@@ -1,0 +1,166 @@
+﻿@model LoLTournament.Models.RegisterViewModel
+
+@using (Ajax.BeginForm("Index", "Register", new AjaxOptions() { HttpMethod = "POST", UpdateTargetId = "ParentDiv" }))
+{
+    <hr />
+    <div class="form-group">
+        <strong>@Html.DisplayNameFor(x => x.TeamName)</strong>
+        @Html.TextBoxFor(x => x.TeamName, new { @class = "form-control" }) @Html.ValidationMessageFor(model => model.TeamName)
+        <hr />
+    </div>
+    <div class="form-group">
+        <strong>@Html.DisplayNameFor(x => x.TeamCaptainName)</strong>
+        <div>
+            <div style="display:inline-block; width: 280px;">@Html.TextBoxFor(x => x.TeamCaptainName, new { @class = "form-control summonerName" })</div>
+            <div id="TeamCaptainNameInfo" style="display:inline-block; margin: 0px; padding: 0px; vertical-align: top;"></div>
+        </div>
+    </div>
+    <div class="form-group">
+        <strong>@Html.DisplayNameFor(x => x.TeamCaptainRealName)</strong>
+        <div>
+            <div style="display:inline-block; width: 280px;">@Html.TextBoxFor(x => x.TeamCaptainRealName, new { @class = "form-control" })</div> <div>@Html.ValidationMessageFor(model => model.TeamCaptainRealName)</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <strong>@Html.DisplayNameFor(x => x.TeamCaptainEmail)</strong>
+        <div>
+            <div style="display:inline-block; width: 280px;">@Html.TextBoxFor(x => x.TeamCaptainEmail, new { @class = "form-control" })</div> <div>@Html.ValidationMessageFor(model => model.TeamCaptainEmail)</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <strong>@Html.DisplayNameFor(x => x.TeamCaptainStudy)</strong>
+        <div>
+            <div style="display:inline-block; width: 280px;">@Html.TextBoxFor(x => x.TeamCaptainStudy, new { @class = "form-control" })</div> <div>@Html.ValidationMessageFor(model => model.TeamCaptainStudy)</div>
+        </div>
+        <hr />
+    </div>
+    <div class="form-group">
+        <strong>@Html.DisplayNameFor(x => x.Summoner2Name)</strong>
+        <div>
+            <div style="display:inline-block; width: 280px;">@Html.TextBoxFor(x => x.Summoner2Name, new { @class = "form-control summonerName" })</div>
+            <div id="Summoner2NameInfo" style="display:inline-block; margin: 0px; padding: 0px; vertical-align: top;"></div>
+        </div>
+    </div>
+    <div class="form-group">
+        <strong>@Html.DisplayNameFor(x => x.Summoner2RealName)</strong>
+        <div>
+            <div style="display:inline-block; width: 280px;">@Html.TextBoxFor(x => x.Summoner2RealName, new { @class = "form-control" })</div> <div>@Html.ValidationMessageFor(model => model.Summoner2RealName)</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <strong>@Html.DisplayNameFor(x => x.Summoner2Email)</strong>
+        <div>
+            <div style="display:inline-block; width: 280px;">@Html.TextBoxFor(x => x.Summoner2Email, new { @class = "form-control" })</div> <div>@Html.ValidationMessageFor(model => model.Summoner2Email)</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <strong>@Html.DisplayNameFor(x => x.Summoner2Study)</strong>
+        <div>
+            <div style="display:inline-block; width: 280px;">@Html.TextBoxFor(x => x.Summoner2Study, new { @class = "form-control" })</div> <div>@Html.ValidationMessageFor(model => model.Summoner2Study)</div>
+        </div>
+        <hr />
+    </div>
+    <div class="form-group">
+        <strong>@Html.DisplayNameFor(x => x.Summoner3Name)</strong>
+        <div>
+            <div style="display:inline-block; width: 280px;">@Html.TextBoxFor(x => x.Summoner3Name, new { @class = "form-control summonerName" })</div>
+            <div id="Summoner3NameInfo" style="display:inline-block; margin: 0px; padding: 0px; vertical-align: top;"></div>
+        </div>
+    </div>
+    <div class="form-group">
+        <strong>@Html.DisplayNameFor(x => x.Summoner3RealName)</strong>
+        <div>
+            <div style="display:inline-block; width: 280px;">@Html.TextBoxFor(x => x.Summoner3RealName, new { @class = "form-control" })</div> <div>@Html.ValidationMessageFor(model => model.Summoner3RealName)</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <strong>@Html.DisplayNameFor(x => x.Summoner3Email)</strong>
+        <div>
+            <div style="display:inline-block; width: 280px;">@Html.TextBoxFor(x => x.Summoner3Email, new { @class = "form-control" })</div> <div>@Html.ValidationMessageFor(model => model.Summoner3Email)</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <strong>@Html.DisplayNameFor(x => x.Summoner3Study)</strong>
+        <div>
+            <div style="display:inline-block; width: 280px;">@Html.TextBoxFor(x => x.Summoner3Study, new { @class = "form-control" })</div> <div>@Html.ValidationMessageFor(model => model.Summoner3Study)</div>
+        </div>
+        <hr />
+    </div>
+    <div class="form-group">
+        <strong>@Html.DisplayNameFor(x => x.Summoner4Name)</strong>
+        <div>
+            <div style="display:inline-block; width: 280px;">@Html.TextBoxFor(x => x.Summoner4Name, new { @class = "form-control summonerName" })</div>
+            <div id="Summoner4NameInfo" style="display:inline-block; margin: 0px; padding: 0px; vertical-align: top;"></div>
+        </div>
+    </div>
+    <div class="form-group">
+        <strong>@Html.DisplayNameFor(x => x.Summoner4RealName)</strong>
+        <div>
+            <div style="display:inline-block; width: 280px;">@Html.TextBoxFor(x => x.Summoner4RealName, new { @class = "form-control" })</div> <div>@Html.ValidationMessageFor(model => model.Summoner4RealName)</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <strong>@Html.DisplayNameFor(x => x.Summoner4Email)</strong>
+        <div>
+            <div style="display:inline-block; width: 280px;">@Html.TextBoxFor(x => x.Summoner4Email, new { @class = "form-control" })</div> <div>@Html.ValidationMessageFor(model => model.Summoner4Email)</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <strong>@Html.DisplayNameFor(x => x.Summoner4Study)</strong>
+        <div>
+            <div style="display:inline-block; width: 280px;">@Html.TextBoxFor(x => x.Summoner4Study, new { @class = "form-control" })</div> <div>@Html.ValidationMessageFor(model => model.Summoner4Study)</div>
+        </div>
+        <hr />
+    </div>
+    <div class="form-group">
+        <strong>@Html.DisplayNameFor(x => x.Summoner5Name)</strong>
+        <div>
+            <div style="display:inline-block; width: 280px;">@Html.TextBoxFor(x => x.Summoner5Name, new { @class = "form-control summonerName" })</div>
+            <div id="Summoner5NameInfo" style="display:inline-block; margin: 0px; padding: 0px; vertical-align: top;"></div>
+        </div>
+    </div>
+    <div class="form-group">
+        <strong>@Html.DisplayNameFor(x => x.Summoner5RealName)</strong>
+        <div>
+            <div style="display:inline-block; width: 280px;">@Html.TextBoxFor(x => x.Summoner5RealName, new { @class = "form-control" })</div> <div>@Html.ValidationMessageFor(model => model.Summoner5RealName)</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <strong>@Html.DisplayNameFor(x => x.Summoner5Email)</strong>
+        <div>
+            <div style="display:inline-block; width: 280px;">@Html.TextBoxFor(x => x.Summoner5Email, new { @class = "form-control" })</div> <div>@Html.ValidationMessageFor(model => model.Summoner5Email)</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <strong>@Html.DisplayNameFor(x => x.Summoner5Study)</strong>
+        <div>
+            <div style="display:inline-block; width: 280px;">@Html.TextBoxFor(x => x.Summoner5Study, new { @class = "form-control" })</div> <div>@Html.ValidationMessageFor(model => model.Summoner5Study)</div>
+        </div>
+        <hr />
+    </div>
+
+    <button type="submit" class="btn btn-default">Register</button>
+    <p>
+        Please be patient after clicking Register. Your League of Legends account data is downloaded from the Riot servers which can take a few seconds.
+    </p>
+}
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('.summonerName').change(function (event) {
+            var callerId = event.target.id;
+            var jsonData = { name: $(this).val() };
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetSummonerInfo", "Register")',
+                dataType: 'html',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(jsonData),
+                async: true,
+                success: function (data) {
+                    $('#' + callerId + 'Info').html(data);
+                }
+            });
+        });
+    });
+</script>

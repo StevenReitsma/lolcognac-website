@@ -1,0 +1,14 @@
+﻿@model LoLTournament.Models.RegisterViewModel
+
+<h2>Registration</h2>
+<p>
+    Fill in the form below to register your team for the League of Legends tournament 2015.
+    Note that you can unregister until the 13th of February, after that your registration is permanent and cannot be canceled.
+</p>
+<p>
+    Don't have a team yet? Use the <a href="@Url.Action("Teambuilder", "Register")">team builder</a>!
+</p>
+
+<div id="ParentDiv">
+    @{ Html.RenderPartial("Form"); }
+</div>

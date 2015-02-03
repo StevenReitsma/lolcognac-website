@@ -1,0 +1,59 @@
+﻿@model LoLTournament.Models.TimetableIndexViewModel
+
+<h2>Timetable</h2>
+
+<p>
+    The bracket layout will be made available soon. It will probably feature a pool phase (4 teams per pool) and an elimination phase for the two winners of each pool. The finale will be a best-out-of-three match. Optionally, a losers' bracket can be created.
+</p>
+
+
+@if (Model.Teams.Count() == 32)
+{
+    <p>
+        There are no more spots available. The tournament is full.
+    </p>
+}
+else if (Model.Teams.Count() == 31)
+{
+    <p>
+        There is only <b>@(32 - Model.Teams.Count())</b> more spot available.
+    </p>
+}
+else
+{
+    <p>
+        There are only <b>@(32-Model.Teams.Count())</b> more spots available.
+    </p>
+}
+
+<h3>Currently registered teams</h3>
+
+@if (!Model.Teams.Any())
+{
+    <p>No teams registered yet.</p>
+}
+else
+{
+    <ul>
+        @foreach (var t in Model.Teams)
+        {
+            <li>@t.Name <!--(MMR: @Math.Round(t.MMR))--></li>
+        }
+    </ul>
+}
+
+<h3>People still looking for a team</h3>
+<p>Do you have room in your team for one of the roles below? Send us an email and we'll get you in touch with each other!</p>
+@if (!Model.TeambuilderParticipants.Any())
+{
+    <p>None!</p>
+}
+else
+{
+    <ul>
+        @foreach (var t in Model.TeambuilderParticipants)
+        {
+            <li>Someone who prefers to play (in order): <strong>@t.Roles</strong></li>
+        }
+    </ul>
+}

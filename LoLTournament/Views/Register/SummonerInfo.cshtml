@@ -1,0 +1,17 @@
+﻿@model LoLTournament.Models.SummonerRegisterInfoModel
+
+
+@if (@Model == null)
+{
+    <div style="color: red;">Summoner does not exist</div>
+}
+else if (@Model.RiotApiOffline)
+{
+    <div style="color: red;">Riot API is offline. You can still register but summoner names can't be checked.</div>
+}
+else
+{
+
+    <img src="http://ddragon.leagueoflegends.com/cdn/5.1.1/img/profileicon/@(Model.Summoner.ProfileIconId).png" style="height:34px;" />
+    <span>Level @Model.Summoner.Level - @Model.SoloLeague (Season 5)</span>
+}
