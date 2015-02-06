@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 using RiotSharp.StatusEndpoint;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -25,6 +26,8 @@ namespace RiotSharp
         /// <returns>The instance of StatusRiotApi.</returns>
         public static StatusRiotApi GetInstance()
         {
+            // TODO merge ssl per endpoint commit
+            throw new Exception("Not possible through HTTPS");
             return instance ?? (instance = new StatusRiotApi());
         }
 

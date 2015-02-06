@@ -38,12 +38,12 @@ namespace RiotSharp
             HttpWebRequest request;
             if (addedArguments == null)
             {
-                request = (HttpWebRequest)WebRequest.Create(string.Format("http://{0}{1}?api_key={2}"
+                request = (HttpWebRequest)WebRequest.Create(string.Format("https://{0}{1}?api_key={2}"
                     , rootDomain, relativeUrl, ApiKey));
             }
             else
             {
-                request = (HttpWebRequest)WebRequest.Create(string.Format("http://{0}{1}?{2}api_key={3}"
+                request = (HttpWebRequest)WebRequest.Create(string.Format("https://{0}{1}?{2}api_key={3}"
                     , rootDomain, relativeUrl, BuildArgumentsString(addedArguments), ApiKey));
             }
             request.Method = "GET";
