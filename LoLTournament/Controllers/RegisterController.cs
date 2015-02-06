@@ -174,7 +174,7 @@ namespace LoLTournament.Controllers
             catch (Exception e)
             {
                 // Summoner does not exist or riot API offline
-                if (e.Message == "503, Service unavailable")
+                if (e.Message != "404, Resource not found")
                     return PartialView("SummonerInfo", new SummonerRegisterInfoModel(true));
 
                 return PartialView("SummonerInfo", null);
