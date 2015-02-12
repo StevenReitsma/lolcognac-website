@@ -11,6 +11,9 @@ namespace LoLTournament.Models
 {
     public class Participant
     {
+        [BsonIgnore]
+        private const double Season4Ratio = 0.67;
+
         public ObjectId Id { get; set; }
         public Summoner Summoner { get; set; }
         public Tier Season4Tier { get; set; }
@@ -47,30 +50,22 @@ namespace LoLTournament.Models
         public bool RuStudent { get; set; }
 
         /// <summary>
-        /// Returns the MMR for the participant, based on win/loss ratio in season 4, season 4 tier and season 5 tier and division.
+        /// Returns the MMR for the participant, based on season 4 tier and season 5 tier and division.
         /// </summary>
         [BsonIgnore]
         public double MMR
         {
             get
             {
-                // MMR is based on win/loss ratio, season 4 tier, and season 5 tier and division in the following ratio:
-                // Win/Loss    Squared times 35, but only if at least 40 games were played
-                // Season 4    Tier level times 10
-                // Season 5    Tier level times 2 plus division times 0.4 (this gives a linear function from Bronze V to Challenger).
+                double tierRanking = (int)Season4Tier * 5 + 3; // the +6 is because this is the average division
+                // If also ranked in season 5, take weighted average (season 4 = 0.67, season 5 = 0.33)
+                if (Season5Tier != Tier.Unranked)
+                {
+                    tierRanking *= Season4Ratio;
+                    tierRanking += (1-Season4Ratio) * ((int) Season5Tier*5 + 5 - Season5Division);
+                }
 
-                double winLossRatio = 0;
-                if (Season4Losses != 0)
-                    winLossRatio = (double)Season4Wins/Season4Losses;
-
-                double winLossPart = 0;
-                if (Season4Losses + Season4Wins > 40)
-                    winLossPart = Math.Pow(winLossRatio,2) * 35;
-
-                var s4Part = (int)Season4Tier*10;
-                var s5Part = (int)Season5Tier*2 + (5 - Season5Division)*0.4;
-
-                return winLossPart + s4Part + s5Part;
+                return tierRanking * 5;
             }
         }
     }

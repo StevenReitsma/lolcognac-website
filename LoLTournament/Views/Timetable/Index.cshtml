@@ -35,6 +35,10 @@ else
             i++;
             <li>
                 @t.Name
+                @if (HttpContext.Current.Request.Params["admin_method"] == "GiveMMR")
+                {
+                    <strong>RU: @t.AmountOfRuStudents | MMR: @Math.Round(t.MMR)</strong>
+                }
                 @if (i == 32)
                 {
                     <hr />
