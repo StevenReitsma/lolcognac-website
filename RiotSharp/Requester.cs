@@ -105,6 +105,10 @@ namespace RiotSharp
         private void HandleWebException(WebException ex)
         {
             HttpWebResponse response = (HttpWebResponse)ex.Response;
+
+            if (response == null)
+                throw new RiotSharpException("Server did not send a response", ex);
+
             switch (response.StatusCode)
             {
                 case HttpStatusCode.ServiceUnavailable:

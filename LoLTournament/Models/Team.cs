@@ -47,5 +47,11 @@ namespace LoLTournament.Models
         {
             get { return Participants.Sum(x => x.MMR); }
         }
+
+        [BsonIgnore]
+        public int AmountOfRuStudents
+        {
+            get { return Participants.Count(x => x.RuStudent); }
+        }
     }
 }

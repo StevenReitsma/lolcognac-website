@@ -44,6 +44,7 @@ namespace LoLTournament.Models
         public DateTime LastUpdateTime { get; set; }
         public string StudyProgram { get; set; }
         public bool IsCaptain { get; set; }
+        public bool RuStudent { get; set; }
 
         /// <summary>
         /// Returns the MMR for the participant, based on win/loss ratio in season 4, season 4 tier and season 5 tier and division.

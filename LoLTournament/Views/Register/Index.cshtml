@@ -4,12 +4,12 @@
 <p>
     Fill in the form below to register your team for the League of Legends tournament 2015.
     Note that you can unregister until the 13th of February, after that your registration is permanent and cannot be canceled.
-    Also note that you will be placed on the waiting list if the tournament is full upon registration. You can see the amount of spots remaining <a href="@Url.Action("Index", "Timetable")">here</a>.
-    You will be contacted if a space becomes available.
 </p>
 <p>
     Don't have a team yet? Use the <a href="@Url.Action("Teambuilder", "Register")">team builder</a>!
 </p>
+
+<div class="alert alert-warning" role="alert">The tournament is full. However, you can still register. If you have more RU students in your team than there are RU students in another team, you will take their place.</div>
 
 <div id="ParentDiv">
     @{ Html.RenderPartial("Form"); }
