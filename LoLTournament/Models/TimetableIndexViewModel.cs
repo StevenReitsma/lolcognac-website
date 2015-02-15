@@ -1,10 +1,11 @@
-﻿using MongoDB.Driver;
+﻿using System.Linq;
+using MongoDB.Driver;
 
 namespace LoLTournament.Models
 {
     public class TimetableIndexViewModel
     {
-        public MongoCursor<Team> Teams
+        public IOrderedEnumerable<Team> Teams
         {
             get
             {
@@ -13,7 +14,7 @@ namespace LoLTournament.Models
                 var db = server.GetDatabase("CLT");
                 var col = db.GetCollection<Team>("Teams");
 
-                return col.FindAll();
+                return col.FindAll().OrderByDescending(x => x.AmountOfRuStudents).ThenBy(x => x.Participants.Sum(y => y.RegisterTime.Ticks));
             }
         }
 
