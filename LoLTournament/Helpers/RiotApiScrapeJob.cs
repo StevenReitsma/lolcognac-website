@@ -10,17 +10,25 @@ using RiotSharp.StatsEndpoint;
 using RiotSharp.SummonerEndpoint;
 using Participant = LoLTournament.Models.Participant;
 using Season = RiotSharp.StatsEndpoint.Season;
+using System.Diagnostics;
+using System.Globalization;
 
 namespace LoLTournament.Helpers
 {
     public class RiotApiScrapeJob
     {
         private readonly RiotApi _api;
+        private static DateTime tournamentStart;
 
         public RiotApiScrapeJob()
         {
             var key = WebConfigurationManager.AppSettings["RiotApiKey"];
             _api = RiotApi.GetInstance(key, 3000, 180000);
+
+            var timeSetting = WebConfigurationManager.AppSettings["TournamentStart"];
+
+            tournamentStart = DateTime.ParseExact(timeSetting, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
+
 
             // For summoner statistics, always 1 hour
             var intervalSummoners = new TimeSpan(1, 0, 0);
@@ -32,6 +40,15 @@ namespace LoLTournament.Helpers
 
         private void ScrapeMatches(object arg)
         {
+            Debug.WriteLine("Scraping Matches");
+
+            Debug.WriteLine(DateTime.Now.ToString());
+            Debug.WriteLine(tournamentStart);
+
+            
+
+
+
             // TODO
             // 0 Check if event has started
             // 1   Get list of team captains
@@ -63,6 +80,14 @@ namespace LoLTournament.Helpers
                 // Match is finished! TODO Add to DB
                 var matchObject = new Match(); // TODO add parameters
             }*/
+        }
+
+        private bool isAfterTournamentStart(Models.Match match)
+        {
+            //TODO Determine match start (match.Time?), see if it is after tournamentStart static var
+            Debug.WriteLine(match.Time.ToString());
+            
+            return false;
         }
 
         private void ScrapeSummoners(object arg)
