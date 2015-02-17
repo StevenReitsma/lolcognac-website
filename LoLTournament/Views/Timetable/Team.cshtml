@@ -1,4 +1,6 @@
-﻿@using RiotSharp.LeagueEndpoint
+﻿@using System.Globalization
+@using System.Web.Configuration
+@using RiotSharp.LeagueEndpoint
 @model LoLTournament.Models.TeamViewModel
 
 @if (@Model == null)
@@ -47,7 +49,11 @@ else
     }
 
     <h3>Next match</h3>
-    if (Model.NextMatch == null)
+    if (DateTime.Now < DateTime.ParseExact(WebConfigurationManager.AppSettings["TournamentStart"], "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture))
+    {
+        <p>Tournament hasn't started yet.</p>
+    }
+    else if (Model.NextMatch == null)
     {
          <p>No more matches to play.</p>
     }
