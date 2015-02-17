@@ -3,7 +3,7 @@
 @using RiotSharp.LeagueEndpoint
 @model LoLTournament.Models.TeamViewModel
 
-@if (@Model == null)
+@if (@Model == null || @Model.Team == null)
 {
     <h2>Team does not exist</h2>
 }
