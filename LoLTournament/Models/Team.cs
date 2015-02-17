@@ -83,5 +83,56 @@ namespace LoLTournament.Models
                 return col.Find(Query<Match>.Where(x => x.Finished && x.WinnerId != Id && (x.BlueTeamId == Id || x.PurpleTeamId == Id))).Count();
             }
         }
+
+        public Match GetNextMatch()
+        {
+            var client = new MongoClient();
+            var server = client.GetServer();
+            var db = server.GetDatabase("CLT");
+            var matchCol = db.GetCollection<Match>("Matches");
+
+            if (Phase == Phase.Pool)
+            {
+                return
+                    matchCol.Find(
+                        Query<Match>.Where(
+                            x =>
+                                !x.Finished && x.Phase == Phase.Pool &&
+                                (x.BlueTeamId == Id || x.PurpleTeamId == Id)))
+                        .OrderBy(x => x.Priority)
+                        .FirstOrDefault();
+            }
+            if (Phase == Phase.Finale)
+            {
+                return
+                    matchCol.Find(
+                        Query<Match>.Where(
+                            x =>
+                                !x.Finished && x.Phase == Phase.Finale &&
+                                (x.BlueTeamId == Id || x.PurpleTeamId == Id)))
+                        .OrderBy(x => x.Priority)
+                        .FirstOrDefault();
+            }
+            if (Phase == Phase.WinnerBracket)
+            {
+                return
+                    matchCol.Find(
+                        Query<Match>.Where(
+                            x =>
+                                !x.Finished && x.Phase == Phase.WinnerBracket &&
+                                (x.BlueTeamId == Id || x.PurpleTeamId == Id))).FirstOrDefault();
+            }
+            if (Phase == Phase.LoserBracket)
+            {
+                return
+                    matchCol.Find(
+                        Query<Match>.Where(
+                            x =>
+                                !x.Finished && x.Phase == Phase.LoserBracket &&
+                                (x.BlueTeamId == Id || x.PurpleTeamId == Id))).FirstOrDefault();
+            }
+
+            return null;
+        }
     }
 }

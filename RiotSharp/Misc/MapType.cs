@@ -39,5 +39,7 @@
         /// Howling Abyss ARAM Map
         /// </summary>
         HowlingAbyss = 12,
+
+        SummonersRiftCurrent = 11
     }
 }

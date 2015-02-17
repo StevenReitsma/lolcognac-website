@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Web.Configuration;
+using LoLTournament.Models;
 using MongoDB.Driver;
 using RiotSharp;
+using RiotSharp.GameEndpoint;
 using RiotSharp.LeagueEndpoint;
 using RiotSharp.StatsEndpoint;
 using RiotSharp.SummonerEndpoint;
@@ -18,36 +20,81 @@ namespace LoLTournament.Helpers
     public class RiotApiScrapeJob
     {
         private readonly RiotApi _api;
-        private static DateTime tournamentStart;
 
         public RiotApiScrapeJob()
         {
             var key = WebConfigurationManager.AppSettings["RiotApiKey"];
             _api = RiotApi.GetInstance(key, 3000, 180000);
 
-            var timeSetting = WebConfigurationManager.AppSettings["TournamentStart"];
-
-            tournamentStart = DateTime.ParseExact(timeSetting, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
-
-
             // For summoner statistics, always 1 hour
             var intervalSummoners = new TimeSpan(1, 0, 0);
             var intervalMatches = new TimeSpan(1, 0, 0);
 
             //new Timer(ScrapeSummoners, null, new TimeSpan(0, 0, 0, 0, 0), intervalSummoners);
-            //new Timer(ScrapeMatches, null, new TimeSpan(0, 0, 0, 0, 0), intervalMatches);
+            new Timer(ScrapeMatches, null, new TimeSpan(0, 0, 0, 0, 0), intervalMatches);
         }
 
         private void ScrapeMatches(object arg)
         {
-            Debug.WriteLine("Scraping Matches");
+            var timeSetting = WebConfigurationManager.AppSettings["TournamentStart"];
+            var tournamentStart = DateTime.ParseExact(timeSetting, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
 
-            Debug.WriteLine(DateTime.Now.ToString());
-            Debug.WriteLine(tournamentStart);
+            if (true) //(DateTime.Now >= tournamentStart && DateTime.Now <= tournamentStart + TimeSpan.FromHours(12))
+                // assuming tournament lasts for a maximum of 12 hours
+            {
+                // Tournament is currently ongoing
+                var client = new MongoClient();
+                var server = client.GetServer();
+                var db = server.GetDatabase("CLT");
+                var col = db.GetCollection<Team>("Teams");
+                var teamCaptains = col.FindAll().Select(x => x.Captain);
 
-            
+                // For each team captain
+                foreach (var tc in teamCaptains)
+                {
+                    // Get match that this team is currently playing (or should be)
+                    var nextMatch = tc.Team.GetNextMatch();
+                    
+                    if (nextMatch == null)
+                        continue;
 
+                    // Query match history for team captain
+                    var matchHistory = tc.Summoner.GetRecentGames();
 
+                    // Filter: matches that finished after the tournament start
+                    //         matches that have gameMode = CLASSIC
+                    //         matches that have gameType = CUSTOM_GAME
+                    //         matches that have subType = NONE, NORMAL
+                    //         matches that have mapId = 11
+                    var validMatches = from m in matchHistory
+                        where 
+                              m.GameMode == GameMode.Classic &&
+                              m.GameType == GameType.CustomGame &&
+                              (m.SubType == GameSubType.None || m.SubType == GameSubType.Normal) &&
+                              m.MapType == MapType.SummonersRiftCurrent
+                        select m;
+
+                    Game validMatch;
+
+                    // Check for each match whether it has valid participants
+                    foreach (var match in validMatches)
+                    {
+                        bool valid =
+                            match.FellowPlayers.All(
+                                p =>
+                                    nextMatch.BlueTeam.Participants.Any(x => x.Summoner.Id == p.SummonerId) ||
+                                    nextMatch.PurpleTeam.Participants.Any(x => x.Summoner.Id == p.SummonerId));
+
+                        if (valid)
+                        {
+                            validMatch = match;
+                            break;
+                        }
+                    }
+
+                    
+                }
+            }
 
             // TODO
             // 0 Check if event has started

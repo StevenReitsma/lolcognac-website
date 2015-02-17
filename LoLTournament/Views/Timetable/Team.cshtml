@@ -1,5 +1,6 @@
 ﻿@using System.Globalization
 @using System.Web.Configuration
+@using LoLTournament.Helpers
 @using LoLTournament.Models
 @using RiotSharp.LeagueEndpoint
 @model LoLTournament.Models.TeamViewModel
@@ -72,14 +73,32 @@ else
             <div class="panel-body">
                 @if (Model.OtherTeamReady)
                 {
-                    <p><b>@Model.NextMatch.BlueTeam.Name</b> is on the <b>blue</b> side (left in lobby) and <b>@Model.NextMatch.BlueTeam.Participants.Single(x => x.IsCaptain).SummonerName</b> has to create the tournament draft match and invite all other participants, including the other team's. If one of the participants does not have enough champions, you can play blind pick. <b>@Model.NextMatch.PurpleTeam.Name</b> plays on the purple side and should keep an eye out for invites.
-                        <br />
-                        <span style="font-size: 75%;">Protip: When inviting, copy and paste the summoner names on the team's pages to be sure they are correctly entered.</span>
-                    </p>
+                    <h4>How to enter tournament lobby</h4>
+                    if (!IpHelper.IsAllowed(HttpContext.Current))
+                    {
+                        <div class="alert alert-danger" role="alert">You are not connected to the RU network. Connect the correct ethernet cable or connect to eduroam. If you think you are correctly connected, notify crew member Steven.</div>
+                    }
+                    else
+                    {
+                        <p>
+                            Go to <b>Play &raquo; Custom &raquo; Tournament Code</b> in your League of Legends client and enter the following code:<br /><br />
+
+                            <input type="text" class="form-control" style="display: inline" value="@Model.NextMatch.TournamentCode" onfocus=" this.select() " onclick=" this.select() " /> click box, copy paste
+                            <hr />
+
+                            If one of the participants does not own at least 6 champions, all 10 participants should use the following code:<br /><br />
+
+                            <input type="text" class="form-control" style="display: inline" value="@Model.NextMatch.TournamentCodeBlind" onfocus=" this.select() " onclick=" this.select() " /> click box, copy paste
+                            <hr />
+
+                            <b>@Model.NextMatch.BlueTeam.Name</b> is on the <b style="color: #337AB7">blue</b> side (left in lobby), while <b>@Model.NextMatch.PurpleTeam.Name</b> is on the <b style="color: #7D26CD;">purple</b> side (right in lobby).<br />
+                            No players have to be invited since everyone can join the lobby using the tournament code, even spectators.
+                        </p>
+                    }
                 }
                 else
                 {
-                    <p>The other team has not finished their match yet. Keep refreshing.</p>
+                    <p>The other team has not finished their current match yet. Refresh the page or refresh yourself with a drink from the bar.</p>
                 }
             </div>
         </div>

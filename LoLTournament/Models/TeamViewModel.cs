@@ -42,7 +42,7 @@ namespace LoLTournament.Models
 
             // Initialize next match
             var matchCol = db.GetCollection<Match>("Matches");
-            NextMatch = GetNextMatch(matchCol, Team);
+            NextMatch = Team.GetNextMatch();
 
             // Initialize match history
             MatchHistory =
@@ -74,57 +74,11 @@ namespace LoLTournament.Models
                     OtherTeamDefined = false;
                     return;
                 }
-                    
-                var otherTeamNextMatch = GetNextMatch(matchCol, otherTeam);
+
+                var otherTeamNextMatch = otherTeam.GetNextMatch();
                 OtherTeamReady = otherTeamNextMatch.BlueTeamId == NextMatch.BlueTeamId &&
                                  otherTeamNextMatch.PurpleTeamId == NextMatch.PurpleTeamId;
             }
-        }
-
-        private static Match GetNextMatch(MongoCollection<Match> matchCol, Team team)
-        {
-            if (team.Phase == Phase.Pool)
-            {
-                return
-                    matchCol.Find(
-                        Query<Match>.Where(
-                            x =>
-                                !x.Finished && x.Phase == Phase.Pool &&
-                                (x.BlueTeamId == team.Id || x.PurpleTeamId == team.Id)))
-                        .OrderBy(x => x.Priority)
-                        .FirstOrDefault();
-            }
-            else if (team.Phase == Phase.Finale)
-            {
-                return
-                    matchCol.Find(
-                        Query<Match>.Where(
-                            x =>
-                                !x.Finished && x.Phase == Phase.Finale &&
-                                (x.BlueTeamId == team.Id || x.PurpleTeamId == team.Id)))
-                        .OrderBy(x => x.Priority)
-                        .FirstOrDefault();
-            }
-            else if (team.Phase == Phase.WinnerBracket)
-            {
-                return
-                    matchCol.Find(
-                        Query<Match>.Where(
-                            x =>
-                                !x.Finished && x.Phase == Phase.WinnerBracket &&
-                                (x.BlueTeamId == team.Id || x.PurpleTeamId == team.Id))).FirstOrDefault();
-            }
-            else if (team.Phase == Phase.LoserBracket)
-            {
-                return
-                    matchCol.Find(
-                        Query<Match>.Where(
-                            x =>
-                                !x.Finished && x.Phase == Phase.LoserBracket &&
-                                (x.BlueTeamId == team.Id || x.PurpleTeamId == team.Id))).FirstOrDefault();
-            }
-
-            return null;
         }
     }
 }

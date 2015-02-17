@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver;
@@ -70,6 +71,26 @@ namespace LoLTournament.Models
                 var col = db.GetCollection<Team>("Teams");
 
                 return col.Find(Query<Team>.Where(x => x.Id == WinnerId)).FirstOrDefault();
+            }
+        }
+
+        [BsonIgnore]
+        public string TournamentCode
+        {
+            get
+            {
+                return
+                    "pvpnet://lol/customgame/joinorcreate/map11/pick6/team5/specALL/" + Convert.ToBase64String(Encoding.UTF8.GetBytes("{\"name\": \"" + @BlueTeam.Name.Substring(0, 10) + "..(B)+" + @PurpleTeam.Name.Substring(0, 10) + "..(P)" + "\",\"extra\":\"\",\"password\":\"CognACPrivateLobby\",\"report\":\"\"}"));
+            }
+        }
+
+        [BsonIgnore]
+        public string TournamentCodeBlind
+        {
+            get
+            {
+                return
+                    "pvpnet://lol/customgame/joinorcreate/map11/pick1/team5/specALL/" + Convert.ToBase64String(Encoding.UTF8.GetBytes("{\"name\": \"" + @BlueTeam.Name.Substring(0, 10) + "..(B) vs " + @PurpleTeam.Name.Substring(0, 10) + "..(P) [BP]" + "\",\"extra\":\"\",\"password\":\"CognACPrivateLobby\",\"report\":\"\"}"));
             }
         }
     }
