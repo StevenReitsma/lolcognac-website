@@ -117,8 +117,10 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Images\azerty.png" />
     <Content Include="Content\Images\CognAC_logo.png" />
     <Content Include="Content\Images\GitHub-Mark-32px.png" />
+    <Content Include="Content\Images\gm.png" />
     <Content Include="Content\Images\laserquest.png" />
     <Content Include="Content\Images\splash.jpg" />
     <Content Include="Content\Images\splash2.jpg" />
