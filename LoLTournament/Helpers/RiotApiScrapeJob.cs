@@ -34,8 +34,8 @@ namespace LoLTournament.Helpers
             var intervalSummoners = new TimeSpan(1, 0, 0);
             var intervalMatches = new TimeSpan(1, 0, 0);
 
-            new Timer(ScrapeSummoners, null, new TimeSpan(0, 0, 0, 0, 0), intervalSummoners);
-            new Timer(ScrapeMatches, null, new TimeSpan(0, 0, 0, 0, 0), intervalMatches);
+            //new Timer(ScrapeSummoners, null, new TimeSpan(0, 0, 0, 0, 0), intervalSummoners);
+            //new Timer(ScrapeMatches, null, new TimeSpan(0, 0, 0, 0, 0), intervalMatches);
         }
 
         private void ScrapeMatches(object arg)
@@ -82,10 +82,10 @@ namespace LoLTournament.Helpers
             }*/
         }
 
-        private bool isAfterTournamentStart(Models.Match match)
+        private bool IsAfterTournamentStart(Models.Match match)
         {
-            //TODO Determine match start (match.Time?), see if it is after tournamentStart static var
-            Debug.WriteLine(match.Time.ToString());
+            //TODO Determine match finish (match.FinishTime?), see if it is after tournamentStart static var
+            Debug.WriteLine(match.FinishTime.ToString());
             
             return false;
         }
