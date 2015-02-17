@@ -55,5 +55,33 @@ namespace LoLTournament.Models
         {
             get { return Participants.Count(x => x.RuStudent); }
         }
+
+        [BsonIgnore]
+        public long Wins
+        {
+            get
+            {
+                var client = new MongoClient();
+                var server = client.GetServer();
+                var db = server.GetDatabase("CLT");
+                var col = db.GetCollection<Match>("Matches");
+
+                return col.Find(Query<Match>.Where(x => x.Finished && x.WinnerId == Id)).Count();
+            }
+        }
+
+        [BsonIgnore]
+        public long Losses
+        {
+            get
+            {
+                var client = new MongoClient();
+                var server = client.GetServer();
+                var db = server.GetDatabase("CLT");
+                var col = db.GetCollection<Match>("Matches");
+
+                return col.Find(Query<Match>.Where(x => x.Finished && x.WinnerId != Id)).Count();
+            }
+        }
     }
 }

@@ -5,6 +5,7 @@ using System.Web;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Builders;
+using RiotSharp.TeamEndpoint;
 
 namespace LoLTournament.Models
 {
@@ -14,6 +15,11 @@ namespace LoLTournament.Models
         public Match NextMatch { get; set; }
         public List<Match> MatchHistory { get; set; }
         public bool OtherTeamReady { get; set; }
+        public int TotalKills { get; set; }
+        public int TotalAssists { get; set; }
+        public int TotalDeaths { get; set; }
+        public double WinPercentage { get; set; }
+        public TimeSpan TotalPlayTime { get; set; }
 
         public TeamViewModel()
         {
@@ -38,7 +44,7 @@ namespace LoLTournament.Models
 
             // Initialize match history
             MatchHistory =
-                matchCol.Find(Query<Match>.Where(x => x.Finished && (x.BlueTeamId == Team.Id || x.PurpleTeamId == Team.Id)))
+                matchCol.Find(Query<Match>.Where(x => x.Finished && (x.BlueTeamId == Team.Id || x.PurpleTeamId == Team.Id))).OrderByDescending(x => x.FinishTime)
                     .ToList();
 
             // Check if other team is ready
@@ -52,6 +58,21 @@ namespace LoLTournament.Models
                 OtherTeamReady = otherTeamNextMatch.BlueTeamId == NextMatch.BlueTeamId &&
                                  otherTeamNextMatch.PurpleTeamId == NextMatch.PurpleTeamId;
             }
+
+            // Initialize statistics
+            TotalKills = matchCol.Find(Query<Match>.Where(x => x.Finished && x.BlueTeamId == Team.Id)).Sum(x => x.KillsBlueTeam) + matchCol.Find(Query<Match>.Where(x => x.Finished && x.PurpleTeamId == Team.Id)).Sum(x => x.KillsPurpleTeam);
+            TotalDeaths = matchCol.Find(Query<Match>.Where(x => x.Finished && x.BlueTeamId == Team.Id)).Sum(x => x.DeathsBlueTeam) + matchCol.Find(Query<Match>.Where(x => x.Finished && x.PurpleTeamId == Team.Id)).Sum(x => x.DeathsPurpleTeam);
+            TotalAssists = matchCol.Find(Query<Match>.Where(x => x.Finished && x.BlueTeamId == Team.Id)).Sum(x => x.AssistsBlueTeam) + matchCol.Find(Query<Match>.Where(x => x.Finished && x.PurpleTeamId == Team.Id)).Sum(x => x.AssistsPurpleTeam);
+
+            var losses = Team.Losses;
+            if (losses == 0)
+                WinPercentage = 100;
+            else
+                WinPercentage = Team.Wins/((double)Team.Losses + Team.Wins)*100;
+
+            TotalPlayTime = new TimeSpan(0, 0, 0, (int) matchCol.Find(
+                    Query<Match>.Where(x => x.Finished && (x.BlueTeamId == Team.Id || x.PurpleTeamId == Team.Id)))
+                    .Sum(x => x.Duration.TotalSeconds));
         }
 
         private static Match GetNextMatch(MongoCollection<Match> matchCol, Team team)

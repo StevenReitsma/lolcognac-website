@@ -1,5 +1,6 @@
 ﻿@using System.Globalization
 @using System.Web.Configuration
+@using LoLTournament.Models
 @using RiotSharp.LeagueEndpoint
 @model LoLTournament.Models.TeamViewModel
 
@@ -55,25 +56,54 @@ else
     }
     else if (Model.NextMatch == null)
     {
-         <p>No more matches to play.</p>
+        <p>No more matches to play.</p>
     }
     else
     {
-        <h4><a href="@Url.Action("Team", "Timetable", new RouteValueDictionary {{"teamId", @Model.NextMatch.BlueTeamId}})">@Model.NextMatch.BlueTeam.Name</a> versus <a href="@Url.Action("Team", "Timetable", new RouteValueDictionary { { "teamId", @Model.NextMatch.PurpleTeamId} })">@Model.NextMatch.PurpleTeam.Name</a></h4>
-
-        if (Model.OtherTeamReady)
-        {
-            <div class="alert alert-warning" role="alert">
-                <b>@Model.NextMatch.BlueTeam.Name</b> is on the <b>blue</b> side (left in lobby) and <b>@Model.NextMatch.BlueTeam.Participants.Single(x => x.IsCaptain).SummonerName</b> has to create the tournament draft match and invite all other participants, including the other team's. If anyone does not have enough champions, you can play blind pick. <b>@Model.NextMatch.PurpleTeam.Name</b> plays on the purple side and should keep an eye out for invites.
-                <br />
-                <span style="font-size:75%;">Protip: When inviting, copy and paste the summoner names on the team's pages to be sure they are correctly entered.</span>
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <span class="label label-primary" style="font-size: 11px; vertical-align: middle">@Model.NextMatch.Phase.GetDisplayString()</span>
+                <a href="@Url.Action("Team", "Timetable", new RouteValueDictionary {{"teamId", Model.NextMatch.BlueTeamId}})">@Model.NextMatch.BlueTeam.Name</a> versus <a href="@Url.Action("Team", "Timetable", new RouteValueDictionary {{"teamId", Model.NextMatch.PurpleTeamId}})">@Model.NextMatch.PurpleTeam.Name</a>
             </div>
-        }
-        else
-        {
-            <div class="alert alert-warning" role="alert">The other team has not finished their match yet. Keep refreshing.</div>
-        }
+            <div class="panel-body">
+                @if (Model.OtherTeamReady)
+                {
+                    <p><b>@Model.NextMatch.BlueTeam.Name</b> is on the <b>blue</b> side (left in lobby) and <b>@Model.NextMatch.BlueTeam.Participants.Single(x => x.IsCaptain).SummonerName</b> has to create the tournament draft match and invite all other participants, including the other team's. If one of the participants does not have enough champions, you can play blind pick. <b>@Model.NextMatch.PurpleTeam.Name</b> plays on the purple side and should keep an eye out for invites.
+                        <br />
+                        <span style="font-size: 75%;">Protip: When inviting, copy and paste the summoner names on the team's pages to be sure they are correctly entered.</span>
+                    </p>
+                }
+                else
+                {
+                    <p>The other team has not finished their match yet. Keep refreshing.</p>
+                }
+            </div>
+        </div>
     }
+
+    <h3>Tournament statistics</h3>
+    <ul class="list-group" style="max-width: 300px">
+        <li class="list-group-item">
+            <span class="badge">@Model.WinPercentage%</span>
+            Wins
+        </li>
+        <li class="list-group-item">
+            <span class="badge">@Model.TotalKills</span>
+            Kills
+        </li>
+        <li class="list-group-item">
+            <span class="badge">@Model.TotalDeaths</span>
+            Deaths
+        </li>
+        <li class="list-group-item">
+            <span class="badge">@Model.TotalAssists</span>
+            Assists
+        </li>
+        <li class="list-group-item">
+            <span class="badge">@Model.TotalPlayTime</span>
+            Total play time
+        </li>
+    </ul>
 
     <h3>Match history</h3>
     if (Model.MatchHistory == null || Model.MatchHistory.Count == 0)
@@ -82,6 +112,27 @@ else
     }
     else
     {
-        
+        foreach (var m in Model.MatchHistory)
+        {
+            var color = m.WinnerId == Model.Team.Id ? "success" : "danger";
+            var phase = "";
+            var otherTeamId = Model.Team.Id == m.BlueTeamId ? m.PurpleTeamId : m.BlueTeamId;
+            var otherTeamName = Model.Team.Id == m.BlueTeamId ? m.PurpleTeam.Name : m.BlueTeam.Name;
+
+            <div class="panel panel-@color">
+                <div class="panel-heading">
+                    <div style="float:right">@m.FinishTime.ToShortTimeString()</div>
+                    <span class="label label-primary" style="font-size: 11px; vertical-align:middle">@m.Phase.GetDisplayString()</span>
+                    Versus <a href="@Url.Action("Team", "Timetable", new RouteValueDictionary { { "teamId", otherTeamId} })">@otherTeamName</a>
+                </div>
+                <div class="panel-body">
+                    Winner: <b>@m.Winner.Name</b> <br />
+                    Match duration: <b>@m.Duration</b>
+                </div>
+            </div>
+
+
+
+        }
     }
 }

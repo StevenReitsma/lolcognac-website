@@ -23,13 +23,13 @@ namespace LoLTournament.Models
         public TimeSpan Duration { get; set; }
         public DateTime FinishTime { get; set; }
 
-        public int KillsWinningTeam { get; set; }
-        public int DeathsWinningTeam { get; set; }
-        public int AssistsWinningTeam { get; set; }
+        public int KillsBlueTeam { get; set; }
+        public int DeathsBlueTeam { get; set; }
+        public int AssistsBlueTeam { get; set; }
 
-        public int KillsLosingTeam { get; set; }
-        public int DeathsLosingTeam { get; set; }
-        public int AssistsLosingTeam { get; set; }
+        public int KillsPurpleTeam { get; set; }
+        public int DeathsPurpleTeam { get; set; }
+        public int AssistsPurpleTeam { get; set; }
 
         [BsonIgnore]
         public Team BlueTeam {
@@ -55,6 +55,20 @@ namespace LoLTournament.Models
                 var col = db.GetCollection<Team>("Teams");
 
                 return col.Find(Query<Team>.Where(x => x.Id == PurpleTeamId)).FirstOrDefault();
+            }
+        }
+
+        [BsonIgnore]
+        public Team Winner
+        {
+            get
+            {
+                var client = new MongoClient();
+                var server = client.GetServer();
+                var db = server.GetDatabase("CLT");
+                var col = db.GetCollection<Team>("Teams");
+
+                return col.Find(Query<Team>.Where(x => x.Id == WinnerId)).FirstOrDefault();
             }
         }
     }
