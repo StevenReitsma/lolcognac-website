@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
+using System.Web;
 using System.Web.Configuration;
 using System.Web.Mvc;
+using System.Web.UI.WebControls;
 using LoLTournament.Models;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -26,6 +29,12 @@ namespace LoLTournament.Controllers
         [HttpPost]
         public PartialViewResult Index(RegisterViewModel m)
         {
+            if (DateTime.Now >= new DateTime(2015, 2, 20))
+            {
+                Response.StatusCode = 403;
+                return PartialView();
+            }
+
             if (ModelState.IsValid)
             {
                 // Note: we don't actually retrieve stuff from the Riot servers here. We do this in a separate cron thread asynchronously every hour (outside event) or every minute (during event).
