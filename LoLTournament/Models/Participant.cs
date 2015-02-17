@@ -57,15 +57,21 @@ namespace LoLTournament.Models
         {
             get
             {
-                double tierRanking = (int)Season4Tier * 5 + 3; // the +6 is because this is the average division
+                double tierRanking = 0;
+
+                if (Season4Tier != Tier.Unranked)
+                    tierRanking += (int)Season4Tier * 5 + 3; // the +3 is because this is the average division
+
                 // If also ranked in season 5, take weighted average (season 4 = 0.67, season 5 = 0.33)
                 if (Season5Tier != Tier.Unranked)
                 {
                     tierRanking *= Season4Ratio;
-                    tierRanking += (1-Season4Ratio) * ((int) Season5Tier*5 + 5 - Season5Division);
+                    tierRanking += (1 - Season4Ratio) * ((int)Season5Tier * 5 + 5 - Season5Division);
+                    if (Season4Tier != Tier.Unranked)
+                        tierRanking /= (1 - Season4Ratio); // undo ratio multiplication
                 }
 
-                return tierRanking * 5;
+                return tierRanking * 3;
             }
         }
     }

@@ -12,6 +12,8 @@ namespace LoLTournament.Models
         public ObjectId Id { get; set; }
         public string Name { get; set; }
         public List<ObjectId> ParticipantsIds { get; set; }
+        public int Pool { get; set; }
+        public Phase Phase { get; set; }
 
         [BsonIgnore]
         public List<Participant> Participants

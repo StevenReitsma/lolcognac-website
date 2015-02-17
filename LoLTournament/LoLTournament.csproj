@@ -100,12 +100,15 @@
     <Compile Include="Helpers\RiotApiScrapeJob.cs" />
     <Compile Include="Models\Match.cs" />
     <Compile Include="Models\Participant.cs" />
+    <Compile Include="Models\Phase.cs" />
     <Compile Include="Models\RegisterViewModel.cs" />
     <Compile Include="Models\Side.cs" />
+    <Compile Include="Models\StatisticsViewModel.cs" />
     <Compile Include="Models\SummonerRegisterInfoModel.cs" />
     <Compile Include="Models\Team.cs" />
     <Compile Include="Models\TeambuilderParticipant.cs" />
     <Compile Include="Models\TeambuilderViewModel.cs" />
+    <Compile Include="Models\TeamViewModel.cs" />
     <Compile Include="Models\TimetableIndexViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -115,6 +118,7 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Images\CognAC_logo.png" />
+    <Content Include="Content\Images\GitHub-Mark-32px.png" />
     <Content Include="Content\Images\laserquest.png" />
     <Content Include="Content\Images\splash.jpg" />
     <Content Include="Content\Images\splash2.jpg" />
@@ -173,6 +177,7 @@
     <Content Include="Views\Register\TeambuilderOK.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Web.config" />
+    <Content Include="Views\Timetable\Team.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

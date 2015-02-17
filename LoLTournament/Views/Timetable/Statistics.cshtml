@@ -1,3 +1,27 @@
-﻿<h2>Real time statistics</h2>
+﻿@model LoLTournament.Models.StatisticsViewModel
 
-During the event, this page will show real time statistics such as the teams' scores and the next matchups.
+<h2>Real time statistics</h2>
+<h4>Select your team</h4>
+
+<table class="table table-striped">
+    <tbody>
+        @{
+            var teamCount = Math.Min(16, Model.Teams.Count / 2);
+
+            for (int i = 0; i < teamCount; i++)
+             {
+                 <tr>
+                     <td>
+                         <a href="@Url.Action("Team", "Timetable", new RouteValueDictionary { { "teamId", @Model.Teams[i].Id } })">@Model.Teams[i].Name</a>
+                     </td>
+                     <td>
+                         @if (@Model.Teams.Count > i + teamCount)
+                         {
+                             <a href="@Url.Action("Team", "Timetable", new RouteValueDictionary { { "teamId", @Model.Teams[i + teamCount].Id } })">@Model.Teams[i + teamCount].Name</a>
+                         }
+                     </td>
+                 </tr>
+             }
+        }
+    </tbody>
+</table>

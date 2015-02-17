@@ -1,0 +1,81 @@
+﻿@using RiotSharp.LeagueEndpoint
+@model LoLTournament.Models.TeamViewModel
+
+@if (@Model == null)
+{
+    <h2>Team does not exist</h2>
+}
+else
+{
+    <h2>@Model.Team.Name <span class="label label-success" style="font-size: 11px; vertical-align:middle">Pool @Model.Team.Pool</span></h2>
+
+    foreach (var p in @Model.Team.Participants.OrderByDescending(x => Math.Max((int)x.Season4Tier, (int)x.Season5Tier)))
+    {
+        var maxTier = (Tier)Math.Max((int)p.Season4Tier, (int)p.Season5Tier);
+        string color;
+        switch (maxTier)
+        {
+            case Tier.Unranked:
+                color = "333";
+                break;
+            case Tier.Bronze:
+                color = "F0AD4E";
+                break;
+            case Tier.Silver:
+                color = "ADB3C6";
+                break;
+            case Tier.Gold:
+                color = "F0AD4E";
+                break;
+            case Tier.Platinum:
+                color = "5CB85C";
+                break;
+            case Tier.Diamond:
+                color = "5BC0DE";
+                break;
+            case Tier.Master:
+                color = "337AB7";
+                break;
+            case Tier.Challenger:
+                color = "D9534F";
+                break;
+            default:
+                color = "777";
+                break;
+        }
+        <a href="http://www.lolking.net/summoner/euw/@p.Summoner.Id" style="text-decoration: none;" title="@maxTier"><span class="label" style="background-color: #@color;">@p.SummonerName</span></a>
+    }
+
+    <h3>Next match</h3>
+    if (Model.NextMatch == null)
+    {
+         <p>No more matches to play.</p>
+    }
+    else
+    {
+        <h4><a href="@Url.Action("Team", "Timetable", new RouteValueDictionary {{"teamId", @Model.NextMatch.BlueTeamId}})">@Model.NextMatch.BlueTeam.Name</a> versus <a href="@Url.Action("Team", "Timetable", new RouteValueDictionary { { "teamId", @Model.NextMatch.PurpleTeamId} })">@Model.NextMatch.PurpleTeam.Name</a></h4>
+
+        if (Model.OtherTeamReady)
+        {
+            <div class="alert alert-warning" role="alert">
+                <b>@Model.NextMatch.BlueTeam.Name</b> is on the <b>blue</b> side (left in lobby) and <b>@Model.NextMatch.BlueTeam.Participants.Single(x => x.IsCaptain).SummonerName</b> has to create the tournament draft match and invite all other participants, including the other team's. If anyone does not have enough champions, you can play blind pick. <b>@Model.NextMatch.PurpleTeam.Name</b> plays on the purple side and should keep an eye out for invites.
+                <br />
+                <span style="font-size:75%;">Protip: When inviting, copy and paste the summoner names on the team's pages to be sure they are correctly entered.</span>
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-warning" role="alert">The other team has not finished their match yet. Keep refreshing.</div>
+        }
+    }
+
+    <h3>Match history</h3>
+    if (Model.MatchHistory == null || Model.MatchHistory.Count == 0)
+    {
+        <p>No matches played yet.</p>
+    }
+    else
+    {
+        
+    }
+}
