@@ -86,7 +86,7 @@ namespace LoLTournament.Models
                                 !x.Finished && x.Phase == Phase.Pool &&
                                 (x.BlueTeamId == team.Id || x.PurpleTeamId == team.Id)))
                         .OrderBy(x => x.Priority)
-                        .SingleOrDefault();
+                        .FirstOrDefault();
             }
             else if (team.Phase == Phase.Finale)
             {
@@ -97,7 +97,7 @@ namespace LoLTournament.Models
                                 !x.Finished && x.Phase == Phase.Finale &&
                                 (x.BlueTeamId == team.Id || x.PurpleTeamId == team.Id)))
                         .OrderBy(x => x.Priority)
-                        .SingleOrDefault();
+                        .FirstOrDefault();
             }
             else if (team.Phase == Phase.WinnerBracket)
             {
@@ -106,7 +106,7 @@ namespace LoLTournament.Models
                         Query<Match>.Where(
                             x =>
                                 !x.Finished && x.Phase == Phase.WinnerBracket &&
-                                (x.BlueTeamId == team.Id || x.PurpleTeamId == team.Id))).SingleOrDefault();
+                                (x.BlueTeamId == team.Id || x.PurpleTeamId == team.Id))).FirstOrDefault();
             }
             else if (team.Phase == Phase.LoserBracket)
             {
@@ -115,7 +115,7 @@ namespace LoLTournament.Models
                         Query<Match>.Where(
                             x =>
                                 !x.Finished && x.Phase == Phase.LoserBracket &&
-                                (x.BlueTeamId == team.Id || x.PurpleTeamId == team.Id))).SingleOrDefault();
+                                (x.BlueTeamId == team.Id || x.PurpleTeamId == team.Id))).FirstOrDefault();
             }
 
             return null;

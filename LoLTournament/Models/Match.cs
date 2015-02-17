@@ -11,6 +11,7 @@ namespace LoLTournament.Models
     public class Match
     {
         public ObjectId Id { get; set; }
+        public long RiotMatchId { get; set; }
 
         public ObjectId BlueTeamId { get; set; }
         public ObjectId PurpleTeamId { get; set; }

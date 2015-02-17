@@ -80,7 +80,7 @@ namespace LoLTournament.Models
                 var db = server.GetDatabase("CLT");
                 var col = db.GetCollection<Match>("Matches");
 
-                return col.Find(Query<Match>.Where(x => x.Finished && x.WinnerId != Id)).Count();
+                return col.Find(Query<Match>.Where(x => x.Finished && x.WinnerId != Id && (x.BlueTeamId == Id || x.PurpleTeamId == Id))).Count();
             }
         }
     }

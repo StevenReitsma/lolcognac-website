@@ -1,7 +1,4 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-
-namespace LoLTournament.Models
+﻿namespace LoLTournament.Models
 {
     public enum Phase
     {
@@ -20,7 +17,7 @@ namespace LoLTournament.Models
                 case Phase.Pool:
                     return "Pool";
                 case Phase.WinnerBracket:
-                    return "Winner bracket";
+                    return "Elimination";
                 case Phase.LoserBracket:
                     return "Loser bracket";
                 case Phase.Finale:
