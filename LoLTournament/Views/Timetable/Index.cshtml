@@ -1,14 +1,13 @@
-﻿@using Microsoft.Ajax.Utilities
-@model LoLTournament.Models.TimetableIndexViewModel
+﻿@using LoLTournament.Models
+@model TimetableIndexViewModel
 
-<h2>Timetable</h2>
+<h2>Registered teams</h2>
 
-<p>
-    The bracket layout will be made available soon. It will probably feature a pool phase (4 teams per pool) and an elimination phase for the two winners of each pool. The finale will be a best-out-of-three match. Optionally, a losers' bracket can be created.
-</p>
-
-
-@if (Model.Teams.Count() >= 32)
+@if (DateTime.Now > new DateTime(2015, 2, 19))
+{
+    <div class="alert alert-warning" role="alert">Registration is closed.</div>
+}
+else if (Model.Teams.Count() >= 32)
 {
     <div class="alert alert-warning" role="alert">The tournament is full. However, you can still register. If you have more RU students in your team than there are RU students in another team, you will take their place. <strong>The list below is not yet final</strong>. 20 February, you will receive an email telling you whether you can participate or not. The higher you are on the list, the less likely you are to descend into the waiting list. If you have five RU students in your team you cannot descend at all.</div>
 }
@@ -29,7 +28,7 @@ else
 else
 {
     <ul>
-        @{ var i = 0; }
+        @{ int i = 0; }
         @foreach (var t in Model.Teams)
         {
             i++;
@@ -45,7 +44,6 @@ else
                     <strong>Waiting list:</strong>
                 }
             </li>
-
         }
     </ul>
 }
