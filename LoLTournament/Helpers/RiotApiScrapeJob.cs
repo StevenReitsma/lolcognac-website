@@ -30,7 +30,8 @@ namespace LoLTournament.Helpers
 
             // For summoner statistics, always 1 hour
             var intervalSummoners = new TimeSpan(1, 0, 0);
-            var intervalMatches = new TimeSpan(1, 0, 0);
+            // For matches, every minute
+            var intervalMatches = new TimeSpan(0, 1, 0);
 
             //new Timer(ScrapeSummoners, null, new TimeSpan(0, 0, 0, 0, 0), intervalSummoners);
             //new Timer(ScrapeMatches, null, new TimeSpan(0, 0, 0, 0, 0), intervalMatches);
@@ -56,23 +57,26 @@ namespace LoLTournament.Helpers
                     // Get match that this team is currently playing (or should be)
                     var nextMatch = tc.Team.GetNextMatch();
                     
+                    // No match?
                     if (nextMatch == null)
                         continue;
 
-                    // Query match history for team captain
+                    // Query Riot match history for team captain
                     var matchHistory = tc.Summoner.GetRecentGames();
 
                     // Filter: matches that finished after the tournament start
                     //         matches that have gameMode = CLASSIC
                     //         matches that have gameType = CUSTOM_GAME
-                    //         matches that have subType = NONE, NORMAL
+                    //         matches that have subType = NONE or NORMAL
                     //         matches that have mapId = 11
+                    //         matches that has creation date >= tournament start date
                     var validMatches = from m in matchHistory
                         where 
                               m.GameMode == GameMode.Classic &&
                               m.GameType == GameType.CustomGame &&
                               (m.SubType == GameSubType.None || m.SubType == GameSubType.Normal) &&
-                              m.MapType == MapType.SummonersRiftCurrent
+                              m.MapType == MapType.SummonersRiftCurrent &&
+                              m.CreateDate >= tournamentStart
                         select m;
 
                     Game validMatch = null;
