@@ -1,5 +1,7 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text;
+using System.Web;
 using LoLTournament.Models;
 using MongoDB.Driver;
 using System.Linq;
@@ -35,7 +37,7 @@ namespace LoLTournament.Helpers
                 }
             }
 
-            File.WriteAllText("C:\\Users\\Steven\\Desktop\\badge_list.csv", csv.ToString(), Encoding.UTF8);
+            File.WriteAllText(HttpRuntime.AppDomainAppPath + "/badge_list.csv", csv.ToString(), Encoding.UTF8);
         }
     }
 }
