@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -26,7 +25,7 @@ namespace LoLTournament.Helpers
         public static bool IsAllowed(HttpContext context)
         {
             var ip = GetIpAddress(context);
-            var whitelist = new List<string> {"131.174.*.*", "127.0.0.1", "::1"}; // IPv4 /24 subnet reserved by C&CZ for the CognAC League of Legends Tournament
+            var whitelist = new List<string> { "145.102.16.*", "145.116.*.*", "127.0.0.1", "::1" }; // 131.174.*.* is generic RU, 145.102.16.0/24 subnet reserved for the tournament by C&CZ, 145.116.*.* is eduroam.
 
             return whitelist.Any(x => Match(x, ip));
         }
@@ -38,6 +37,14 @@ namespace LoLTournament.Helpers
             byte[] ip = IPAddress.Parse(ipAddr).GetAddressBytes();
 
             return subnetMask.Where((t, i) => (t & patternIp[i]) != (t & ip[i])).Any() == false;
+        }
+
+        public static bool IsOnEduroam(HttpContext context)
+        {
+            var ip = GetIpAddress(context);
+            var eduroam = new List<string> {"145.116.*.*"};
+
+            return eduroam.Any(x => Match(x, ip));
         }
     }
 }

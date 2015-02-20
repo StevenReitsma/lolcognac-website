@@ -9,6 +9,10 @@
 {
     <h2>Team does not exist</h2>
 }
+else if (@Model.Team.Participants.Any(x => x.Summoner == null))
+{
+    <h2>Team info has not yet been downloaded from Riot API, this is done every hour, so check back later!</h2>
+}
 else
 {
     <h2>@Model.Team.Name <span class="label label-success" style="font-size: 11px; vertical-align:middle">Pool @Model.Team.Pool</span></h2>
@@ -51,7 +55,7 @@ else
     }
 
     <h3>Next match</h3>
-    if (DateTime.Now < DateTime.ParseExact(WebConfigurationManager.AppSettings["TournamentStart"], "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture))
+    if (false) //(DateTime.Now < DateTime.ParseExact(WebConfigurationManager.AppSettings["TournamentStart"], "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture))
     {
         <p>Tournament hasn't started yet.</p>
     }
@@ -73,22 +77,26 @@ else
             <div class="panel-body">
                 @if (Model.OtherTeamReady)
                 {
-                    <h4>How to enter tournament lobby</h4>
                     if (!IpHelper.IsAllowed(HttpContext.Current))
                     {
                         <div class="alert alert-danger" role="alert">You are not connected to the RU network. Connect the correct ethernet cable or connect to eduroam. If you think you are correctly connected, notify crew member Steven.</div>
                     }
                     else
                     {
+                        if (IpHelper.IsOnEduroam(HttpContext.Current))
+                        {
+                            <div class="alert alert-danger" role="alert">You are connected to eduroam instead of to a wired connection. Disable wi-fi to force wired connectivity.</div>
+                        }
+                        <h4>How to enter tournament lobby</h4>
                         <p>
                             Go to <b>Play &raquo; Custom &raquo; Tournament Code</b> in your League of Legends client and enter the following code:<br /><br />
 
-                            <input type="text" class="form-control" style="display: inline" value="@Model.NextMatch.TournamentCode" onfocus=" this.select() " onclick=" this.select() " /> click box, copy paste
+                            <input type="text" class="form-control" style="display: inline; cursor: pointer; max-width: 400px;" value="@Model.NextMatch.TournamentCode" onfocus=" this.select() " onclick=" this.select() " readonly/> click box, copy paste
                             <hr />
 
-                            If one of the participants does not own at least 6 champions, all 10 participants should use the following code:<br /><br />
+                            If one of the participants does not own at least 16 champions &#8213; including free rotation &#8213;, all 10 participants should use the following code:<br /><br />
 
-                            <input type="text" class="form-control" style="display: inline" value="@Model.NextMatch.TournamentCodeBlind" onfocus=" this.select() " onclick=" this.select() " /> click box, copy paste
+                            <input type="text" class="form-control" style="display: inline; cursor: pointer; max-width: 400px;" value="@Model.NextMatch.TournamentCodeBlind" onfocus=" this.select() " onclick=" this.select() " readonly/> click box, copy paste
                             <hr />
 
                             <b>@Model.NextMatch.BlueTeam.Name</b> is on the <b style="color: #337AB7">blue</b> side (left in lobby), while <b>@Model.NextMatch.PurpleTeam.Name</b> is on the <b style="color: #7D26CD;">purple</b> side (right in lobby).<br />
@@ -107,7 +115,14 @@ else
     <h3>Tournament statistics</h3>
     <ul class="list-group" style="max-width: 300px">
         <li class="list-group-item">
-            <span class="badge">@Model.WinPercentage%</span>
+            @if (Model.Team.Wins == 0 && Model.Team.Losses == 0)
+            {
+                <span class="badge">N/A</span>
+            }
+            else
+            {
+                <span class="badge">@Model.WinPercentage%</span>
+            }
             Wins
         </li>
         <li class="list-group-item">
