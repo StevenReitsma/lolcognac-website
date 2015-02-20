@@ -25,13 +25,16 @@ namespace LoLTournament.Models
         public TimeSpan Duration { get; set; }
         public DateTime FinishTime { get; set; }
 
-        public int KillsBlueTeam { get; set; }
-        public int DeathsBlueTeam { get; set; }
-        public int AssistsBlueTeam { get; set; }
+        public long KillsBlueTeam { get; set; }
+        public long DeathsBlueTeam { get; set; }
+        public long AssistsBlueTeam { get; set; }
 
-        public int KillsPurpleTeam { get; set; }
-        public int DeathsPurpleTeam { get; set; }
-        public int AssistsPurpleTeam { get; set; }
+        public long KillsPurpleTeam { get; set; }
+        public long DeathsPurpleTeam { get; set; }
+        public long AssistsPurpleTeam { get; set; }
+
+        public bool BlueStatsFilled { get; set; }
+        public bool PurpleStatsFilled { get; set; }
 
         [BsonIgnore]
         public Team BlueTeam {
@@ -80,7 +83,7 @@ namespace LoLTournament.Models
             get
             {
                 return
-                    "pvpnet://lol/customgame/joinorcreate/map11/pick6/team5/specALL/" + Convert.ToBase64String(Encoding.UTF8.GetBytes("{\"name\": \"" + @BlueTeam.Name.Substring(0, 10) + "..(B)+" + @PurpleTeam.Name.Substring(0, 10) + "..(P)" + "\",\"extra\":\"\",\"password\":\"CognACPrivateLobby\",\"report\":\"\"}"));
+                    "pvpnet://lol/customgame/joinorcreate/map11/pick6/team5/specALL/" + Convert.ToBase64String(Encoding.UTF8.GetBytes("{\"name\": \"" + @BlueTeam.Name.Substring(0, 10) + "..(B)+" + @PurpleTeam.Name.Substring(0, 10) + "..(P)" + "\",\"extra\":\"\",\"password\":\"CognAC" + Id + "\",\"report\":\"\"}"));
             }
         }
 
@@ -90,7 +93,7 @@ namespace LoLTournament.Models
             get
             {
                 return
-                    "pvpnet://lol/customgame/joinorcreate/map11/pick1/team5/specALL/" + Convert.ToBase64String(Encoding.UTF8.GetBytes("{\"name\": \"" + @BlueTeam.Name.Substring(0, 10) + "..(B) vs " + @PurpleTeam.Name.Substring(0, 10) + "..(P) [BP]" + "\",\"extra\":\"\",\"password\":\"CognACPrivateLobby\",\"report\":\"\"}"));
+                    "pvpnet://lol/customgame/joinorcreate/map11/pick1/team5/specALL/" + Convert.ToBase64String(Encoding.UTF8.GetBytes("{\"name\": \"" + @BlueTeam.Name.Substring(0, 10) + "..(B) vs " + @PurpleTeam.Name.Substring(0, 10) + "..(P) [BP]" + "\",\"extra\":\"\",\"password\":\"CognAC" + Id + "\",\"report\":\"\"}"));
             }
         }
     }
