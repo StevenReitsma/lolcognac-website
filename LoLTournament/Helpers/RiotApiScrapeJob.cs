@@ -8,12 +8,14 @@ using MongoDB.Driver;
 using RiotSharp;
 using RiotSharp.GameEndpoint;
 using RiotSharp.LeagueEndpoint;
+using RiotSharp.MatchEndpoint;
 using RiotSharp.StatsEndpoint;
 using RiotSharp.SummonerEndpoint;
 using Participant = LoLTournament.Models.Participant;
 using Season = RiotSharp.StatsEndpoint.Season;
 using System.Diagnostics;
 using System.Globalization;
+using Team = LoLTournament.Models.Team;
 
 namespace LoLTournament.Helpers
 {
@@ -31,7 +33,7 @@ namespace LoLTournament.Helpers
             var intervalMatches = new TimeSpan(1, 0, 0);
 
             //new Timer(ScrapeSummoners, null, new TimeSpan(0, 0, 0, 0, 0), intervalSummoners);
-            new Timer(ScrapeMatches, null, new TimeSpan(0, 0, 0, 0, 0), intervalMatches);
+            //new Timer(ScrapeMatches, null, new TimeSpan(0, 0, 0, 0, 0), intervalMatches);
         }
 
         private void ScrapeMatches(object arg)
@@ -39,8 +41,7 @@ namespace LoLTournament.Helpers
             var timeSetting = WebConfigurationManager.AppSettings["TournamentStart"];
             var tournamentStart = DateTime.ParseExact(timeSetting, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
 
-            if (true) //(DateTime.Now >= tournamentStart && DateTime.Now <= tournamentStart + TimeSpan.FromHours(12))
-                // assuming tournament lasts for a maximum of 12 hours
+            if (DateTime.Now >= tournamentStart && DateTime.Now <= tournamentStart + TimeSpan.FromHours(12)) // assuming tournament lasts for a maximum of 12 hours
             {
                 // Tournament is currently ongoing
                 var client = new MongoClient();
@@ -74,7 +75,7 @@ namespace LoLTournament.Helpers
                               m.MapType == MapType.SummonersRiftCurrent
                         select m;
 
-                    Game validMatch;
+                    Game validMatch = null;
 
                     // Check for each match whether it has valid participants
                     foreach (var match in validMatches)
@@ -92,49 +93,36 @@ namespace LoLTournament.Helpers
                         }
                     }
 
-                    
+                    // No valid match for this team captain
+                    if (validMatch == null)
+                        continue;
+
+                    // Get full match statistics
+                    var matchData = _api.GetMatch(Region.euw, validMatch.GameId);
+
+                    // validMatch is now the Riot-Match for nextMatch, so set fields
+                    nextMatch.AssistsBlueTeam = matchData.Participants.Where(x => x.TeamId == 100).Sum(x => x.Stats.Assists);
+                    nextMatch.DeathsBlueTeam = matchData.Participants.Where(x => x.TeamId == 100).Sum(x => x.Stats.Deaths);
+                    nextMatch.KillsBlueTeam = matchData.Participants.Where(x => x.TeamId == 100).Sum(x => x.Stats.Kills);
+
+                    nextMatch.AssistsPurpleTeam = matchData.Participants.Where(x => x.TeamId == 200).Sum(x => x.Stats.Assists);
+                    nextMatch.DeathsPurpleTeam = matchData.Participants.Where(x => x.TeamId == 200).Sum(x => x.Stats.Deaths);
+                    nextMatch.KillsPurpleTeam = matchData.Participants.Where(x => x.TeamId == 200).Sum(x => x.Stats.Kills);
+
+                    nextMatch.Duration = matchData.MatchDuration;
+                    nextMatch.FinishTime = matchData.MatchCreation;
+
+                    nextMatch.WinnerId = matchData.Participants.First(x => x.TeamId == 100).Stats.Winner
+                        ? nextMatch.BlueTeamId
+                        : nextMatch.PurpleTeamId;
+
+                    nextMatch.Finished = true;
+
+                    // Save to database
+                    var matchCol = db.GetCollection<Match>("Matches");
+                    matchCol.Save(nextMatch);
                 }
             }
-
-            // TODO
-            // 0 Check if event has started
-            // 1   Get list of team captains
-            // 2   Get match history for each team captain
-            // 3   Check if a match has finished in the last 5 minutes
-            // 4   Check if the match is against the correct opponent according to the schedule
-            // 5   Enter score in database
-
-/*            var teamCaptains = new List<Participant>();
-
-            foreach (var tc in teamCaptains)
-            {
-                var matchHistory = tc.Summoner.GetMatchHistory(0, 9);
-                var matchesFinishedInLastFiveMinutes = from m in matchHistory
-                    where DateTime.Now - m.MatchCreation < new TimeSpan(0, 0, 5, 0)
-                    select m;
-
-                // TODO Get match that team is supposed to be playing
-                Match matchShouldBePlaying = null;
-
-                var participantsShould = matchShouldBePlaying.Participants.Select(p => p.Summoner.Id);
-                var match =
-                    matchesFinishedInLastFiveMinutes.SingleOrDefault(
-                        m => m.Participants.All(n => participantsShould.Contains(n.ParticipantId)));
-
-                if (match == null)
-                    continue;
-
-                // Match is finished! TODO Add to DB
-                var matchObject = new Match(); // TODO add parameters
-            }*/
-        }
-
-        private bool IsAfterTournamentStart(Models.Match match)
-        {
-            //TODO Determine match finish (match.FinishTime?), see if it is after tournamentStart static var
-            Debug.WriteLine(match.FinishTime.ToString());
-            
-            return false;
         }
 
         private void ScrapeSummoners(object arg)
@@ -203,27 +191,7 @@ namespace LoLTournament.Helpers
                     var division =
                         season5LeagueSoloQueue.Entries.Single(x => x.PlayerOrTeamId == s.Id.ToString()).Division;
 
-                    switch (division)
-                    {
-                        case "I":
-                            divisionInt = 1;
-                            break;
-                        case "II":
-                            divisionInt = 2;
-                            break;
-                        case "III":
-                            divisionInt = 3;
-                            break;
-                        case "IV":
-                            divisionInt = 4;
-                            break;
-                        case "V":
-                            divisionInt = 5;
-                            break;
-                        default:
-                            divisionInt = 0;
-                            break;
-                    }
+                    divisionInt = RomanToInt(division);
                 }
                 catch (Exception)
                 {
@@ -242,6 +210,26 @@ namespace LoLTournament.Helpers
                 p.LastUpdateTime = DateTime.Now;
 
                 col.Save(p);
+            }
+
+
+            }
+        private static int RomanToInt(string numeral)
+        {
+            switch (numeral)
+            {
+                case "I":
+                    return 1;
+                case "II":
+                    return 2;
+                case "III":
+                    return 3;
+                case "IV":
+                    return 4;
+                case "V":
+                    return 5;
+                default:
+                    return 0;
             }
         }
     }

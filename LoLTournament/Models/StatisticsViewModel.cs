@@ -9,9 +9,9 @@ namespace LoLTournament.Models
     {
 
         public List<Team> Teams { get; set; }
-        public int TotalKills { get; set; }
-        public int TotalDeaths { get; set; }
-        public int TotalAssists { get; set; }
+        public long TotalKills { get; set; }
+        public long TotalDeaths { get; set; }
+        public long TotalAssists { get; set; }
         public long TotalGames { get; set; }
 
         public StatisticsViewModel()
