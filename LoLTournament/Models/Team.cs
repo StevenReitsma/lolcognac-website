@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
@@ -14,6 +15,8 @@ namespace LoLTournament.Models
         public List<ObjectId> ParticipantsIds { get; set; }
         public int Pool { get; set; }
         public Phase Phase { get; set; }
+        public int FinalRanking { get; set; }
+        public bool OnHold { get; set; }
 
         [BsonIgnore]
         public List<Participant> Participants
@@ -84,6 +87,36 @@ namespace LoLTournament.Models
             }
         }
 
+        [BsonIgnore]
+        public TimeSpan TotalPlayTime
+        {
+            get
+            {
+                var client = new MongoClient();
+                var server = client.GetServer();
+                var db = server.GetDatabase("CLT");
+                var col = db.GetCollection<Match>("Matches");
+
+                return
+                    TimeSpan.FromSeconds(col.Find(Query<Match>.Where(x => x.Finished && (x.BlueTeamId == Id || x.PurpleTeamId == Id)))
+                        .Sum(x => x.Duration.TotalSeconds));
+            }
+        }
+
+        [BsonIgnore]
+        public int PoolRank
+        {
+            get
+            {
+                var client = new MongoClient();
+                var server = client.GetServer();
+                var db = server.GetDatabase("CLT");
+                var col = db.GetCollection<Team>("Teams");
+
+                return col.Find(Query<Team>.Where(x => x.Pool == Pool)).OrderByDescending(x => x.Wins).ThenBy(x => x.TotalPlayTime).ToList().FindIndex(x => x.Id == Id);
+            }
+        }
+
         public Match GetNextMatch()
         {
             var client = new MongoClient();
@@ -112,6 +145,15 @@ namespace LoLTournament.Models
                                 (x.BlueTeamId == Id || x.PurpleTeamId == Id)))
                         .OrderBy(x => x.Priority)
                         .FirstOrDefault();
+            }
+            if (Phase == Phase.BronzeFinale)
+            {
+                return
+                    matchCol.Find(
+                        Query<Match>.Where(
+                            x =>
+                                !x.Finished && x.Phase == Phase.BronzeFinale &&
+                                (x.BlueTeamId == Id || x.PurpleTeamId == Id))).FirstOrDefault();
             }
             if (Phase == Phase.WinnerBracket)
             {

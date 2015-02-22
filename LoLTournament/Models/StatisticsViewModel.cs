@@ -9,9 +9,9 @@ namespace LoLTournament.Models
     {
 
         public List<Team> Teams { get; set; }
-        public long TotalKills { get; set; }
-        public long TotalDeaths { get; set; }
-        public long TotalAssists { get; set; }
+        public long AvgKills { get; set; }
+        public long AvgDeaths { get; set; }
+        public long AvgAssists { get; set; }
         public long TotalGames { get; set; }
 
         public StatisticsViewModel()
@@ -29,10 +29,28 @@ namespace LoLTournament.Models
                     .OrderBy(x => x.Name)
                     .ToList();
 
-            TotalKills = matchCol.FindAll().Sum(x => x.KillsBlueTeam + x.KillsPurpleTeam);
-            TotalDeaths = matchCol.FindAll().Sum(x => x.DeathsBlueTeam + x.DeathsPurpleTeam);
-            TotalAssists = matchCol.FindAll().Sum(x => x.AssistsBlueTeam + x.AssistsPurpleTeam);
             TotalGames = matchCol.Count(Query<Match>.Where(x => x.Finished));
+
+            AvgKills = matchCol.FindAll().Sum(x => x.KillsBlueTeam + x.KillsPurpleTeam);
+
+            if (TotalGames > 0)
+                AvgKills /= TotalGames;
+            else
+                AvgKills = 0;
+
+            AvgDeaths = matchCol.FindAll().Sum(x => x.DeathsBlueTeam + x.DeathsPurpleTeam);
+
+            if (TotalGames > 0)
+                AvgDeaths /= TotalGames;
+            else
+                AvgDeaths = 0;
+
+            AvgAssists = matchCol.FindAll().Sum(x => x.AssistsBlueTeam + x.AssistsPurpleTeam);
+
+            if (TotalGames > 0)
+                AvgAssists /= TotalGames;
+            else
+                AvgAssists = 0;
         }
     }
 }

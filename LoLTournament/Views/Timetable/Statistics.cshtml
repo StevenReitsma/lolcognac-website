@@ -1,18 +1,19 @@
 ﻿@model LoLTournament.Models.StatisticsViewModel
 
 <h2>Statistics</h2>
-<ul class="list-group" style="max-width: 300px">
+
+<ul class="list-group" style="max-width: 300px;">
     <li class="list-group-item">
-        <span class="badge">@Model.TotalKills</span>
-        Kills
+        <span class="badge">@Model.AvgKills</span>
+        Average kills per game
     </li>
     <li class="list-group-item">
-        <span class="badge">@Model.TotalDeaths</span>
-        Deaths
+        <span class="badge">@Model.AvgDeaths</span>
+        Average deaths per game
     </li>
     <li class="list-group-item">
-        <span class="badge">@Model.TotalAssists</span>
-        Assists
+        <span class="badge">@Model.AvgAssists</span>
+        Average assists per game
     </li>
     <li class="list-group-item">
         <span class="badge">@Model.TotalGames</span>
@@ -31,11 +32,13 @@
              {
                  <tr>
                      <td>
+                         <span class="label label-success" style="font-size: 11px; vertical-align:middle">Pool @(Model.Teams[i].Pool + 1)</span>
                          <a href="@Url.Action("Team", "Timetable", new RouteValueDictionary { { "teamId", @Model.Teams[i].Id } })">@Model.Teams[i].Name</a>
                      </td>
                      <td>
                          @if (@Model.Teams.Count > i + teamCount)
                          {
+                            <span class="label label-success" style="font-size: 11px; vertical-align:middle">Pool @(Model.Teams[i + teamCount].Pool + 1)</span>
                              <a href="@Url.Action("Team", "Timetable", new RouteValueDictionary { { "teamId", @Model.Teams[i + teamCount].Id } })">@Model.Teams[i + teamCount].Name</a>
                          }
                      </td>

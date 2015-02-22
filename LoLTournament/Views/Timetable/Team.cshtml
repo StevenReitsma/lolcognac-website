@@ -3,7 +3,7 @@
 @using LoLTournament.Helpers
 @using LoLTournament.Models
 @using RiotSharp.LeagueEndpoint
-@model LoLTournament.Models.TeamViewModel
+@model TeamViewModel
 
 @if (@Model == null || @Model.Team == null)
 {
@@ -15,7 +15,7 @@ else if (@Model.Team.Participants.Any(x => x.Summoner == null))
 }
 else
 {
-    <h2>@Model.Team.Name <span class="label label-success" style="font-size: 11px; vertical-align:middle">Pool @Model.Team.Pool</span></h2>
+    <h2>@Model.Team.Name <span class="label label-success" style="font-size: 11px; vertical-align:middle">Pool @(Model.Team.Pool+1)</span></h2>
 
     foreach (var p in @Model.Team.Participants.OrderByDescending(x => Math.Max((int)x.Season4Tier, (int)x.Season5Tier)))
     {
@@ -55,17 +55,17 @@ else
     }
 
     <h3>Next match</h3>
-    if (false) //(DateTime.Now < DateTime.ParseExact(WebConfigurationManager.AppSettings["TournamentStart"], "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture))
+    if (DateTime.Now < DateTime.ParseExact(WebConfigurationManager.AppSettings["TournamentStart"], "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture))
     {
         <p>Tournament hasn't started yet.</p>
+    }
+    else if (!Model.OtherTeamDefined)
+    {
+        <p>Your next opponent has not yet been defined because their pool or elimination match has not yet finished. Refresh the page every minute or so or refresh yourself with a drink from the bar.</p>
     }
     else if (Model.NextMatch == null)
     {
         <p>No more matches to play.</p>
-    }
-    else if (!Model.OtherTeamDefined)
-    {
-        <p>Your next opponent has not yet been defined because their pool or elimination match has not yet finished. Keep refreshing.</p>
     }
     else
     {
@@ -106,7 +106,7 @@ else
                 }
                 else
                 {
-                    <p>The other team has not finished their current match yet. Refresh the page or refresh yourself with a drink from the bar.</p>
+                    <p>The other team has not yet finished their current match. Refresh the page every minute or so or refresh yourself with a drink from the bar.</p>
                 }
             </div>
         </div>
@@ -121,25 +121,25 @@ else
             }
             else
             {
-                <span class="badge">@Model.WinPercentage%</span>
+                <span class="badge">@(Math.Round(Model.WinPercentage))%</span>
             }
             Wins
         </li>
         <li class="list-group-item">
-            <span class="badge">@Model.TotalKills</span>
-            Kills
+            <span class="badge">@Model.AvgKills</span>
+            Average kills per game
         </li>
         <li class="list-group-item">
-            <span class="badge">@Model.TotalDeaths</span>
-            Deaths
+            <span class="badge">@Model.AvgDeaths</span>
+            Average deaths per game
         </li>
         <li class="list-group-item">
-            <span class="badge">@Model.TotalAssists</span>
-            Assists
+            <span class="badge">@Model.AvgAssists</span>
+            Average assists per game
         </li>
         <li class="list-group-item">
-            <span class="badge">@Model.TotalPlayTime</span>
-            Total play time
+            <span class="badge">@Model.AvgPlayTime</span>
+            Average play time
         </li>
     </ul>
 

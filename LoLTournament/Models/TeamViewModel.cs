@@ -16,11 +16,11 @@ namespace LoLTournament.Models
         public List<Match> MatchHistory { get; set; }
         public bool OtherTeamReady { get; set; }
         public bool OtherTeamDefined { get; set; }
-        public long TotalKills { get; set; }
-        public long TotalAssists { get; set; }
-        public long TotalDeaths { get; set; }
+        public long AvgKills { get; set; }
+        public long AvgAssists { get; set; }
+        public long AvgDeaths { get; set; }
         public double WinPercentage { get; set; }
-        public TimeSpan TotalPlayTime { get; set; }
+        public TimeSpan AvgPlayTime { get; set; }
 
         public TeamViewModel()
         {
@@ -44,15 +44,35 @@ namespace LoLTournament.Models
             var matchCol = db.GetCollection<Match>("Matches");
             NextMatch = Team.GetNextMatch();
 
+            if (NextMatch == null && Team.OnHold)
+                OtherTeamDefined = false;
+
             // Initialize match history
             MatchHistory =
                 matchCol.Find(Query<Match>.Where(x => x.Finished && (x.BlueTeamId == Team.Id || x.PurpleTeamId == Team.Id))).OrderByDescending(x => x.FinishTime)
                     .ToList();
 
             // Initialize statistics
-            TotalKills = matchCol.Find(Query<Match>.Where(x => x.Finished && x.BlueTeamId == Team.Id)).Sum(x => x.KillsBlueTeam) + matchCol.Find(Query<Match>.Where(x => x.Finished && x.PurpleTeamId == Team.Id)).Sum(x => x.KillsPurpleTeam);
-            TotalDeaths = matchCol.Find(Query<Match>.Where(x => x.Finished && x.BlueTeamId == Team.Id)).Sum(x => x.DeathsBlueTeam) + matchCol.Find(Query<Match>.Where(x => x.Finished && x.PurpleTeamId == Team.Id)).Sum(x => x.DeathsPurpleTeam);
-            TotalAssists = matchCol.Find(Query<Match>.Where(x => x.Finished && x.BlueTeamId == Team.Id)).Sum(x => x.AssistsBlueTeam) + matchCol.Find(Query<Match>.Where(x => x.Finished && x.PurpleTeamId == Team.Id)).Sum(x => x.AssistsPurpleTeam);
+            AvgKills = matchCol.Find(Query<Match>.Where(x => x.Finished && x.BlueTeamId == Team.Id)).Sum(x => x.KillsBlueTeam) + matchCol.Find(Query<Match>.Where(x => x.Finished && x.PurpleTeamId == Team.Id)).Sum(x => x.KillsPurpleTeam);
+
+            if (MatchHistory.Count > 0)
+                AvgKills /= MatchHistory.Count;
+            else
+                AvgKills = 0;
+
+            AvgDeaths = matchCol.Find(Query<Match>.Where(x => x.Finished && x.BlueTeamId == Team.Id)).Sum(x => x.DeathsBlueTeam) + matchCol.Find(Query<Match>.Where(x => x.Finished && x.PurpleTeamId == Team.Id)).Sum(x => x.DeathsPurpleTeam);
+
+            if (MatchHistory.Count > 0)
+                AvgDeaths /= MatchHistory.Count;
+            else
+                AvgDeaths = 0;
+
+            AvgAssists = matchCol.Find(Query<Match>.Where(x => x.Finished && x.BlueTeamId == Team.Id)).Sum(x => x.AssistsBlueTeam) + matchCol.Find(Query<Match>.Where(x => x.Finished && x.PurpleTeamId == Team.Id)).Sum(x => x.AssistsPurpleTeam);
+
+            if (MatchHistory.Count > 0)
+                AvgAssists /= MatchHistory.Count;
+            else
+                AvgAssists = 0;
 
             var losses = Team.Losses;
             if (losses == 0)
@@ -60,9 +80,12 @@ namespace LoLTournament.Models
             else
                 WinPercentage = Team.Wins / ((double)Team.Losses + Team.Wins) * 100;
 
-            TotalPlayTime = new TimeSpan(0, 0, 0, (int)matchCol.Find(
-                    Query<Match>.Where(x => x.Finished && (x.BlueTeamId == Team.Id || x.PurpleTeamId == Team.Id)))
-                    .Sum(x => x.Duration.TotalSeconds));
+            AvgPlayTime = Team.TotalPlayTime;
+
+            if (MatchHistory.Count > 0)
+                AvgPlayTime = TimeSpan.FromSeconds(AvgPlayTime.TotalSeconds / MatchHistory.Count);
+            else
+                AvgPlayTime = new TimeSpan(0, 0, 0);
 
             // Check if other team is ready
             if (NextMatch != null)

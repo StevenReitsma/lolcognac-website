@@ -16,6 +16,10 @@ namespace LoLTournament
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
             new RiotApiScrapeJob();
+
+            ExportHelper.ExportBadgeList();
+            BracketHelper.CreatePoolStructure();
+            BracketHelper.CreateFinaleStructure();
         }
     }
 }
