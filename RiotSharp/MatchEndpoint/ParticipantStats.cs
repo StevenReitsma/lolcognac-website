@@ -9,7 +9,7 @@ namespace RiotSharp.MatchEndpoint
     [Serializable]
     public class ParticipantStats
     {
-        internal ParticipantStats() { }
+        public ParticipantStats() { }
 
         /// <summary>
         /// Number of assists.

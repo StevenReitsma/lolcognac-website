@@ -11,7 +11,7 @@ namespace RiotSharp.MatchEndpoint
     [Serializable]
     public class Participant
     {
-        internal Participant() { }
+        public Participant() { }
 
         /// <summary>
         /// Champion ID.

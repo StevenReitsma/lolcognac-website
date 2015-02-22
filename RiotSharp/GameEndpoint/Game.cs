@@ -10,7 +10,7 @@ namespace RiotSharp.GameEndpoint
     [Serializable]
     public class Game
     {
-        internal Game() { }
+        public Game() { }
 
         /// <summary>
         /// Champion ID associated with game.

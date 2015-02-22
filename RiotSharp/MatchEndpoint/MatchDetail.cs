@@ -10,7 +10,7 @@ namespace RiotSharp.MatchEndpoint
     [Serializable]
     public class MatchDetail : MatchSummary
     {
-        internal MatchDetail() { }
+        public MatchDetail() { }
 
         /// <summary>
         /// Team information.
