@@ -5,7 +5,8 @@
         Pool,
         WinnerBracket,
         LoserBracket,
-        Finale
+        Finale,
+        BronzeFinale
     }
 
     public static class EnumExtension
@@ -19,9 +20,11 @@
                 case Phase.WinnerBracket:
                     return "Elimination";
                 case Phase.LoserBracket:
-                    return "Loser bracket";
+                    return "Losers' bracket";
                 case Phase.Finale:
                     return "Finale";
+                case Phase.BronzeFinale:
+                    return "Bronze finale";
             }
 
             return "";
