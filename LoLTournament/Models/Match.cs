@@ -33,9 +33,6 @@ namespace LoLTournament.Models
         public long DeathsPurpleTeam { get; set; }
         public long AssistsPurpleTeam { get; set; }
 
-        public bool BlueStatsFilled { get; set; }
-        public bool PurpleStatsFilled { get; set; }
-
         [BsonIgnore]
         public Team BlueTeam {
             get
@@ -83,7 +80,7 @@ namespace LoLTournament.Models
             get
             {
                 return
-                    "pvpnet://lol/customgame/joinorcreate/map11/pick6/team5/specALL/" + Convert.ToBase64String(Encoding.UTF8.GetBytes("{\"name\": \"" + @BlueTeam.Name.Substring(0, 10) + "..(B)+" + @PurpleTeam.Name.Substring(0, 10) + "..(P)" + "\",\"extra\":\"\",\"password\":\"CognAC" + Id + "\",\"report\":\"\"}"));
+                    "pvpnet://lol/customgame/joinorcreate/map11/pick6/team5/specALL/" + Convert.ToBase64String(Encoding.UTF8.GetBytes("{\"name\": \"" + @BlueTeam.Name.Substring(0, Math.Min(10, BlueTeam.Name.Length)) + "..(B)+" + @PurpleTeam.Name.Substring(0, Math.Min(10, PurpleTeam.Name.Length)) + "..(P)" + "\",\"extra\":\"\",\"password\":\"CognAC" + Id + "\",\"report\":\"\"}"));
             }
         }
 
@@ -93,7 +90,7 @@ namespace LoLTournament.Models
             get
             {
                 return
-                    "pvpnet://lol/customgame/joinorcreate/map11/pick1/team5/specALL/" + Convert.ToBase64String(Encoding.UTF8.GetBytes("{\"name\": \"" + @BlueTeam.Name.Substring(0, 10) + "..(B) vs " + @PurpleTeam.Name.Substring(0, 10) + "..(P) [BP]" + "\",\"extra\":\"\",\"password\":\"CognAC" + Id + "\",\"report\":\"\"}"));
+                    "pvpnet://lol/customgame/joinorcreate/map11/pick1/team5/specALL/" + Convert.ToBase64String(Encoding.UTF8.GetBytes("{\"name\": \"" + @BlueTeam.Name.Substring(0, Math.Min(10, BlueTeam.Name.Length)) + "..(B)+" + @PurpleTeam.Name.Substring(0, Math.Min(10, PurpleTeam.Name.Length)) + "..(P)" + "\",\"extra\":\"\",\"password\":\"CognAC" + Id + "\",\"report\":\"\"}"));
             }
         }
     }
