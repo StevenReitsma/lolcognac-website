@@ -32,8 +32,8 @@ namespace LoLTournament.Helpers
             // For matches, every minute
             var intervalMatches = new TimeSpan(0, 1, 0);
 
-            new Timer(ScrapeSummoners, null, new TimeSpan(0, 0, 0, 0, 0), intervalSummoners);
-            new Timer(ScrapeMatches, null, new TimeSpan(0, 0, 0, 0, 0), intervalMatches);
+            //new Timer(ScrapeSummoners, null, new TimeSpan(0, 0, 0, 0, 0), intervalSummoners);
+            //new Timer(ScrapeMatches, null, new TimeSpan(0, 0, 0, 0, 0), intervalMatches);
         }
 
         private void ScrapeMatches(object arg)
@@ -41,97 +41,98 @@ namespace LoLTournament.Helpers
             var timeSetting = WebConfigurationManager.AppSettings["TournamentStart"];
             var tournamentStart = DateTime.ParseExact(timeSetting, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
 
-            if (DateTime.Now >= tournamentStart && DateTime.Now <= tournamentStart + TimeSpan.FromHours(12)) // assuming tournament lasts for a maximum of 12 hours
+            // Check if tournament is ongoing
+            if (DateTime.Now < tournamentStart || DateTime.Now > tournamentStart + TimeSpan.FromHours(12))
+                return;
+
+            // Tournament is currently ongoing
+            var client = new MongoClient();
+            var server = client.GetServer();
+            var db = server.GetDatabase("CLT");
+            var col = db.GetCollection<Team>("Teams");
+            var teamCaptains = col.FindAll().Select(x => x.Captain);
+
+            // For each team captain
+            foreach (var tc in teamCaptains)
             {
-                // Tournament is currently ongoing
-                var client = new MongoClient();
-                var server = client.GetServer();
-                var db = server.GetDatabase("CLT");
-                var col = db.GetCollection<Team>("Teams");
-                var teamCaptains = col.FindAll().Select(x => x.Captain);
-
-                // For each team captain
-                foreach (var tc in teamCaptains)
-                {
-                    // Get match that this team is currently playing (or should be)
-                    var nextMatch = tc.Team.GetNextMatch();
+                // Get match that this team is currently playing (or should be)
+                var nextMatch = tc.Team.GetNextMatch();
                     
-                    // No match?
-                    if (nextMatch == null)
-                        continue;
+                // No match?
+                if (nextMatch == null)
+                    continue;
 
-                    // Query Riot match history for team captain
-                    var matchHistory = tc.Summoner.GetRecentGames();
+                // Query Riot match history for team captain
+                var matchHistory = tc.Summoner.GetRecentGames();
 
-                    // Filter: matches that finished after the tournament start
-                    //         matches that have gameMode = CLASSIC
-                    //         matches that have gameType = CUSTOM_GAME
-                    //         matches that have subType = NONE or NORMAL
-                    //         matches that have mapId = 11
-                    //         matches that has creation date >= tournament start date
-                    //         matches that have 9 fellow players
-                    //         matches that are not invalid
-                    var validMatches = from m in matchHistory
-                        where 
-                              m.GameMode == GameMode.Classic &&
-                              m.GameType == GameType.CustomGame &&
-                              (m.SubType == GameSubType.None || m.SubType == GameSubType.Normal) &&
-                              m.MapType == MapType.SummonersRiftCurrent &&
-                              m.CreateDate >= tournamentStart &&
-                              m.FellowPlayers.Count == 9 &&
-                              !m.Invalid
-                        select m;
+                // Get:
+                //         matches that have gameMode = CLASSIC
+                //         matches that have gameType = CUSTOM_GAME
+                //         matches that have subType = NONE or NORMAL
+                //         matches that have mapId = 11
+                //         matches that has creation date >= tournament start date
+                //         matches that have 9 fellow players
+                //         matches that are not invalid
+                var validMatches = from m in matchHistory
+                    where 
+                        m.GameMode == GameMode.Classic &&
+                        m.GameType == GameType.CustomGame &&
+                        (m.SubType == GameSubType.None || m.SubType == GameSubType.Normal) &&
+                        m.MapType == MapType.SummonersRiftCurrent &&
+                        m.CreateDate >= tournamentStart &&
+                        m.FellowPlayers.Count == 9 &&
+                        !m.Invalid
+                    select m;
 
-                    Game validMatch = null;
+                Game validMatch = null;
 
-                    // Check for each match whether it has valid participants
-                    foreach (var match in validMatches)
+                // Check for each match whether it has valid participants
+                foreach (var match in validMatches)
+                {
+                    bool valid =
+                        match.FellowPlayers.All(
+                            p =>
+                                nextMatch.BlueTeam.Participants.Any(x => x.Summoner.Id == p.SummonerId) ||
+                                nextMatch.PurpleTeam.Participants.Any(x => x.Summoner.Id == p.SummonerId));
+
+                    if (valid)
                     {
-                        bool valid =
-                            match.FellowPlayers.All(
-                                p =>
-                                    nextMatch.BlueTeam.Participants.Any(x => x.Summoner.Id == p.SummonerId) ||
-                                    nextMatch.PurpleTeam.Participants.Any(x => x.Summoner.Id == p.SummonerId));
-
-                        if (valid)
-                        {
-                            validMatch = match;
-                            break;
-                        }
+                        validMatch = match;
+                        break;
                     }
-
-                    // No valid match for this team captain
-                    if (validMatch == null)
-                        continue;
-
-                    // Get full match statistics
-                    var matchData = _api.GetMatch(Region.euw, validMatch.GameId);
-
-                    // validMatch is now the Riot-Match for nextMatch, so set fields
-                    nextMatch.AssistsBlueTeam = matchData.Participants.Where(x => x.TeamId == 100).Sum(x => x.Stats.Assists);
-                    nextMatch.DeathsBlueTeam = matchData.Participants.Where(x => x.TeamId == 100).Sum(x => x.Stats.Deaths);
-                    nextMatch.KillsBlueTeam = matchData.Participants.Where(x => x.TeamId == 100).Sum(x => x.Stats.Kills);
-
-                    nextMatch.AssistsPurpleTeam = matchData.Participants.Where(x => x.TeamId == 200).Sum(x => x.Stats.Assists);
-                    nextMatch.DeathsPurpleTeam = matchData.Participants.Where(x => x.TeamId == 200).Sum(x => x.Stats.Deaths);
-                    nextMatch.KillsPurpleTeam = matchData.Participants.Where(x => x.TeamId == 200).Sum(x => x.Stats.Kills);
-
-                    nextMatch.Duration = matchData.MatchDuration;
-                    nextMatch.FinishTime = matchData.MatchCreation;
-
-                    nextMatch.WinnerId = matchData.Participants.First(x => x.TeamId == 100).Stats.Winner
-                        ? nextMatch.BlueTeamId
-                        : nextMatch.PurpleTeamId;
-
-                    nextMatch.Finished = true;
-
-                    // Save to database
-                    var matchCol = db.GetCollection<Match>("Matches");
-                    matchCol.Save(nextMatch);
-
-                    // New match hook
-                    NewMatch(nextMatch);
                 }
+
+                // No valid match for this team captain
+                if (validMatch == null)
+                    continue;
+
+                // Get full match statistics
+                var matchData = _api.GetMatch(Region.euw, validMatch.GameId);
+
+                // validMatch is now the Riot-Match for nextMatch, so set fields
+                nextMatch.AssistsBlueTeam = matchData.Participants.Where(x => x.TeamId == 100).Sum(x => x.Stats.Assists);
+                nextMatch.DeathsBlueTeam = matchData.Participants.Where(x => x.TeamId == 100).Sum(x => x.Stats.Deaths);
+                nextMatch.KillsBlueTeam = matchData.Participants.Where(x => x.TeamId == 100).Sum(x => x.Stats.Kills);
+
+                nextMatch.AssistsPurpleTeam = matchData.Participants.Where(x => x.TeamId == 200).Sum(x => x.Stats.Assists);
+                nextMatch.DeathsPurpleTeam = matchData.Participants.Where(x => x.TeamId == 200).Sum(x => x.Stats.Deaths);
+                nextMatch.KillsPurpleTeam = matchData.Participants.Where(x => x.TeamId == 200).Sum(x => x.Stats.Kills);
+
+                nextMatch.Duration = matchData.MatchDuration;
+                nextMatch.FinishTime = matchData.MatchCreation;
+
+                nextMatch.WinnerId = matchData.Participants.First(x => x.TeamId == 100).Stats.Winner
+                    ? nextMatch.BlueTeamId
+                    : nextMatch.PurpleTeamId;
+
+                nextMatch.Finished = true;
+
+                // Save to database
+                var matchCol = db.GetCollection<Match>("Matches");
+                matchCol.Save(nextMatch);
+
+                // New match hook
+                NewMatch(nextMatch);
             }
         }
 
@@ -153,7 +154,7 @@ namespace LoLTournament.Helpers
             {
                 var pool = finishedMatch.BlueTeam.Pool;
                 
-                // Get all matches in the pool that are finished
+                // Check whether the pool is finished
                 if (PoolFinished(pool, matchCol))
                 {
                     // Pool is finished
@@ -171,7 +172,7 @@ namespace LoLTournament.Helpers
                     // If coupled pool is also finished
                     if (PoolFinished(otherPool, matchCol))
                     {
-                        // Get winners and seconds for pools
+                        // Get ranking for pools
                         var poolARanking = GetPoolRanking(pool, col);
                         var poolBRanking = GetPoolRanking(otherPool, col);
 
@@ -232,7 +233,7 @@ namespace LoLTournament.Helpers
                 // If this was the final match in the pool for this team
                 else if (finishedMatch.Priority == 2)
                 {
-                    // Set all teams in pool to Hold
+                    // Set match teams on hold since they don't have any matches left
                     Team[] teams = {finishedMatch.BlueTeam, finishedMatch.PurpleTeam};
                     foreach (var t in teams)
                     {
@@ -415,6 +416,49 @@ namespace LoLTournament.Helpers
                         col.Save(loser);
                     }
                 }
+                // Set up loser finale
+                else if ((finishedMatch.Priority == 12 || finishedMatch.Priority == 13) && finishedMatch.Phase == Phase.LoserBracket)
+                {
+                    // Check if other match is also finished
+                    var otherPrio = finishedMatch.Priority == 12 ? 13 : 12;
+                    var matchFinished =
+                        matchCol.Find(
+                            Query<Match>.Where(
+                                x => x.Finished && x.Phase == Phase.LoserBracket && x.Priority == otherPrio));
+
+                    // It's finished, set loser finale match
+                    if (matchFinished.Count() == 1)
+                    {
+                        var match = matchCol.Find(Query<Match>.Where(x => x.Phase == Phase.LoserFinale && x.Priority == 0)).First();
+                        match.BlueTeamId = finishedMatch.WinnerId;
+                        match.PurpleTeamId = matchFinished.First().WinnerId;
+                        matchCol.Save(match);
+
+                        // Set team phases
+                        var blueTeam = match.BlueTeam;
+                        var purpleTeam = match.PurpleTeam;
+
+                        blueTeam.Phase = Phase.LoserFinale;
+                        blueTeam.OnHold = false;
+                        purpleTeam.Phase = Phase.LoserFinale;
+                        purpleTeam.OnHold = false;
+
+                        // Save all to database
+                        col.Save(blueTeam);
+                        col.Save(purpleTeam);
+                    }
+                    else
+                    {
+                        // Not finished, put team on hold
+                        finishedMatchWinner.OnHold = true;
+                        var loser = finishedMatchWinner.Id == finishedMatch.BlueTeamId
+                            ? finishedMatch.PurpleTeam
+                            : finishedMatch.BlueTeam;
+                        loser.OnHold = true;
+                        col.Save(finishedMatchWinner);
+                        col.Save(loser);
+                    }
+                }
             }
             else if (finishedMatch.Phase == Phase.BronzeFinale)
             {
@@ -476,10 +520,11 @@ namespace LoLTournament.Helpers
         /// <returns></returns>
         private static bool PoolFinished(int pool, MongoCollection<Match> matchCol)
         {
-            var matches = matchCol.FindAll().Where(x => x.BlueTeam != null && x.BlueTeam.Pool == pool && x.Finished); // doesn't matter which side we look at since they are both in the same pool
+            // It doesn't matter which side we look at since they are both in the same pool
+            var notFinished = matchCol.FindAll().Where(x => x.BlueTeam != null && x.BlueTeam.Pool == pool && x.Phase == Phase.Pool && !x.Finished);
 
-            // Check whether we have 6 finished matches in the pool
-            return matches.Count() == 6;
+            // Check whether we have no unfinished matches in the pool
+            return !notFinished.Any();
         }
 
         /// <summary>
@@ -500,6 +545,14 @@ namespace LoLTournament.Helpers
         /// <param name="arg">Unused</param>
         private void ScrapeSummoners(object arg)
         {
+            // Disable during tournament to save API calls
+            var timeSetting = WebConfigurationManager.AppSettings["TournamentStart"];
+            var tournamentStart = DateTime.ParseExact(timeSetting, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
+
+            if (DateTime.Now >= tournamentStart && DateTime.Now <= tournamentStart + TimeSpan.FromHours(12))
+                // assuming tournament lasts for a maximum of 12 hours
+                return;
+
             var client = new MongoClient();
             var server = client.GetServer();
             var db = server.GetDatabase("CLT");

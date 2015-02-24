@@ -1,4 +1,7 @@
-﻿@using LoLTournament.Models
+﻿@using System
+@using System.Linq
+@using System.Web
+@using LoLTournament.Models
 @model TimetableIndexViewModel
 
 <h2>Registered teams</h2>
@@ -48,14 +51,10 @@ else
     </ul>
 }
 
-<h3>People still looking for a team</h3>
-<p>Do you have room in your team for one of the roles below? Send us an email and we'll get you in touch with each other!</p>
-@if (!Model.TeambuilderParticipants.Any())
+@if (Model.TeambuilderParticipants.Any())
 {
-    <p>None!</p>
-}
-else
-{
+    <h3>People still looking for a team</h3>
+    <p>Do you have room in your team for one of the roles below? Send us an email and we'll get you in touch with each other!</p>
     <ul>
         @foreach (var t in Model.TeambuilderParticipants)
         {

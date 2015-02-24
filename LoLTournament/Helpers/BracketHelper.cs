@@ -83,6 +83,10 @@ namespace LoLTournament.Helpers
                 matchCol.Save(match);
             }
 
+            // Losers' finale
+            var losers = new Match {Phase = Phase.LoserFinale};
+            matchCol.Save(losers);
+
             // Bronze finale
             var bronze = new Match { Phase = Phase.BronzeFinale };
             matchCol.Save(bronze);

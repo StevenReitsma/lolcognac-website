@@ -37,7 +37,7 @@ namespace LoLTournament.Helpers
                 }
             }
 
-            File.WriteAllText(HttpRuntime.AppDomainAppPath + "/badge_list.csv", csv.ToString(), Encoding.UTF8);
+            File.WriteAllText(HttpRuntime.AppDomainAppPath + "/badge_list.csv", csv.ToString(), new UTF8Encoding(false)); // no BOM
         }
     }
 }

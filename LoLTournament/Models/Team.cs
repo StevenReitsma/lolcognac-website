@@ -173,6 +173,15 @@ namespace LoLTournament.Models
                                 !x.Finished && x.Phase == Phase.LoserBracket &&
                                 (x.BlueTeamId == Id || x.PurpleTeamId == Id))).FirstOrDefault();
             }
+            if (Phase == Phase.LoserFinale)
+            {
+                return
+                    matchCol.Find(
+                        Query<Match>.Where(
+                            x =>
+                                !x.Finished && x.Phase == Phase.LoserFinale &&
+                                (x.BlueTeamId == Id || x.PurpleTeamId == Id))).FirstOrDefault();
+            }
 
             return null;
         }
