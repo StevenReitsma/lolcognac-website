@@ -106,7 +106,7 @@
     <Compile Include="Models\Participant.cs" />
     <Compile Include="Models\Phase.cs" />
     <Compile Include="Models\RegisterViewModel.cs" />
-    <Compile Include="Models\Side.cs" />
+    <Compile Include="Models\ScheduleViewModel.cs" />
     <Compile Include="Models\StatisticsViewModel.cs" />
     <Compile Include="Models\SummonerRegisterInfoModel.cs" />
     <Compile Include="Models\Team.cs" />
@@ -122,6 +122,7 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Images\azerty.png" />
+    <Content Include="Content\Images\bracket.png" />
     <Content Include="Content\Images\CognAC_logo.png" />
     <Content Include="Content\Images\GitHub-Mark-32px.png" />
     <Content Include="Content\Images\gm.png" />
@@ -171,7 +172,7 @@
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\Timetable\Statistics.cshtml" />
+    <Content Include="Views\Timetable\Schedule.cshtml" />
     <Content Include="Views\Register\Index.cshtml" />
     <Content Include="Views\Register\Form.cshtml" />
     <Content Include="Views\Register\SummonerInfo.cshtml" />
@@ -184,6 +185,7 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\Timetable\Team.cshtml" />
+    <Content Include="Views\Timetable\Statistics.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using System
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -25,7 +26,8 @@
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
                     <li>@Html.ActionLink("Information", "Information", "Home")</li>
                     <li>@Html.ActionLink("Teams", "Index", "Timetable")</li>
-                    <li>@Html.ActionLink("Schedule", "Statistics", "Timetable")</li>
+                    <li>@Html.ActionLink("Schedule", "Schedule", "Timetable")</li>
+                    <li>@Html.ActionLink("Statistics", "Statistics", "Timetable")</li>
                     <li>@Html.ActionLink("Photos", "Photos", "Home")</li>
                     <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
                 </ul>

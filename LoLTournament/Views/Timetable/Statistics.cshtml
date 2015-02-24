@@ -20,30 +20,3 @@
         Total games played
     </li>
 </ul>
-
-<h2>Schedule</h2>
-
-<table class="table table-striped">
-    <tbody>
-        @{
-            var teamCount = Math.Min(16, Model.Teams.Count / 2);
-
-            for (int i = 0; i < teamCount; i++)
-             {
-                 <tr>
-                     <td>
-                         <span class="label label-success" style="font-size: 11px; vertical-align:middle">Pool @(Model.Teams[i].Pool + 1)</span>
-                         <a href="@Url.Action("Team", "Timetable", new RouteValueDictionary { { "teamId", @Model.Teams[i].Id } })">@Model.Teams[i].Name</a>
-                     </td>
-                     <td>
-                         @if (@Model.Teams.Count > i + teamCount)
-                         {
-                            <span class="label label-success" style="font-size: 11px; vertical-align:middle">Pool @(Model.Teams[i + teamCount].Pool + 1)</span>
-                             <a href="@Url.Action("Team", "Timetable", new RouteValueDictionary { { "teamId", @Model.Teams[i + teamCount].Id } })">@Model.Teams[i + teamCount].Name</a>
-                         }
-                     </td>
-                 </tr>
-             }
-        }
-    </tbody>
-</table>
