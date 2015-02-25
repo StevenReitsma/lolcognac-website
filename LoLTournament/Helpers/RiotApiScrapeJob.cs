@@ -32,8 +32,8 @@ namespace LoLTournament.Helpers
             // For matches, every minute
             var intervalMatches = new TimeSpan(0, 1, 0);
 
-            //new Timer(ScrapeSummoners, null, new TimeSpan(0, 0, 0, 0, 0), intervalSummoners);
-            //new Timer(ScrapeMatches, null, new TimeSpan(0, 0, 0, 0, 0), intervalMatches);
+            new Timer(ScrapeSummoners, null, new TimeSpan(0, 0, 0, 0, 0), intervalSummoners);
+            new Timer(ScrapeMatches, null, new TimeSpan(0, 0, 0, 0, 0), intervalMatches);
         }
 
         private void ScrapeMatches(object arg)
@@ -126,6 +126,7 @@ namespace LoLTournament.Helpers
                     : nextMatch.PurpleTeamId;
 
                 nextMatch.Finished = true;
+                nextMatch.RiotMatchId = validMatch.GameId;
 
                 // Save to database
                 var matchCol = db.GetCollection<Match>("Matches");
