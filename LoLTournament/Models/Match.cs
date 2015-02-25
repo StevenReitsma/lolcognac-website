@@ -80,7 +80,7 @@ namespace LoLTournament.Models
             get
             {
                 return
-                    "pvpnet://lol/customgame/joinorcreate/map11/pick6/team5/specALL/" + Convert.ToBase64String(Encoding.UTF8.GetBytes("{\"name\": \"" + @BlueTeam.Name.Substring(0, Math.Min(10, BlueTeam.Name.Length)) + "..(B)+" + @PurpleTeam.Name.Substring(0, Math.Min(10, PurpleTeam.Name.Length)) + "..(P)" + "\",\"extra\":\"\",\"password\":\"CognAC" + Id + "\",\"report\":\"\"}"));
+                    "pvpnet://lol/customgame/joinorcreate/map11/pick6/team5/specALL/" + Convert.ToBase64String(Encoding.UTF8.GetBytes("{\"name\": \"" + @BlueTeam.Name.Substring(0, Math.Min(10, BlueTeam.Name.Length)) + "..(B)+" + @PurpleTeam.Name.Substring(0, Math.Min(10, PurpleTeam.Name.Length)) + "..(R)" + "\",\"extra\":\"\",\"password\":\"CognAC" + Id + "\",\"report\":\"\"}"));
             }
         }
 
@@ -90,7 +90,7 @@ namespace LoLTournament.Models
             get
             {
                 return
-                    "pvpnet://lol/customgame/joinorcreate/map11/pick1/team5/specALL/" + Convert.ToBase64String(Encoding.UTF8.GetBytes("{\"name\": \"" + @BlueTeam.Name.Substring(0, Math.Min(10, BlueTeam.Name.Length)) + "..(B)+" + @PurpleTeam.Name.Substring(0, Math.Min(10, PurpleTeam.Name.Length)) + "..(P) [BP]" + "\",\"extra\":\"\",\"password\":\"CognAC" + Id + "\",\"report\":\"\"}"));
+                    "pvpnet://lol/customgame/joinorcreate/map11/pick1/team5/specALL/" + Convert.ToBase64String(Encoding.UTF8.GetBytes("{\"name\": \"" + @BlueTeam.Name.Substring(0, Math.Min(10, BlueTeam.Name.Length)) + "..(B)+" + @PurpleTeam.Name.Substring(0, Math.Min(10, PurpleTeam.Name.Length)) + "..(R)[BP]" + "\",\"extra\":\"\",\"password\":\"CognAC" + Id + "\",\"report\":\"\"}"));
             }
         }
     }
