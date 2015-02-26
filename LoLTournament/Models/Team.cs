@@ -104,6 +104,22 @@ namespace LoLTournament.Models
         }
 
         [BsonIgnore]
+        public TimeSpan TotalWinsPlayTime
+        {
+            get
+            {
+                var client = new MongoClient();
+                var server = client.GetServer();
+                var db = server.GetDatabase("CLT");
+                var col = db.GetCollection<Match>("Matches");
+
+                return
+                    TimeSpan.FromSeconds(col.Find(Query<Match>.Where(x => x.Finished && x.WinnerId == Id && (x.BlueTeamId == Id || x.PurpleTeamId == Id)))
+                        .Sum(x => x.Duration.TotalSeconds));
+            }
+        }
+
+        [BsonIgnore]
         public int PoolRank
         {
             get
@@ -113,7 +129,7 @@ namespace LoLTournament.Models
                 var db = server.GetDatabase("CLT");
                 var col = db.GetCollection<Team>("Teams");
 
-                return col.Find(Query<Team>.Where(x => x.Pool == Pool)).OrderByDescending(x => x.Wins).ThenBy(x => x.TotalPlayTime).ToList().FindIndex(x => x.Id == Id);
+                return col.Find(Query<Team>.Where(x => x.Pool == Pool)).OrderByDescending(x => x.Wins).ThenBy(x => x.TotalWinsPlayTime).ToList().FindIndex(x => x.Id == Id);
             }
         }
 
