@@ -1,4 +1,5 @@
 ﻿using System.Web.Mvc;
+using LoLTournament.Models;
 
 namespace LoLTournament.Controllers
 {
@@ -16,7 +17,7 @@ namespace LoLTournament.Controllers
 
         public ActionResult Photos()
         {
-            return View();
+            return View(new PhotosViewModel());
         }
 
         public ActionResult Information()

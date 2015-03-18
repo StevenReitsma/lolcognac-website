@@ -9,6 +9,7 @@ using MongoDB.Driver.Builders;
 using RiotSharp;
 using RiotSharp.GameEndpoint;
 using RiotSharp.LeagueEndpoint;
+using RiotSharp.MatchEndpoint;
 using RiotSharp.StatsEndpoint;
 using RiotSharp.SummonerEndpoint;
 using Participant = LoLTournament.Models.Participant;
@@ -32,18 +33,14 @@ namespace LoLTournament.Helpers
             // For matches, every minute
             var intervalMatches = new TimeSpan(0, 1, 0);
 
-            new Timer(ScrapeSummoners, null, new TimeSpan(0, 0, 0, 0, 0), intervalSummoners);
-            new Timer(ScrapeMatches, null, new TimeSpan(0, 0, 0, 0, 0), intervalMatches);
+            //new Timer(ScrapeSummoners, null, new TimeSpan(0, 0, 0, 0, 0), intervalSummoners);
+            //new Timer(ScrapeMatches, null, new TimeSpan(0, 0, 0, 0, 0), intervalMatches);
         }
 
         private void ScrapeMatches(object arg)
         {
             var timeSetting = WebConfigurationManager.AppSettings["TournamentStart"];
             var tournamentStart = DateTime.ParseExact(timeSetting, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
-
-            // Check if tournament is ongoing
-            if (DateTime.Now < tournamentStart || DateTime.Now > tournamentStart + TimeSpan.FromHours(12))
-                return;
 
             // Tournament is currently ongoing
             var client = new MongoClient();
@@ -79,7 +76,6 @@ namespace LoLTournament.Helpers
                         m.GameType == GameType.CustomGame &&
                         (m.SubType == GameSubType.None || m.SubType == GameSubType.Normal) &&
                         m.MapType == MapType.SummonersRiftCurrent &&
-                        m.CreateDate >= tournamentStart &&
                         m.FellowPlayers.Count == 9 &&
                         !m.Invalid
                     select m;
@@ -107,7 +103,33 @@ namespace LoLTournament.Helpers
                     continue;
 
                 // Get full match statistics
-                var matchData = _api.GetMatch(Region.euw, validMatch.GameId);
+                MatchDetail matchData = null;
+                try
+                {
+                    matchData = _api.GetMatch(Region.euw, validMatch.GameId);
+
+                }
+                catch (Exception)
+                {
+                    // wtf?
+                }
+
+                if (matchData == null)
+                {
+                    nextMatch.WinnerId = (validMatch.Statistics.Team == 100 && validMatch.Statistics.Win) || (validMatch.Statistics.Team == 200 && !validMatch.Statistics.Win)
+                        ? nextMatch.BlueTeamId
+                        : nextMatch.PurpleTeamId;
+                    nextMatch.Duration = validMatch.Statistics.TimePlayed;
+                    nextMatch.FinishTime = DateTime.Now;
+                    nextMatch.RiotMatchId = validMatch.GameId;
+                    nextMatch.Finished = true;
+                    // Save to database
+                    var abc = db.GetCollection<Match>("Matches");
+                    abc.Save(nextMatch);
+
+                    NewMatch(nextMatch);
+                    continue;
+                }
 
                 // validMatch is now the Riot-Match for nextMatch, so set fields
                 nextMatch.AssistsBlueTeam = matchData.Participants.Where(x => x.TeamId == 100).Sum(x => x.Stats.Assists);
@@ -119,7 +141,7 @@ namespace LoLTournament.Helpers
                 nextMatch.KillsPurpleTeam = matchData.Participants.Where(x => x.TeamId == 200).Sum(x => x.Stats.Kills);
 
                 nextMatch.Duration = matchData.MatchDuration;
-                nextMatch.FinishTime = matchData.MatchCreation;
+                nextMatch.FinishTime = matchData.MatchCreation + nextMatch.Duration;
 
                 nextMatch.WinnerId = matchData.Participants.First(x => x.TeamId == 100).Stats.Winner
                     ? nextMatch.BlueTeamId
@@ -546,6 +568,9 @@ namespace LoLTournament.Helpers
         /// <param name="arg">Unused</param>
         private void ScrapeSummoners(object arg)
         {
+            // Fix time creation date and match statistics
+            TimeFixer.FixMatchCreationDates();
+
             // Disable during tournament to save API calls
             var timeSetting = WebConfigurationManager.AppSettings["TournamentStart"];
             var tournamentStart = DateTime.ParseExact(timeSetting, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using MongoDB.Driver;
 using MongoDB.Driver.Builders;
 
@@ -11,6 +12,7 @@ namespace LoLTournament.Models
         public long AvgDeaths { get; set; }
         public long AvgAssists { get; set; }
         public long TotalGames { get; set; }
+        public TimeSpan AvgMatchDuration { get; set; }
 
         public StatisticsViewModel()
         {
@@ -41,6 +43,8 @@ namespace LoLTournament.Models
                 AvgAssists /= TotalGames;
             else
                 AvgAssists = 0;
+
+            AvgMatchDuration = TimeSpan.FromSeconds(matchCol.FindAll().Average(x => x.Duration.TotalSeconds));
         }
     }
 }

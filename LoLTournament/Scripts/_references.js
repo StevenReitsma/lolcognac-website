@@ -5,3 +5,5 @@
 /// <reference path="jquery.unobtrusive-ajax.min.js" />
 /// <reference path="npm.js" />
 /// <reference path="bootstrap.min.js" />
+/// <reference path="bootstrap-image-gallery.min.js" />
+/// <reference path="jquery.blueimp-gallery.min.js" />

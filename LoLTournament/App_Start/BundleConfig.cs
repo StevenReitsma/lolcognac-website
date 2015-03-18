@@ -18,7 +18,9 @@ namespace LoLTournament
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
-                      "~/Content/Site.css"));
+                      "~/Content/Site.css",
+                      "~/Content/blueimp-gallery.min.css",
+                      "~/Content/bootstrap-image-gallery.css"));
 
             // Set EnableOptimizations to false for debugging. For more information,
             // visit http://go.microsoft.com/fwlink/?LinkId=301862

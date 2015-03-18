@@ -17,9 +17,10 @@ namespace LoLTournament
 
             new RiotApiScrapeJob();
 
-            ExportHelper.ExportBadgeList();
-            BracketHelper.CreatePoolStructure();
-            BracketHelper.CreateFinaleStructure();
+            //ExportHelper.ExportBadgeList();
+            //ExportHelper.ExportEntryList();
+            //BracketHelper.CreatePoolStructure();
+            //BracketHelper.CreateFinaleStructure();
         }
     }
 }
