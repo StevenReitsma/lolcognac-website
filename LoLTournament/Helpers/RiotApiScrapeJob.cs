@@ -34,7 +34,7 @@ namespace LoLTournament.Helpers
             var intervalMatches = new TimeSpan(0, 1, 0);
 
             //new Timer(ScrapeSummoners, null, new TimeSpan(0, 0, 0, 0, 0), intervalSummoners);
-            //new Timer(ScrapeMatches, null, new TimeSpan(0, 0, 0, 0, 0), intervalMatches);
+            new Timer(ScrapeMatches, null, new TimeSpan(0, 0, 0, 0, 0), intervalMatches);
         }
 
         private void ScrapeMatches(object arg)
@@ -120,9 +120,10 @@ namespace LoLTournament.Helpers
                         ? nextMatch.BlueTeamId
                         : nextMatch.PurpleTeamId;
                     nextMatch.Duration = validMatch.Statistics.TimePlayed;
-                    nextMatch.FinishTime = DateTime.Now;
+                    nextMatch.CreationTime = validMatch.CreateDate + new TimeSpan(0, 2, 0, 0); // add two hours for timezone difference
                     nextMatch.RiotMatchId = validMatch.GameId;
                     nextMatch.Finished = true;
+                    nextMatch.FinishDate = DateTime.Now;
                     // Save to database
                     var abc = db.GetCollection<Match>("Matches");
                     abc.Save(nextMatch);
@@ -141,11 +142,22 @@ namespace LoLTournament.Helpers
                 nextMatch.KillsPurpleTeam = matchData.Participants.Where(x => x.TeamId == 200).Sum(x => x.Stats.Kills);
 
                 nextMatch.Duration = matchData.MatchDuration;
-                nextMatch.FinishTime = matchData.MatchCreation + nextMatch.Duration;
+                nextMatch.CreationTime = matchData.MatchCreation + new TimeSpan(0, 2, 0, 0); // add two hours for timezone difference;
+                nextMatch.FinishDate = DateTime.Now;
 
                 nextMatch.WinnerId = matchData.Participants.First(x => x.TeamId == 100).Stats.Winner
                     ? nextMatch.BlueTeamId
                     : nextMatch.PurpleTeamId;
+
+                // Check if teams played correct side. If not, switch winner.
+                // If captain team equals team that should have played blue side
+                bool shouldPlayBlue = nextMatch.BlueTeamId == tc.TeamId; // team captain should have played blue side
+                bool playedBlue = matchData.Participants.Any(x => x.TeamId == 100 && x.ParticipantId == tc.Summoner.Id); // team captain played blue side
+                if ((shouldPlayBlue && !playedBlue) || (!shouldPlayBlue && playedBlue)) // if sides don't match up
+                    // Switch
+                    nextMatch.WinnerId = nextMatch.WinnerId == nextMatch.BlueTeamId
+                        ? nextMatch.PurpleTeamId
+                        : nextMatch.BlueTeamId;
 
                 nextMatch.Finished = true;
                 nextMatch.RiotMatchId = validMatch.GameId;

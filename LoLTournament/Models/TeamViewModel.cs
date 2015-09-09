@@ -49,7 +49,7 @@ namespace LoLTournament.Models
 
             // Initialize match history
             MatchHistory =
-                matchCol.Find(Query<Match>.Where(x => x.Finished && (x.BlueTeamId == Team.Id || x.PurpleTeamId == Team.Id))).OrderByDescending(x => x.FinishTime)
+                matchCol.Find(Query<Match>.Where(x => x.Finished && (x.BlueTeamId == Team.Id || x.PurpleTeamId == Team.Id))).OrderByDescending(x => x.CreationTime)
                     .ToList();
 
             // Initialize statistics

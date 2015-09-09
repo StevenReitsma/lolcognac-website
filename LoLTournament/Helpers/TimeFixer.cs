@@ -45,7 +45,7 @@ namespace LoLTournament.Helpers
                 m.DeathsPurpleTeam = game.Participants.Where(x => x.TeamId == 200).Sum(x => x.Stats.Deaths);
                 m.KillsPurpleTeam = game.Participants.Where(x => x.TeamId == 200).Sum(x => x.Stats.Kills);
 
-                m.FinishTime = game.MatchCreation + new TimeSpan(0, 2, 10, 0) + game.MatchDuration;
+                m.CreationTime = game.MatchCreation + new TimeSpan(0, 2, 10, 0) + game.MatchDuration;
                 matchCol.Save(m);
             }
         }

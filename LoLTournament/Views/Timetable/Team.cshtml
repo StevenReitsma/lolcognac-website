@@ -158,7 +158,7 @@ else
 
             <div class="panel panel-@color">
                 <div class="panel-heading">
-                    <div style="float:right" title="@m.Duration">@((m.FinishTime - m.Duration).ToShortTimeString()) - @m.FinishTime.ToShortTimeString()</div>
+                    <div style="float:right" title="@m.Duration">@(m.CreationTime.AddMinutes(10)).ToShortTimeString()) - @(m.CreationTime.AddMinutes(10) + m.Duration).ToShortTimeString()</div>
                     <span class="label label-primary" style="font-size: 11px; vertical-align:middle">@m.Phase.GetDisplayString()</span>
                     @if (m.Duration == new TimeSpan(0, 0, 0, 0))
                     {

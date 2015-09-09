@@ -23,7 +23,12 @@ namespace LoLTournament.Models
 
         public ObjectId WinnerId { get; set; }
         public TimeSpan Duration { get; set; }
-        public DateTime FinishTime { get; set; }
+        public DateTime CreationTime { get; set; }
+
+        /// <summary>
+        /// The date that the data was entered into the system.
+        /// </summary>
+        public DateTime FinishDate { get; set; }
 
         public long KillsBlueTeam { get; set; }
         public long DeathsBlueTeam { get; set; }
