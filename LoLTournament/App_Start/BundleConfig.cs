@@ -20,7 +20,9 @@ namespace LoLTournament
                       "~/Content/bootstrap.css",
                       "~/Content/Site.css",
                       "~/Content/blueimp-gallery.min.css",
-                      "~/Content/bootstrap-image-gallery.css"));
+                      "~/Content/bootstrap-image-gallery.css",
+                      "~/Content/landing-page.css",
+                      "~/Content/font-awesome.min.css"));
 
             // Set EnableOptimizations to false for debugging. For more information,
             // visit http://go.microsoft.com/fwlink/?LinkId=301862

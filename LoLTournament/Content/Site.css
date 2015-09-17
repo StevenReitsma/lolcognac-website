@@ -30,3 +30,17 @@ textarea.input-validation-error {
 input.input-validation-error {
     border-color: red;
 }
+
+.navbar-inverse .navbar-nav li a {
+    color: rgba(255, 255, 255, 0.7);
+    font-family: 'Open Sans';
+    text-transform:uppercase;
+    font-weight:700;
+    font-size: 13px;
+}
+
+.navbar-inverse .navbar-brand {
+    color: rgba(255, 255, 255, 0.7);
+    font-weight:700;
+    font-family: 'Open Sans';
+}
