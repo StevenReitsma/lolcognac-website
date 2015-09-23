@@ -2,6 +2,7 @@
 using System.Linq;
 using MongoDB.Driver;
 using MongoDB.Driver.Builders;
+using LoLTournament.Helpers;
 
 namespace LoLTournament.Models
 {
@@ -16,35 +17,30 @@ namespace LoLTournament.Models
 
         public StatisticsViewModel()
         {
-            var client = new MongoClient();
-            var server = client.GetServer();
-            var db = server.GetDatabase("CLT");
-            var matchCol = db.GetCollection<Match>("Matches");
+            TotalGames = Mongo.Matches.Count(Query<Match>.Where(x => x.Finished));
 
-            TotalGames = matchCol.Count(Query<Match>.Where(x => x.Finished));
-
-            AvgKills = matchCol.FindAll().Sum(x => x.KillsBlueTeam + x.KillsPurpleTeam);
+            AvgKills = Mongo.Matches.FindAll().Sum(x => x.KillsBlueTeam + x.KillsPurpleTeam);
 
             if (TotalGames > 0)
                 AvgKills /= TotalGames;
             else
                 AvgKills = 0;
 
-            AvgDeaths = matchCol.FindAll().Sum(x => x.DeathsBlueTeam + x.DeathsPurpleTeam);
+            AvgDeaths = Mongo.Matches.FindAll().Sum(x => x.DeathsBlueTeam + x.DeathsPurpleTeam);
 
             if (TotalGames > 0)
                 AvgDeaths /= TotalGames;
             else
                 AvgDeaths = 0;
 
-            AvgAssists = matchCol.FindAll().Sum(x => x.AssistsBlueTeam + x.AssistsPurpleTeam);
+            AvgAssists = Mongo.Matches.FindAll().Sum(x => x.AssistsBlueTeam + x.AssistsPurpleTeam);
 
             if (TotalGames > 0)
                 AvgAssists /= TotalGames;
             else
                 AvgAssists = 0;
 
-            AvgMatchDuration = TimeSpan.FromSeconds(matchCol.FindAll().Average(x => x.Duration.TotalSeconds));
+            AvgMatchDuration = TimeSpan.FromSeconds(Mongo.Matches.FindAll().Average(x => x.Duration.TotalSeconds));
         }
     }
 }

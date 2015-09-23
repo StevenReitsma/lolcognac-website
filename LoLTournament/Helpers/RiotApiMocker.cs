@@ -22,13 +22,8 @@ namespace LoLTournament.Helpers
         /// <returns></returns>
         public static List<Game> MockRecentGames(string teamId1, string teamId2)
         {
-            var client = new MongoClient();
-            var server = client.GetServer();
-            var db = server.GetDatabase("CLT");
-            var col = db.GetCollection<Team>("Teams");
-
-            var team1 = col.Find(Query<Team>.Where(x => x.Id == ObjectId.Parse(teamId1))).First();
-            var team2 = col.Find(Query<Team>.Where(x => x.Id == ObjectId.Parse(teamId2))).First();
+            var team1 = Mongo.Teams.Find(Query<Team>.Where(x => x.Id == ObjectId.Parse(teamId1))).First();
+            var team2 = Mongo.Teams.Find(Query<Team>.Where(x => x.Id == ObjectId.Parse(teamId2))).First();
 
             var participantFilter = team2.Participants.Where(x => !x.IsCaptain).ToList();
 

@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using MongoDB.Driver;
+using LoLTournament.Helpers;
 
 namespace LoLTournament.Models
 {
@@ -9,12 +10,7 @@ namespace LoLTournament.Models
         {
             get
             {
-                var client = new MongoClient();
-                var server = client.GetServer();
-                var db = server.GetDatabase("CLT");
-                var col = db.GetCollection<Team>("Teams");
-
-                return col.FindAll().OrderByDescending(x => x.AmountOfRuStudents).ThenBy(x => x.Participants.Sum(y => y.RegisterTime.Ticks));
+                return Mongo.Teams.FindAll().OrderByDescending(x => x.AmountOfRuStudents).ThenBy(x => x.Participants.Sum(y => y.RegisterTime.Ticks));
             }
         }
 
@@ -22,12 +18,7 @@ namespace LoLTournament.Models
         {
             get
             {
-                var client = new MongoClient();
-                var server = client.GetServer();
-                var db = server.GetDatabase("CLT");
-                var col = db.GetCollection<TeambuilderParticipant>("TeamBuilderParticipants");
-
-                return col.FindAll();
+                return Mongo.TeamBuilderParticipants.FindAll();
             }
         }
     }

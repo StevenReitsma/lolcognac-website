@@ -6,6 +6,7 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver;
 using MongoDB.Driver.Builders;
+using LoLTournament.Helpers;
 
 namespace LoLTournament.Models
 {
@@ -42,12 +43,7 @@ namespace LoLTournament.Models
         public Team BlueTeam {
             get
             {
-                var client = new MongoClient();
-                var server = client.GetServer();
-                var db = server.GetDatabase("CLT");
-                var col = db.GetCollection<Team>("Teams");
-
-                return col.Find(Query<Team>.Where(x => x.Id == BlueTeamId)).FirstOrDefault();
+                return Mongo.Teams.Find(Query<Team>.Where(x => x.Id == BlueTeamId)).FirstOrDefault();
             }
         }
 
@@ -56,12 +52,7 @@ namespace LoLTournament.Models
         {
             get
             {
-                var client = new MongoClient();
-                var server = client.GetServer();
-                var db = server.GetDatabase("CLT");
-                var col = db.GetCollection<Team>("Teams");
-
-                return col.Find(Query<Team>.Where(x => x.Id == PurpleTeamId)).FirstOrDefault();
+                return Mongo.Teams.Find(Query<Team>.Where(x => x.Id == PurpleTeamId)).FirstOrDefault();
             }
         }
 
@@ -70,12 +61,7 @@ namespace LoLTournament.Models
         {
             get
             {
-                var client = new MongoClient();
-                var server = client.GetServer();
-                var db = server.GetDatabase("CLT");
-                var col = db.GetCollection<Team>("Teams");
-
-                return col.Find(Query<Team>.Where(x => x.Id == WinnerId)).FirstOrDefault();
+                return Mongo.Teams.Find(Query<Team>.Where(x => x.Id == WinnerId)).FirstOrDefault();
             }
         }
 

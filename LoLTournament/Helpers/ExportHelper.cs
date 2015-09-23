@@ -15,22 +15,16 @@ namespace LoLTournament.Helpers
         /// </summary>
         public static void ExportBadgeList()
         {
-            var client = new MongoClient();
-            var server = client.GetServer();
-            var db = server.GetDatabase("CLT");
-            var col = db.GetCollection<Participant>("Participants");
-            var teamCol = db.GetCollection<Team>("Teams");
-
             var csv = new StringBuilder();
             csv.AppendLine("SummonerName, Season5Tier, Season5Division, TeamName");
 
-            var validTeams = teamCol.FindAll()
+            var validTeams = Mongo.Teams.FindAll()
                 .OrderByDescending(x => x.AmountOfRuStudents)
                 .ThenBy(x => x.Participants.Sum(y => y.RegisterTime.Ticks))
                 .Take(32)
                 .OrderBy(x => x.Name);
 
-            foreach (var p in col.FindAll().OrderBy(x => x.Summoner.Name))
+            foreach (var p in Mongo.Participants.FindAll().OrderBy(x => x.Summoner.Name))
             {
                 if (validTeams.Any(x => x.Id == p.TeamId))
                 {
@@ -48,22 +42,16 @@ namespace LoLTournament.Helpers
         /// </summary>
         public static void ExportEntryList()
         {
-            var client = new MongoClient();
-            var server = client.GetServer();
-            var db = server.GetDatabase("CLT");
-            var col = db.GetCollection<Participant>("Participants");
-            var teamCol = db.GetCollection<Team>("Teams");
-
             var csv = new StringBuilder();
             csv.AppendLine("SummonerName, FullName, TeamName, StudyProgram, Captain, RU");
 
-            var validTeams = teamCol.FindAll()
+            var validTeams = Mongo.Teams.FindAll()
                 .OrderByDescending(x => x.AmountOfRuStudents)
                 .ThenBy(x => x.Participants.Sum(y => y.RegisterTime.Ticks))
                 .Take(32)
                 .OrderBy(x => x.Name);
 
-            foreach (var p in col.FindAll().OrderBy(x => x.Team.Name))
+            foreach (var p in Mongo.Participants.FindAll().OrderBy(x => x.Team.Name))
             {
                 if (validTeams.Any(x => x.Id == p.TeamId))
                 {

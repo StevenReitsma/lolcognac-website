@@ -16,15 +16,10 @@ namespace LoLTournament.Helpers
     {
         public static void FixMatchCreationDates()
         {
-            var client = new MongoClient();
-            var server = client.GetServer();
-            var db = server.GetDatabase("CLT");
-            var matchCol = db.GetCollection<Match>("Matches");
-
             var key = WebConfigurationManager.AppSettings["RiotApiKey"];
             var api = RiotApi.GetInstance(key, 3000, 180000);
 
-            foreach (var m in matchCol.FindAll())
+            foreach (var m in Mongo.Matches.FindAll())
             {
                 MatchDetail game;
                 try
@@ -46,7 +41,7 @@ namespace LoLTournament.Helpers
                 m.KillsPurpleTeam = game.Participants.Where(x => x.TeamId == 200).Sum(x => x.Stats.Kills);
 
                 m.CreationTime = game.MatchCreation + new TimeSpan(0, 2, 10, 0) + game.MatchDuration;
-                matchCol.Save(m);
+                Mongo.Matches.Save(m);
             }
         }
     }

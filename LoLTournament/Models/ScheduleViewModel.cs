@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using MongoDB.Driver;
+using LoLTournament.Helpers;
 
 namespace LoLTournament.Models
 {
@@ -12,12 +13,7 @@ namespace LoLTournament.Models
 
         public ScheduleViewModel()
         {
-            var client = new MongoClient();
-            var server = client.GetServer();
-            var db = server.GetDatabase("CLT");
-            var col = db.GetCollection<Team>("Teams");
-
-            Teams = col.FindAll()
+            Teams = Mongo.Teams.FindAll()
                    .OrderByDescending(x => x.AmountOfRuStudents)
                    .ThenBy(x => x.Participants.Sum(y => y.RegisterTime.Ticks))
                    .Take(32)

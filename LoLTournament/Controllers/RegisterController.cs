@@ -9,6 +9,7 @@ using LoLTournament.Models;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using RiotSharp;
+using LoLTournament.Helpers;
 
 namespace LoLTournament.Controllers
 {
@@ -102,15 +103,11 @@ namespace LoLTournament.Controllers
                 };
 
                 // TODO create database wrapper + mongoclient singleton so we don't have to reconnect constantly
-                var client = new MongoClient();
-                var server = client.GetServer();
-                var db = server.GetDatabase("CLT");
-                var col = db.GetCollection("Participants");
-                col.Insert(captain);
-                col.Insert(summoner2);
-                col.Insert(summoner3);
-                col.Insert(summoner4);
-                col.Insert(summoner5);
+                Mongo.Participants.Insert(captain);
+                Mongo.Participants.Insert(summoner2);
+                Mongo.Participants.Insert(summoner3);
+                Mongo.Participants.Insert(summoner4);
+                Mongo.Participants.Insert(summoner5);
   
                 var listParticipantIds = new List<ObjectId> {captain.Id, summoner2.Id, summoner3.Id, summoner4.Id, summoner5.Id};
 
@@ -123,8 +120,7 @@ namespace LoLTournament.Controllers
                 };
 
                 // Add team to database
-                col = db.GetCollection("Teams");
-                col.Insert(team);
+                Mongo.Teams.Insert(team);
 
                 return PartialView("OK", m);
             }
@@ -152,11 +148,7 @@ namespace LoLTournament.Controllers
                     Roles = m.Role
                 };
 
-                var client = new MongoClient();
-                var server = client.GetServer();
-                var db = server.GetDatabase("CLT");
-                var col = db.GetCollection("TeamBuilderParticipants");
-                col.Insert(buildee);
+                Mongo.TeamBuilderParticipants.Insert(buildee);
 
                 // Model is valid and participant has been added to DB, return OK message
                 return PartialView("TeambuilderOK", m);

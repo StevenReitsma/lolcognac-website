@@ -101,6 +101,7 @@
     <Compile Include="Helpers\BracketHelper.cs" />
     <Compile Include="Helpers\ExportHelper.cs" />
     <Compile Include="Helpers\IpHelper.cs" />
+    <Compile Include="Helpers\Mongo.cs" />
     <Compile Include="Helpers\RiotApiMocker.cs" />
     <Compile Include="Helpers\RiotApiScrapeJob.cs" />
     <Compile Include="Helpers\TimeFixer.cs" />

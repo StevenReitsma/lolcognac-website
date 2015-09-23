@@ -5,6 +5,7 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver;
 using MongoDB.Driver.Builders;
+using LoLTournament.Helpers;
 
 namespace LoLTournament.Models
 {
@@ -23,12 +24,7 @@ namespace LoLTournament.Models
         {
             get
             {
-                var client = new MongoClient();
-                var server = client.GetServer();
-                var db = server.GetDatabase("CLT");
-                var col = db.GetCollection<Participant>("Participants");
-
-                return col.Find(Query<Participant>.Where(x => x.TeamId == Id)).ToList();
+                return Mongo.Participants.Find(Query<Participant>.Where(x => x.TeamId == Id)).ToList();
             }
         }
 
@@ -38,12 +34,7 @@ namespace LoLTournament.Models
         public Participant Captain {
             get
             {
-                var client = new MongoClient();
-                var server = client.GetServer();
-                var db = server.GetDatabase("CLT");
-                var col = db.GetCollection<Participant>("Participants");
-
-                return col.Find(Query<Participant>.Where(x => x.TeamId == Id && x.IsCaptain)).First();
+                return Mongo.Participants.Find(Query<Participant>.Where(x => x.TeamId == Id && x.IsCaptain)).First();
             }
         }
 
@@ -64,12 +55,7 @@ namespace LoLTournament.Models
         {
             get
             {
-                var client = new MongoClient();
-                var server = client.GetServer();
-                var db = server.GetDatabase("CLT");
-                var col = db.GetCollection<Match>("Matches");
-
-                return col.Find(Query<Match>.Where(x => x.Finished && x.WinnerId == Id)).Count();
+                return Mongo.Matches.Find(Query<Match>.Where(x => x.Finished && x.WinnerId == Id)).Count();
             }
         }
 
@@ -78,12 +64,7 @@ namespace LoLTournament.Models
         {
             get
             {
-                var client = new MongoClient();
-                var server = client.GetServer();
-                var db = server.GetDatabase("CLT");
-                var col = db.GetCollection<Match>("Matches");
-
-                return col.Find(Query<Match>.Where(x => x.Finished && x.WinnerId != Id && (x.BlueTeamId == Id || x.PurpleTeamId == Id))).Count();
+                return Mongo.Matches.Find(Query<Match>.Where(x => x.Finished && x.WinnerId != Id && (x.BlueTeamId == Id || x.PurpleTeamId == Id))).Count();
             }
         }
 
@@ -92,13 +73,8 @@ namespace LoLTournament.Models
         {
             get
             {
-                var client = new MongoClient();
-                var server = client.GetServer();
-                var db = server.GetDatabase("CLT");
-                var col = db.GetCollection<Match>("Matches");
-
                 return
-                    TimeSpan.FromSeconds(col.Find(Query<Match>.Where(x => x.Finished && (x.BlueTeamId == Id || x.PurpleTeamId == Id)))
+                    TimeSpan.FromSeconds(Mongo.Matches.Find(Query<Match>.Where(x => x.Finished && (x.BlueTeamId == Id || x.PurpleTeamId == Id)))
                         .Sum(x => x.Duration.TotalSeconds));
             }
         }
@@ -108,13 +84,8 @@ namespace LoLTournament.Models
         {
             get
             {
-                var client = new MongoClient();
-                var server = client.GetServer();
-                var db = server.GetDatabase("CLT");
-                var col = db.GetCollection<Match>("Matches");
-
                 return
-                    TimeSpan.FromSeconds(col.Find(Query<Match>.Where(x => x.Finished && x.WinnerId == Id && (x.BlueTeamId == Id || x.PurpleTeamId == Id)))
+                    TimeSpan.FromSeconds(Mongo.Matches.Find(Query<Match>.Where(x => x.Finished && x.WinnerId == Id && (x.BlueTeamId == Id || x.PurpleTeamId == Id)))
                         .Sum(x => x.Duration.TotalSeconds));
             }
         }
@@ -124,26 +95,16 @@ namespace LoLTournament.Models
         {
             get
             {
-                var client = new MongoClient();
-                var server = client.GetServer();
-                var db = server.GetDatabase("CLT");
-                var col = db.GetCollection<Team>("Teams");
-
-                return col.Find(Query<Team>.Where(x => x.Pool == Pool)).OrderByDescending(x => x.Wins).ThenBy(x => x.TotalWinsPlayTime).ToList().FindIndex(x => x.Id == Id);
+                return Mongo.Teams.Find(Query<Team>.Where(x => x.Pool == Pool)).OrderByDescending(x => x.Wins).ThenBy(x => x.TotalWinsPlayTime).ToList().FindIndex(x => x.Id == Id);
             }
         }
 
         public Match GetNextMatch()
         {
-            var client = new MongoClient();
-            var server = client.GetServer();
-            var db = server.GetDatabase("CLT");
-            var matchCol = db.GetCollection<Match>("Matches");
-
             if (Phase == Phase.Pool)
             {
                 return
-                    matchCol.Find(
+                    Mongo.Matches.Find(
                         Query<Match>.Where(
                             x =>
                                 !x.Finished && x.Phase == Phase.Pool &&
@@ -154,7 +115,7 @@ namespace LoLTournament.Models
             if (Phase == Phase.Finale)
             {
                 return
-                    matchCol.Find(
+                    Mongo.Matches.Find(
                         Query<Match>.Where(
                             x =>
                                 !x.Finished && x.Phase == Phase.Finale &&
@@ -165,7 +126,7 @@ namespace LoLTournament.Models
             if (Phase == Phase.BronzeFinale)
             {
                 return
-                    matchCol.Find(
+                    Mongo.Matches.Find(
                         Query<Match>.Where(
                             x =>
                                 !x.Finished && x.Phase == Phase.BronzeFinale &&
@@ -174,7 +135,7 @@ namespace LoLTournament.Models
             if (Phase == Phase.WinnerBracket)
             {
                 return
-                    matchCol.Find(
+                    Mongo.Matches.Find(
                         Query<Match>.Where(
                             x =>
                                 !x.Finished && x.Phase == Phase.WinnerBracket &&
@@ -183,7 +144,7 @@ namespace LoLTournament.Models
             if (Phase == Phase.LoserBracket)
             {
                 return
-                    matchCol.Find(
+                    Mongo.Matches.Find(
                         Query<Match>.Where(
                             x =>
                                 !x.Finished && x.Phase == Phase.LoserBracket &&
@@ -192,7 +153,7 @@ namespace LoLTournament.Models
             if (Phase == Phase.LoserFinale)
             {
                 return
-                    matchCol.Find(
+                    Mongo.Matches.Find(
                         Query<Match>.Where(
                             x =>
                                 !x.Finished && x.Phase == Phase.LoserFinale &&

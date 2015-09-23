@@ -16,14 +16,8 @@ namespace LoLTournament.Helpers
         /// </summary>
         public static void CreatePoolStructure()
         {
-            var client = new MongoClient();
-            var server = client.GetServer();
-            var db = server.GetDatabase("CLT");
-            var col = db.GetCollection<Team>("Teams");
-            var matchCol = db.GetCollection<Match>("Matches");
-
             // Get competing teams
-            var validTeams = col.FindAll()
+            var validTeams = Mongo.Teams.FindAll()
                 .OrderByDescending(x => x.AmountOfRuStudents)
                 .ThenBy(x => x.Participants.Sum(y => y.RegisterTime.Ticks))
                 .Take(32)
@@ -40,7 +34,7 @@ namespace LoLTournament.Helpers
                 {
                     // Set pool in team objects
                     teams[j].Pool = i;
-                    col.Save(teams[j]);
+                    Mongo.Teams.Save(teams[j]);
 
                     // For each team below team j
                     for (int k = j + 1; k < 4; k++)
@@ -59,7 +53,7 @@ namespace LoLTournament.Helpers
 
                         // Create match and add to database
                         var match = new Match { BlueTeamId = blue, PurpleTeamId = purple, Phase = Phase.Pool, Priority = p };
-                        matchCol.Save(match);
+                        Mongo.Matches.Save(match);
                     }
                 }
                 
@@ -71,25 +65,20 @@ namespace LoLTournament.Helpers
         /// </summary>
         public static void CreateFinaleStructure()
         {
-            var client = new MongoClient();
-            var server = client.GetServer();
-            var db = server.GetDatabase("CLT");
-            var matchCol = db.GetCollection<Match>("Matches");
-
             // Finale
             for (int p = 0; p < 3; p++)
             {
                 var match = new Match {Phase = Phase.Finale, Priority = p};
-                matchCol.Save(match);
+                Mongo.Matches.Save(match);
             }
 
             // Losers' finale
             var losers = new Match {Phase = Phase.LoserFinale};
-            matchCol.Save(losers);
+            Mongo.Matches.Save(losers);
 
             // Bronze finale
             var bronze = new Match { Phase = Phase.BronzeFinale };
-            matchCol.Save(bronze);
+            Mongo.Matches.Save(bronze);
         }
     }
 }
