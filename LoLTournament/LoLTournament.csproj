@@ -118,7 +118,7 @@
     <Compile Include="Models\TeambuilderParticipant.cs" />
     <Compile Include="Models\TeambuilderViewModel.cs" />
     <Compile Include="Models\TeamViewModel.cs" />
-    <Compile Include="Models\TimetableIndexViewModel.cs" />
+    <Compile Include="Models\ScheduleIndexViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -493,20 +493,20 @@
     <Content Include="Views\Home\Information.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Timetable\Schedule.cshtml" />
+    <Content Include="Views\Schedule\Schedule.cshtml" />
     <Content Include="Views\Register\Index.cshtml" />
     <Content Include="Views\Register\Form.cshtml" />
     <Content Include="Views\Register\SummonerInfo.cshtml" />
     <Content Include="Views\Home\Photos.cshtml" />
     <Content Include="Views\Register\OK.cshtml" />
-    <Content Include="Views\Timetable\Index.cshtml" />
+    <Content Include="Views\Schedule\Index.cshtml" />
     <Content Include="Views\Register\Teambuilder.cshtml" />
     <Content Include="Views\Register\TeambuilderForm.cshtml" />
     <Content Include="Views\Register\TeambuilderOK.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Web.config" />
-    <Content Include="Views\Timetable\Team.cshtml" />
-    <Content Include="Views\Timetable\Statistics.cshtml" />
+    <Content Include="Views\Schedule\Team.cshtml" />
+    <Content Include="Views\Schedule\Statistics.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
