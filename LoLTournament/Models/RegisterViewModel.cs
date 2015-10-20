@@ -18,7 +18,7 @@ namespace LoLTournament.Models
         [Required(ErrorMessage = "Required.")]
         [EmailAddress(ErrorMessage="This is not a valid email address.")]
         public string TeamCaptainEmail { get; set; }
-        [DisplayName("Team captain study program (e.g. Artificial Intelligence, English, Law, etc.)")]
+        [DisplayName("Team captain university and study program (e.g. RU Artificial Intelligence, UvA English, HAN Electrical Engineering, etc.)")]
         [Required(ErrorMessage = "Required.")]
         public string TeamCaptainStudy { get; set; }
 
@@ -32,7 +32,7 @@ namespace LoLTournament.Models
         [Required(ErrorMessage = "Required.")]
         [EmailAddress(ErrorMessage = "This is not a valid email address.")]
         public string Summoner2Email { get; set; }
-        [DisplayName("Player 2 study program")]
+        [DisplayName("Player 2 university and study program")]
         [Required(ErrorMessage = "Required.")]
         public string Summoner2Study { get; set; }
 
@@ -46,7 +46,7 @@ namespace LoLTournament.Models
         [Required(ErrorMessage="Required.")]
         [EmailAddress(ErrorMessage = "This is not a valid email address.")]
         public string Summoner3Email { get; set; }
-        [DisplayName("Player 3 study program")]
+        [DisplayName("Player 3 university and study program")]
         [Required(ErrorMessage="Required.")]
         public string Summoner3Study { get; set; }
 
@@ -60,7 +60,7 @@ namespace LoLTournament.Models
         [Required(ErrorMessage="Required.")]
         [EmailAddress(ErrorMessage = "This is not a valid email address.")]
         public string Summoner4Email { get; set; }
-        [DisplayName("Player 4 study program")]
+        [DisplayName("Player 4 university and study program")]
         [Required(ErrorMessage="Required.")]
         public string Summoner4Study { get; set; }
 
@@ -74,7 +74,7 @@ namespace LoLTournament.Models
         [Required(ErrorMessage="Required.")]
         [EmailAddress(ErrorMessage = "This is not a valid email address.")]
         public string Summoner5Email { get; set; }
-        [DisplayName("Player 5 study program")]
+        [DisplayName("Player 5 university and study program")]
         [Required(ErrorMessage="Required.")]
         public string Summoner5Study { get; set; }
     }

@@ -2,7 +2,6 @@
 
 @using (Ajax.BeginForm("Index", "Register", new AjaxOptions() { HttpMethod = "POST", UpdateTargetId = "ParentDiv" }))
 {
-    <hr />
     <div class="form-group">
         <strong>@Html.DisplayNameFor(x => x.TeamName)</strong>
         @Html.TextBoxFor(x => x.TeamName, new { @class = "form-control" }) @Html.ValidationMessageFor(model => model.TeamName)

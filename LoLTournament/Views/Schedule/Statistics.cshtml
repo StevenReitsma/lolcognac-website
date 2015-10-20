@@ -1,26 +1,50 @@
 ﻿@model LoLTournament.Models.StatisticsViewModel
 
-<h2>Statistics</h2>
+<div class="statistics-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="intro-message-small">
+                    <br />
+                    <h1>Statistics</h1>
+                    <hr class="intro-divider">
+                    <br />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-<ul class="list-group" style="max-width: 300px;">
-    <li class="list-group-item">
-        <span class="badge">@Model.AvgKills</span>
-        Average kills per game
-    </li>
-    <li class="list-group-item">
-        <span class="badge">@Model.AvgDeaths</span>
-        Average deaths per game
-    </li>
-    <li class="list-group-item">
-        <span class="badge">@Model.AvgAssists</span>
-        Average assists per game
-    </li>
-    <li class="list-group-item">
-        <span class="badge">@Model.TotalGames</span>
-        Total games played
-    </li>
-    <li class="list-group-item">
-        <span class="badge">@Model.AvgMatchDuration.ToString(@"hh\:mm\:ss")</span>
-        Average match duration
-    </li>
-</ul>
+<div class="content-section-b">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 col-lg-12">
+                <div class="clearfix"></div>
+
+                <h2>Global</h2>
+                <ul class="list-group" style="max-width: 300px;">
+                    <li class="list-group-item">
+                        <span class="badge">@Model.AvgKills</span>
+                        Average kills per game
+                    </li>
+                    <li class="list-group-item">
+                        <span class="badge">@Model.AvgDeaths</span>
+                        Average deaths per game
+                    </li>
+                    <li class="list-group-item">
+                        <span class="badge">@Model.AvgAssists</span>
+                        Average assists per game
+                    </li>
+                    <li class="list-group-item">
+                        <span class="badge">@Model.TotalGames</span>
+                        Total games played
+                    </li>
+                    <li class="list-group-item">
+                        <span class="badge">@Model.AvgMatchDuration.ToString(@"hh\:mm\:ss")</span>
+                        Average match duration
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
