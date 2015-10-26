@@ -8,41 +8,41 @@
         /// <summary>
         /// Master tier.
         /// </summary>
-        Master,
+        Master = 6,
 
         /// <summary>
         /// Challenger tier.
         /// </summary>
-        Challenger,
+        Challenger = 7,
 
         /// <summary>
         /// Diamon tier.
         /// </summary>
-        Diamond,
+        Diamond = 5,
 
         /// <summary>
         /// Platinum tier.
         /// </summary>
-        Platinum,
+        Platinum = 4,
 
         /// <summary>
         /// Gold tier.
         /// </summary>
-        Gold,
+        Gold = 3,
 
         /// <summary>
         /// Silver tier.
         /// </summary>
-        Silver,
+        Silver = 2,
 
         /// <summary>
         /// Bronze tier.
         /// </summary>
-        Bronze,
-        
+        Bronze = 1,
+
         /// <summary>
         /// Unranked.
         /// </summary>
-        Unranked
+        Unranked = 0
     }
 }
