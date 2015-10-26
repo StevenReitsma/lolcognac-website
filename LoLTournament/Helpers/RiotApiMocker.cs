@@ -46,7 +46,7 @@ namespace LoLTournament.Helpers
                 GameMode = GameMode.Classic,
                 GameType = GameType.CustomGame,
                 SubType = GameSubType.None,
-                MapType = MapType.SummonersRiftCurrent,
+                MapType = MapType.SummonersRift,
                 CreateDate = new DateTime(2015, 2, 26, 19, 02, 18),
                 FellowPlayers = fellowPlayers,
                 Invalid = false,
