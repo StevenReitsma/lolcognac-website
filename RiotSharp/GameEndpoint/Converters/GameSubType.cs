@@ -115,6 +115,9 @@
         /// </summary>
         KingPoro,
 
+        /// <summary>
+        /// Counter Pick games.
+        /// </summary>
         CounterPick
     }
 }

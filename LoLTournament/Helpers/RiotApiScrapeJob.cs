@@ -71,7 +71,7 @@ namespace LoLTournament.Helpers
                         m.GameMode == GameMode.Classic &&
                         m.GameType == GameType.CustomGame &&
                         (m.SubType == GameSubType.None || m.SubType == GameSubType.Normal) &&
-                        m.MapType == MapType.SummonersRiftCurrent &&
+                        m.MapType == MapType.SummonersRift &&
                         m.FellowPlayers.Count == 9 &&
                         !m.Invalid
                     select m;
@@ -616,7 +616,7 @@ namespace LoLTournament.Helpers
                 int losses;
                 try
                 {
-                    var winLoss = _api.GetStatsSummaries(Region.euw, s.Id, Season.Season4);
+                    var winLoss = _api.GetStatsSummaries(Region.euw, s.Id, Season.Season2014);
                     var winLossSoloQueue =
                         winLoss.Single(x => x.PlayerStatSummaryType == PlayerStatsSummaryType.RankedSolo5x5);
                     wins = winLossSoloQueue.Wins;

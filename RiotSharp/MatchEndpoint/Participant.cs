@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 using RiotSharp.LeagueEndpoint;
+using Newtonsoft.Json;
 
 namespace RiotSharp.MatchEndpoint
 {
@@ -66,7 +66,7 @@ namespace RiotSharp.MatchEndpoint
         /// </summary>
         [JsonProperty("timeline")]
         public ParticipantTimeline Timeline { get; set; }
-
+        
         /// <summary>
         /// Highest achieved season tier.
         /// </summary>

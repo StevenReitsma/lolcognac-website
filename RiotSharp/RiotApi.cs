@@ -1,8 +1,11 @@
 ﻿using Newtonsoft.Json;
 using RiotSharp.ChampionEndpoint;
+using RiotSharp.CurrentGameEndpoint;
+using RiotSharp.FeaturedGamesEndpoint;
 using RiotSharp.GameEndpoint;
 using RiotSharp.LeagueEndpoint;
 using RiotSharp.MatchEndpoint;
+using RiotSharp.Misc;
 using RiotSharp.StatsEndpoint;
 using RiotSharp.SummonerEndpoint;
 using System;
@@ -43,6 +46,10 @@ namespace RiotSharp
 
         private const string MatchRootUrl = "/api/lol/{0}/v2.2/match";
         private const string MatchHistoryRootUrl = "/api/lol/{0}/v2.2/matchhistory";
+
+        private const string CurrentGameRootUrl = "/observer-mode/rest/consumer/getSpectatorGameInfo/{0}";
+
+        private const string FeaturedGamesRootUrl = "/observer-mode/rest/featured";
 
         private const string IdUrl = "/{0}";
 
@@ -310,9 +317,10 @@ namespace RiotSharp
         /// </summary>
         /// <param name="region">Region in which you wish to look for champions.</param>
         /// <returns>A list of champions.</returns>
-        public List<Champion> GetChampions(Region region)
+        public List<Champion> GetChampions(Region region, bool freeToPlay = false)
         {
-            var json = requester.CreateRequest(string.Format(ChampionRootUrl, region.ToString()), region);
+            var json = requester.CreateRequest(string.Format(ChampionRootUrl, region.ToString()), region,
+                new List<string> { string.Format("freeToPlay={0}", freeToPlay ? "true" : "false") });
             return JsonConvert.DeserializeObject<ChampionList>(json).Champions;
         }
 
@@ -321,9 +329,10 @@ namespace RiotSharp
         /// </summary>
         /// <param name="region">Region in which you wish to look for champions.</param>
         /// <returns>A list of champions.</returns>
-        public async Task<List<Champion>> GetChampionsAsync(Region region)
+        public async Task<List<Champion>> GetChampionsAsync(Region region, bool freeToPlay = false)
         {
-            var json = await requester.CreateRequestAsync(string.Format(ChampionRootUrl, region.ToString()), region);
+            var json = await requester.CreateRequestAsync(string.Format(ChampionRootUrl, region.ToString()), region,
+                new List<string> { string.Format("freeToPlay={0}", freeToPlay ? "true" : "false") });
             return (await Task.Factory.StartNew(() =>
                 JsonConvert.DeserializeObject<ChampionList>(json))).Champions;
         }
@@ -599,7 +608,8 @@ namespace RiotSharp
         /// <param name="region">Region in which the teams are located.</param>
         /// <param name="summonerIds">List of summoner ids.</param>
         /// <returns>A map of teams indexed by their id.</returns>
-        public async Task<Dictionary<long, List<TeamEndpoint.Team>>> GetTeamsAsync(Region region, List<int> summonerIds)
+        public async Task<Dictionary<long, List<TeamEndpoint.Team>>> GetTeamsAsync(Region region,
+            List<int> summonerIds)
         {
             var json = await requester.CreateRequestAsync(
                 string.Format(TeamRootUrl, region.ToString()) +
@@ -705,8 +715,7 @@ namespace RiotSharp
                 string.Format(MatchHistoryRootUrl, region.ToString()) + string.Format(IdUrl, summonerId),
                 region,
                 addedArguments);
-
-            return json == "" ? null : JsonConvert.DeserializeObject<PlayerHistory>(json).Matches;
+            return JsonConvert.DeserializeObject<PlayerHistory>(json).Matches;
         }
 
         /// <summary>
@@ -924,6 +933,60 @@ namespace RiotSharp
                 returnDict.Add(runePage.SummonerId, runePage.Pages);
             }
             return returnDict;
+        }
+
+        /// <summary>
+        /// Gets the current game by summoner ID synchronously.
+        /// </summary>
+        /// <param name="platform">Region where to retrieve the data.</param>
+        /// <param name="summonerId">ID of the summoner for which to retrieve current game.</param>
+        /// <returns>Current game of the summoner.</returns>
+        public CurrentGame GetCurrentGame(Platform platform, long summonerId)
+        {
+            var json = requester.CreateRequest(
+                string.Format(CurrentGameRootUrl, platform.ToString()) + string.Format(IdUrl, summonerId),
+                platform.ConvertToRegion());
+            return JsonConvert.DeserializeObject<CurrentGame>(json);
+        }
+
+        /// <summary>
+        /// Gets the current game by summoner ID asynchronously.
+        /// </summary>
+        /// <param name="region">Region where to retrieve the data.</param>
+        /// <param name="summonerId">ID of the summoner for which to retrieve current game.</param>
+        /// <returns>Current game of the summoner.</returns>
+        public async Task<CurrentGame> GetCurrentGameAsync(Platform platform, long summonerId)
+        {
+            var json = await requester.CreateRequestAsync(
+                string.Format(CurrentGameRootUrl, platform.ToString()) + string.Format(IdUrl, summonerId),
+                platform.ConvertToRegion());
+            return (await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<CurrentGame>(json)));
+        }
+
+        /// <summary>
+        /// Gets the featured games by region synchronously.
+        /// </summary>
+        /// <param name="region">Region where to retrieve the data.</param>
+        /// <returns>Featured games for the region.</returns>
+        public FeaturedGames GetFeaturedGames(Region region)
+        {
+            var json = requester.CreateRequest(
+                FeaturedGamesRootUrl,
+                region);
+            return JsonConvert.DeserializeObject<FeaturedGames>(json);
+        }
+
+        /// <summary>
+        /// Gets the featured games by region asynchronously.
+        /// </summary>
+        /// <param name="region">Region where to retrieve the data.</param>
+        /// <returns>Featured games for the region.</returns>
+        public async Task<FeaturedGames> GetFeaturedGamesAsync(Region region)
+        {
+            var json = await requester.CreateRequestAsync(
+                FeaturedGamesRootUrl,
+                region);
+            return (await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<FeaturedGames>(json)));
         }
     }
 }
