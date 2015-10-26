@@ -1,26 +1,67 @@
 ﻿@model LoLTournament.Models.RegisterViewModel
 
-<h2>Registration</h2>
-
-@if (DateTime.Now < new DateTime(2015, 2, 20))
-{
-    <p>
-        Fill in the form below to register your team for the League of Legends tournament 2015.
-        Note that you can unregister until the 13th of February, after that your registration is permanent and cannot be canceled.
-    </p>
-    <p>
-        Don't have a team yet? Use the <a href="@Url.Action("Teambuilder", "Register")">team builder</a>!
-    </p>
-
-    <div class="alert alert-warning" role="alert">The tournament is full. However, you can still register. If you have more RU students in your team than there are RU students in another team, you will take their place.</div>
-
-    <div id="ParentDiv">
-        @{ Html.RenderPartial("Form"); }
+<div class="register-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="intro-message-small">
+                    <br />
+                    <h1>Registration</h1>
+                    <hr class="intro-divider">
+                    <br />
+                </div>
+            </div>
+        </div>
     </div>
-}
-else
+</div>
+
+<div class="content-section-a">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-lg-12">
+                <div class="clearfix"></div>
+
+                @if (DateTime.Now < new DateTime(2016, 2, 20))
+                {
+                    <p class="lead">
+                        Fill in the form below to register your team for the CognAC League of Legends Tournament 2016.
+                        Note that your registration is permanent and cannot be canceled. 
+                        Also note that <strong>you need to register on the official League of Legends website as well.</strong> This can be done <a href="http://events.euw.leagueoflegends.com/">here</a>.
+                        Your registration is not valid otherwise.
+                        You need to login to the League of Legends website with your League of Legends account and join the tournament by clicking <em>Register</em>.
+                        Make sure to enter your team name in the required field.
+                    </p>
+                    <p>
+                        Don't have a team yet? Use the <a href="@Url.Action("Teambuilder", "Register")">team builder</a>!
+                    </p>
+
+                    
+                }
+                else
+                {
+                <div class="alert alert-warning" role="alert">
+                    The tournament registration is closed.
+                </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (DateTime.Now < new DateTime(2016, 2, 20))
 {
-    <div class="alert alert-warning" role="alert">
-        The tournament registration is closed.
+    <div class="content-section-b">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 col-lg-12">
+                    <div class="clearfix"></div>
+                    <div class="alert alert-warning" role="alert">The tournament is full. However, you can still register. Your team will be placed on the waiting list and notified when a spot becomes available.</div>
+                    <div id="ParentDiv">
+                        @{ Html.RenderPartial("Form"); }
+                    </div>
+
+                </div>
+            </div>
+        </div>
     </div>
 }

@@ -2,7 +2,6 @@
 
 @using (Ajax.BeginForm("Index", "Register", new AjaxOptions() { HttpMethod = "POST", UpdateTargetId = "ParentDiv" }))
 {
-    <hr />
     <div class="form-group">
         <strong>@Html.DisplayNameFor(x => x.TeamName)</strong>
         @Html.TextBoxFor(x => x.TeamName, new { @class = "form-control" }) @Html.ValidationMessageFor(model => model.TeamName)
@@ -28,9 +27,25 @@
         </div>
     </div>
     <div class="form-group">
+        <div>
+            @Html.CheckBoxFor(x => x.TeamCaptainRUStudent) <strong style="vertical-align:top; padding-left:10px;">@Html.DisplayNameFor(x => x.TeamCaptainRUStudent)</strong> <div>@Html.ValidationMessageFor(model => model.TeamCaptainRUStudent)</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div>
+            @Html.CheckBoxFor(x => x.TeamCaptainCognACDorans) <strong style="vertical-align:top; padding-left:10px;">@Html.DisplayNameFor(x => x.TeamCaptainCognACDorans)</strong> <div>@Html.ValidationMessageFor(model => model.TeamCaptainCognACDorans)</div>
+        </div>
+    </div>
+    <div class="form-group">
         <strong>@Html.DisplayNameFor(x => x.TeamCaptainStudy)</strong>
         <div>
             <div style="display:inline-block; width: 280px;">@Html.TextBoxFor(x => x.TeamCaptainStudy, new { @class = "form-control" })</div> <div>@Html.ValidationMessageFor(model => model.TeamCaptainStudy)</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <strong>@Html.DisplayNameFor(x => x.TeamCaptainStudentNumber)</strong>
+        <div>
+            <div style="display:inline-block; width: 280px;">@Html.TextBoxFor(x => x.TeamCaptainStudentNumber, new { @class = "form-control" })</div> <div>@Html.ValidationMessageFor(model => model.TeamCaptainStudentNumber)</div>
         </div>
         <hr />
     </div>
@@ -54,9 +69,25 @@
         </div>
     </div>
     <div class="form-group">
+        <div>
+            @Html.CheckBoxFor(x => x.Summoner2RUStudent) <strong style="vertical-align:top; padding-left:10px;">@Html.DisplayNameFor(x => x.Summoner2RUStudent)</strong> <div>@Html.ValidationMessageFor(model => model.Summoner2RUStudent)</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div>
+            @Html.CheckBoxFor(x => x.Summoner2CognACDorans) <strong style="vertical-align:top; padding-left:10px;">@Html.DisplayNameFor(x => x.Summoner2CognACDorans)</strong> <div>@Html.ValidationMessageFor(model => model.Summoner2CognACDorans)</div>
+        </div>
+    </div>
+    <div class="form-group">
         <strong>@Html.DisplayNameFor(x => x.Summoner2Study)</strong>
         <div>
             <div style="display:inline-block; width: 280px;">@Html.TextBoxFor(x => x.Summoner2Study, new { @class = "form-control" })</div> <div>@Html.ValidationMessageFor(model => model.Summoner2Study)</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <strong>@Html.DisplayNameFor(x => x.Summoner2StudentNumber)</strong>
+        <div>
+            <div style="display:inline-block; width: 280px;">@Html.TextBoxFor(x => x.Summoner2StudentNumber, new { @class = "form-control" })</div> <div>@Html.ValidationMessageFor(model => model.Summoner2StudentNumber)</div>
         </div>
         <hr />
     </div>
@@ -80,9 +111,25 @@
         </div>
     </div>
     <div class="form-group">
+        <div>
+            @Html.CheckBoxFor(x => x.Summoner3RUStudent) <strong style="vertical-align:top; padding-left:10px;">@Html.DisplayNameFor(x => x.Summoner3RUStudent)</strong> <div>@Html.ValidationMessageFor(model => model.Summoner3RUStudent)</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div>
+            @Html.CheckBoxFor(x => x.Summoner3CognACDorans) <strong style="vertical-align:top; padding-left:10px;">@Html.DisplayNameFor(x => x.Summoner3CognACDorans)</strong> <div>@Html.ValidationMessageFor(model => model.Summoner3CognACDorans)</div>
+        </div>
+    </div>
+    <div class="form-group">
         <strong>@Html.DisplayNameFor(x => x.Summoner3Study)</strong>
         <div>
             <div style="display:inline-block; width: 280px;">@Html.TextBoxFor(x => x.Summoner3Study, new { @class = "form-control" })</div> <div>@Html.ValidationMessageFor(model => model.Summoner3Study)</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <strong>@Html.DisplayNameFor(x => x.Summoner3StudentNumber)</strong>
+        <div>
+            <div style="display:inline-block; width: 280px;">@Html.TextBoxFor(x => x.Summoner3StudentNumber, new { @class = "form-control" })</div> <div>@Html.ValidationMessageFor(model => model.Summoner3StudentNumber)</div>
         </div>
         <hr />
     </div>
@@ -106,9 +153,25 @@
         </div>
     </div>
     <div class="form-group">
+        <div>
+            @Html.CheckBoxFor(x => x.Summoner4RUStudent) <strong style="vertical-align:top; padding-left:10px;">@Html.DisplayNameFor(x => x.Summoner4RUStudent)</strong> <div>@Html.ValidationMessageFor(model => model.Summoner4RUStudent)</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div>
+            @Html.CheckBoxFor(x => x.Summoner4CognACDorans) <strong style="vertical-align:top; padding-left:10px;">@Html.DisplayNameFor(x => x.Summoner4CognACDorans)</strong> <div>@Html.ValidationMessageFor(model => model.Summoner4CognACDorans)</div>
+        </div>
+    </div>
+    <div class="form-group">
         <strong>@Html.DisplayNameFor(x => x.Summoner4Study)</strong>
         <div>
             <div style="display:inline-block; width: 280px;">@Html.TextBoxFor(x => x.Summoner4Study, new { @class = "form-control" })</div> <div>@Html.ValidationMessageFor(model => model.Summoner4Study)</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <strong>@Html.DisplayNameFor(x => x.Summoner4StudentNumber)</strong>
+        <div>
+            <div style="display:inline-block; width: 280px;">@Html.TextBoxFor(x => x.Summoner4StudentNumber, new { @class = "form-control" })</div> <div>@Html.ValidationMessageFor(model => model.Summoner4StudentNumber)</div>
         </div>
         <hr />
     </div>
@@ -132,9 +195,25 @@
         </div>
     </div>
     <div class="form-group">
+        <div>
+            @Html.CheckBoxFor(x => x.Summoner5RUStudent) <strong style="vertical-align:top; padding-left:10px;">@Html.DisplayNameFor(x => x.Summoner5RUStudent)</strong> <div>@Html.ValidationMessageFor(model => model.Summoner5RUStudent)</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div>
+            @Html.CheckBoxFor(x => x.Summoner5CognACDorans) <strong style="vertical-align:top; padding-left:10px;">@Html.DisplayNameFor(x => x.Summoner5CognACDorans)</strong> <div>@Html.ValidationMessageFor(model => model.Summoner5CognACDorans)</div>
+        </div>
+    </div>
+    <div class="form-group">
         <strong>@Html.DisplayNameFor(x => x.Summoner5Study)</strong>
         <div>
             <div style="display:inline-block; width: 280px;">@Html.TextBoxFor(x => x.Summoner5Study, new { @class = "form-control" })</div> <div>@Html.ValidationMessageFor(model => model.Summoner5Study)</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <strong>@Html.DisplayNameFor(x => x.Summoner5StudentNumber)</strong>
+        <div>
+            <div style="display:inline-block; width: 280px;">@Html.TextBoxFor(x => x.Summoner5StudentNumber, new { @class = "form-control" })</div> <div>@Html.ValidationMessageFor(model => model.Summoner5StudentNumber)</div>
         </div>
         <hr />
     </div>
@@ -146,7 +225,7 @@
 }
 
 <script type="text/javascript">
-    $(document).ready(function() {
+    $(document).ready(function () {
         $('.summonerName').change(function (event) {
             var callerId = event.target.id;
             var jsonData = { name: $(this).val() };

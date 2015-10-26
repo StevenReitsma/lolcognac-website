@@ -35,7 +35,7 @@ h6 {
     padding-bottom: 50px;
     text-align: center;
     color: #f8f8f8;
-    background: url(http://images.alphacoders.com/184/184703.jpg) no-repeat top center;
+    background: url(Images/voli.jpg) no-repeat top center;
     background-size: cover;
 }
 
@@ -53,7 +53,34 @@ h6 {
     padding-bottom: 50px;
     text-align: center;
     color: #f8f8f8;
-    background: url(Images/thresh.jpg) no-repeat top center;
+    background: url(Images/thresh.jpg) no-repeat top right;
+    background-size: cover;
+}
+
+.teams-header {
+    padding-top: 50px; /* If you're making other pages, make sure there is 50px of padding to make sure the navbar doesn't overlap content! */
+    padding-bottom: 50px;
+    text-align: center;
+    color: #f8f8f8;
+    background: url(Images/blitz.jpg) no-repeat center right;
+    background-size: cover;
+}
+
+.statistics-header {
+    padding-top: 50px; /* If you're making other pages, make sure there is 50px of padding to make sure the navbar doesn't overlap content! */
+    padding-bottom: 50px;
+    text-align: center;
+    color: #f8f8f8;
+    background: url(Images/annie.jpg) no-repeat top right;
+    background-size: cover;
+}
+
+.register-header {
+    padding-top: 50px; /* If you're making other pages, make sure there is 50px of padding to make sure the navbar doesn't overlap content! */
+    padding-bottom: 50px;
+    text-align: center;
+    color: #f8f8f8;
+    background: url(Images/poro.jpg) no-repeat top right;
     background-size: cover;
 }
 

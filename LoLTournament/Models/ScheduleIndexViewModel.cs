@@ -4,7 +4,7 @@ using LoLTournament.Helpers;
 
 namespace LoLTournament.Models
 {
-    public class TimetableIndexViewModel
+    public class ScheduleIndexViewModel
     {
         public IOrderedEnumerable<Team> Teams
         {

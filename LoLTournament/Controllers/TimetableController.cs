@@ -5,11 +5,11 @@ using MongoDB.Bson;
 
 namespace LoLTournament.Controllers
 {
-    public class TimetableController : Controller
+    public class ScheduleController : Controller
     {
         public ActionResult Index()
         {
-            return View(new TimetableIndexViewModel());
+            return View(new ScheduleIndexViewModel());
         }
         public ActionResult Schedule()
         {
