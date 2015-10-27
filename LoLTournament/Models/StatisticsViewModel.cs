@@ -18,29 +18,23 @@ namespace LoLTournament.Models
         public StatisticsViewModel()
         {
             TotalGames = Mongo.Matches.Count(Query<Match>.Where(x => x.Finished));
+            var matches = Mongo.Matches.FindAll();
 
-            AvgKills = Mongo.Matches.FindAll().Sum(x => x.KillsBlueTeam + x.KillsPurpleTeam);
-
-            if (TotalGames > 0)
-                AvgKills /= TotalGames;
+            if(matches.Count() > 0)
+            {
+                AvgKills = matches.Sum(x => x.KillsBlueTeam + x.KillsPurpleTeam) / TotalGames;
+                AvgDeaths = matches.Sum(x => x.DeathsBlueTeam + x.DeathsPurpleTeam) / TotalGames;
+                AvgAssists = matches.Sum(x => x.AssistsBlueTeam + x.AssistsPurpleTeam) / TotalGames;
+                AvgMatchDuration = TimeSpan.FromSeconds(matches.Average(x => x.Duration.TotalSeconds));
+            }
             else
+            {
                 AvgKills = 0;
-
-            AvgDeaths = Mongo.Matches.FindAll().Sum(x => x.DeathsBlueTeam + x.DeathsPurpleTeam);
-
-            if (TotalGames > 0)
-                AvgDeaths /= TotalGames;
-            else
                 AvgDeaths = 0;
-
-            AvgAssists = Mongo.Matches.FindAll().Sum(x => x.AssistsBlueTeam + x.AssistsPurpleTeam);
-
-            if (TotalGames > 0)
-                AvgAssists /= TotalGames;
-            else
                 AvgAssists = 0;
-
-            AvgMatchDuration = TimeSpan.FromSeconds(Mongo.Matches.FindAll().Average(x => x.Duration.TotalSeconds));
+                AvgMatchDuration = TimeSpan.Zero;
+            }
+            
         }
     }
 }

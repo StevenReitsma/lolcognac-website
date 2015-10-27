@@ -20,19 +20,22 @@
                 <tr>
                     @for (int j = 0; j < 4; j++)
                     {
-                        <td style="padding-left: 10px; width: 25%">
-                            <ul class="list-group">
-                                <li class="list-group-item list-group-item-info">
-                                    <b>Pool @(Model.Teams[i*16 + 4*j].Pool + 1)</b>
-                                </li>
-                                @for (int k = 0; k < 4; k++)
-                                {
-                                    <li class="list-group-item">
-                                        <a href="@Url.Action("Team", "Timetable", new RouteValueDictionary {{"teamId", @Model.Teams[i*16 + 4*j + k].Id}})">@Model.Teams[i*16 + 4*j + k].Name</a>
+                        if (i * 16 + 4 * j < Model.Teams.Count)
+                        {
+                            <td style="padding-left: 10px; width: 25%">
+                                <ul class="list-group">
+                                    <li class="list-group-item list-group-item-info">
+                                        <b>Pool @(Model.Teams[i * 16 + 4 * j].Pool + 1)</b>
                                     </li>
-                                }
-                            </ul>
-                        </td>
+                                    @for (int k = 0; k < 4; k++)
+                                    {
+                                        <li class="list-group-item">
+                                            <a href="@Url.Action("Team", "Timetable", new RouteValueDictionary { { "teamId", @Model.Teams[i * 16 + 4 * j + k].Id } })">@Model.Teams[i * 16 + 4 * j + k].Name</a>
+                                        </li>
+                                    }
+                                </ul>
+                            </td>
+                        }
                     }
                 </tr>
             }
