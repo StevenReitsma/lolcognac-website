@@ -13,5 +13,10 @@ namespace LoLTournament.Controllers
         {
             return View(new StatisticsViewModel());
         }
+
+        public ActionResult StudyProgrammeChart()
+        {
+            return View(new StudyProgrammeViewModel());
+        }
     }
 }

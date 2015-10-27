@@ -1,0 +1,11 @@
+﻿@model LoLTournament.Models.StudyProgrammeViewModel
+
+@{
+    var myChart = new Chart(width: 800, height: 800)
+        .AddTitle("Study Programmes")
+        .AddSeries(chartType: "Pie",
+            name: "Study Programme",
+            xValue: Model.Programmes.Keys,
+            yValues: Model.Programmes.Values)
+        .Write();
+}
