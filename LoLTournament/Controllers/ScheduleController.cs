@@ -11,13 +11,10 @@ namespace LoLTournament.Controllers
         {
             return View(new ScheduleIndexViewModel());
         }
+
         public ActionResult Schedule()
         {
             return View(new ScheduleViewModel());
-        }
-        public ActionResult Statistics()
-        {
-            return View(new StatisticsViewModel());
         }
 
         public ActionResult Team(string teamId)
