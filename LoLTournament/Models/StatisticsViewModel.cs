@@ -9,10 +9,10 @@ namespace LoLTournament.Models
     public class StatisticsViewModel
     {
 
-        public long AvgKills { get; set; }
-        public long AvgDeaths { get; set; }
-        public long AvgAssists { get; set; }
-        public long TotalGames { get; set; }
+        public double AvgKills { get; set; }
+        public double AvgDeaths { get; set; }
+        public double AvgAssists { get; set; }
+        public double TotalGames { get; set; }
         public TimeSpan AvgMatchDuration { get; set; }
 
         public StatisticsViewModel()

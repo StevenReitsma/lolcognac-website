@@ -24,15 +24,15 @@
                 <h2>Global</h2>
                 <ul class="list-group" style="max-width: 300px;">
                     <li class="list-group-item">
-                        <span class="badge">@Model.AvgKills</span>
+                        <span class="badge">@Model.AvgKills.ToString("0.0")</span>
                         Average kills per game
                     </li>
                     <li class="list-group-item">
-                        <span class="badge">@Model.AvgDeaths</span>
+                        <span class="badge">@Model.AvgDeaths.ToString("0.0")</span>
                         Average deaths per game
                     </li>
                     <li class="list-group-item">
-                        <span class="badge">@Model.AvgAssists</span>
+                        <span class="badge">@Model.AvgAssists.ToString("0.0")</span>
                         Average assists per game
                     </li>
                     <li class="list-group-item">
@@ -40,7 +40,7 @@
                         Total games played
                     </li>
                     <li class="list-group-item">
-                        <span class="badge">@Model.AvgMatchDuration.ToString(@"hh\:mm\:ss")</span>
+                        <span class="badge">@Model.AvgMatchDuration.ToString(@"mm\:ss")</span>
                         Average match duration
                     </li>
                 </ul>
