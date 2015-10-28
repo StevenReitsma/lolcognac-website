@@ -19,9 +19,9 @@ namespace LoLTournament.Controllers
             return View(new StudyProgrammeViewModel());
         }
 
-        public ActionResult KillsOverTimeChart()
+        public ActionResult StatisticsOverTimeChart()
         {
-            return View(new KillsOverTimeViewModel());
+            return View(new StatisticsOverTimeViewModel());
         }
     }
 }

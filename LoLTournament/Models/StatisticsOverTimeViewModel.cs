@@ -8,13 +8,15 @@ using System.Globalization;
 
 namespace LoLTournament.Models
 {
-    public class KillsOverTimeViewModel
+    public class StatisticsOverTimeViewModel
     {
         public Dictionary<string, long> Kills { get; set; }
+        public Dictionary<string, long> Assists { get; set; }
 
-        public KillsOverTimeViewModel()
+        public StatisticsOverTimeViewModel()
         {
             Kills = new Dictionary<string, long>();
+            Assists = new Dictionary<string, long>();
             var matches = Mongo.Matches.FindAll().OrderBy(match => match.CreationTime);
             
             var timeSetting = WebConfigurationManager.AppSettings["TournamentStart"];
@@ -23,8 +25,12 @@ namespace LoLTournament.Models
 
             for (DateTime currentTime = tournamentStart; currentTime <= tournamentEnd; currentTime += new TimeSpan(0, 5, 0))
             {
-                long killsSoFar = matches.Where(match => match.FinishDate < currentTime).Sum(match => match.KillsBlueTeam + match.KillsPurpleTeam);
-                Kills.Add(currentTime.ToString("HH:mm"), killsSoFar);
+                var matchesSoFar = matches.Where(match => match.FinishDate < currentTime);
+                long killsSoFar = matchesSoFar.Sum(match => match.KillsBlueTeam + match.KillsPurpleTeam);
+                long assistsSoFar = matchesSoFar.Sum(match => match.AssistsBlueTeam + match.AssistsPurpleTeam);
+                string time = currentTime.ToString("HH:mm");
+                Kills.Add(time, killsSoFar);
+                Assists.Add(time, assistsSoFar);
             }
         }
 
