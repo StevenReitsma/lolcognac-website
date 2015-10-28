@@ -110,6 +110,7 @@
     <Compile Include="Helpers\RiotApiMocker.cs" />
     <Compile Include="Helpers\RiotApiScrapeJob.cs" />
     <Compile Include="Helpers\TimeFixer.cs" />
+    <Compile Include="Models\KillsOverTimeViewModel.cs" />
     <Compile Include="Models\Match.cs" />
     <Compile Include="Models\Participant.cs" />
     <Compile Include="Models\Phase.cs" />
@@ -515,6 +516,7 @@
     <Content Include="Views\Statistics\Index.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Statistics\StudyProgrammeChart.cshtml" />
+    <Content Include="Views\Statistics\KillsOverTimeChart.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -18,5 +18,10 @@ namespace LoLTournament.Controllers
         {
             return View(new StudyProgrammeViewModel());
         }
+
+        public ActionResult KillsOverTimeChart()
+        {
+            return View(new KillsOverTimeViewModel());
+        }
     }
 }

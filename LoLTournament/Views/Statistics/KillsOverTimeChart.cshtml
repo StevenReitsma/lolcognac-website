@@ -1,0 +1,11 @@
+﻿@model LoLTournament.Models.KillsOverTimeViewModel
+
+@{ 
+    var myChart = new Chart(width: 800, height: 800)
+        .AddTitle("Kills over time")
+        .AddSeries(chartType: "Line",
+            name: "Kills",
+            xValue: Model.Kills.Keys,
+            yValues: Model.Kills.Values)
+        .Write();
+}
