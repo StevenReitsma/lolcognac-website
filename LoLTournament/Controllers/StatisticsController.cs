@@ -23,5 +23,10 @@ namespace LoLTournament.Controllers
         {
             return View(new StatisticsOverTimeViewModel());
         }
+
+        public ActionResult ChampionsPlayedChart()
+        {
+            return View(new ChampionsPlayedViewModel());
+        }
     }
 }
