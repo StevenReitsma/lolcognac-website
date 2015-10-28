@@ -1,5 +1,8 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
+using System.Web.Configuration;
 
 namespace LoLTournament.Models
 {
@@ -22,5 +25,16 @@ namespace LoLTournament.Models
         [DisplayName("Preferred roles (i.e. AP, AD, support, top, jungle)")]
         [Required(ErrorMessage = "Required.")]
         public string Role { get; set; }
+
+        public DateTime RegistrationCloseDate
+        {
+            get
+            {
+                var timeSetting = WebConfigurationManager.AppSettings["RegistrationClose"];
+                var registrationClose = DateTime.ParseExact(timeSetting, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
+
+                return registrationClose;
+            }
+        }
     }
 }

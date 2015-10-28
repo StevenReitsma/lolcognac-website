@@ -1,5 +1,8 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
+using System.Web.Configuration;
 
 namespace LoLTournament.Models
 {
@@ -106,5 +109,16 @@ namespace LoLTournament.Models
         public bool Summoner5CognACDorans { get; set; }
         [DisplayName("Player 5 student number (only if student of RU)")]
         public string Summoner5StudentNumber { get; set; }
+
+        public DateTime RegistrationCloseDate
+        {
+            get
+            {
+                var timeSetting = WebConfigurationManager.AppSettings["RegistrationClose"];
+                var registrationClose = DateTime.ParseExact(timeSetting, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
+
+                return registrationClose;
+            }
+        }
     }
 }

@@ -1,7 +1,7 @@
 ﻿@model LoLTournament.Models.TeambuilderViewModel
 
 <h2>Registration</h2>
-@if (DateTime.Now < new DateTime(2015, 2, 20))
+@if (DateTime.Now < Model.RegistrationCloseDate)
 {
     <p>
         Fill in the form below to enqueue yourself in the Team Builder system.

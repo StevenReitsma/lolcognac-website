@@ -25,7 +25,7 @@
             <div class="col-lg-12 col-lg-12">
                 <div class="clearfix"></div>
 
-                @if (DateTime.Now > new DateTime(2015, 2, 19))
+                @if (DateTime.Now >= Model.RegistrationCloseDate)
                 {
                     <div class="alert alert-warning" role="alert">Registration is closed.</div>
                 }
