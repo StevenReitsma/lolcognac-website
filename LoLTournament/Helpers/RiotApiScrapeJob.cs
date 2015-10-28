@@ -120,6 +120,7 @@ namespace LoLTournament.Helpers
                     nextMatch.RiotMatchId = validMatch.GameId;
                     nextMatch.Finished = true;
                     nextMatch.FinishDate = DateTime.Now;
+                    nextMatch.ChampionIds = validMatch.FellowPlayers.Select(p => p.ChampionId).Concat(new[] { validMatch.ChampionId }).ToArray();
                     // Save to database
                     Mongo.Matches.Save(nextMatch);
 
@@ -139,6 +140,8 @@ namespace LoLTournament.Helpers
                 nextMatch.Duration = matchData.MatchDuration;
                 nextMatch.CreationTime = matchData.MatchCreation + new TimeSpan(0, 2, 0, 0); // add two hours for timezone difference;
                 nextMatch.FinishDate = DateTime.Now;
+
+                nextMatch.ChampionIds = matchData.Participants.Select(p => p.ChampionId).ToArray();
 
                 nextMatch.WinnerId = matchData.Participants.First(x => x.TeamId == 100).Stats.Winner
                     ? nextMatch.BlueTeamId
