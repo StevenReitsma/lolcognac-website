@@ -14,19 +14,19 @@ namespace LoLTournament.Controllers
             return View(new StatisticsViewModel());
         }
 
-        public ActionResult StudyProgrammeChart()
+        public JsonResult StudyProgrammeData()
         {
-            return View(new StudyProgrammeViewModel());
+            return Json(new StudyProgrammeViewModel());
         }
 
-        public ActionResult StatisticsOverTimeChart()
+        public JsonResult StatisticsOverTimeData()
         {
-            return View(new StatisticsOverTimeViewModel());
+            return Json(new StatisticsOverTimeViewModel());
         }
 
-        public ActionResult ChampionsPlayedChart()
+        public JsonResult ChampionsPlayedData()
         {
-            return View(new ChampionsPlayedViewModel());
+            return Json(new ChampionsPlayedViewModel());
         }
     }
 }
