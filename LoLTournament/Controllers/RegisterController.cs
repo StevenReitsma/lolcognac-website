@@ -10,6 +10,7 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using RiotSharp;
 using LoLTournament.Helpers;
+using System.Globalization;
 
 namespace LoLTournament.Controllers
 {
@@ -30,7 +31,10 @@ namespace LoLTournament.Controllers
         [HttpPost]
         public PartialViewResult Index(RegisterViewModel m)
         {
-            if (DateTime.Now >= new DateTime(2015, 2, 20))
+            var timeSetting = WebConfigurationManager.AppSettings["RegistrationClose"];
+            var registrationClose = DateTime.ParseExact(timeSetting, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
+
+            if (DateTime.Now >= registrationClose) // if registration date has passed
             {
                 Response.StatusCode = 403;
                 return PartialView();
@@ -51,7 +55,10 @@ namespace LoLTournament.Controllers
                     RegisterTime = DateTime.Now,
                     StudyProgram = m.TeamCaptainStudy,
                     TeamId = teamId,
-                    SummonerName = m.TeamCaptainName
+                    SummonerName = m.TeamCaptainName,
+                    RuStudent = m.TeamCaptainRUStudent,
+                    CognACDorans = m.TeamCaptainCognACDorans,
+                    StudentNumber = m.TeamCaptainStudentNumber
                 };
 
                 var summoner2 = new Participant
@@ -63,7 +70,10 @@ namespace LoLTournament.Controllers
                     RegisterTime = DateTime.Now,
                     StudyProgram = m.Summoner2Study,
                     TeamId = teamId,
-                    SummonerName = m.Summoner2Name
+                    SummonerName = m.Summoner2Name,
+                    RuStudent = m.Summoner2RUStudent,
+                    CognACDorans = m.Summoner2CognACDorans,
+                    StudentNumber = m.Summoner2StudentNumber
                 };
 
                 var summoner3 = new Participant
@@ -75,7 +85,10 @@ namespace LoLTournament.Controllers
                     RegisterTime = DateTime.Now,
                     StudyProgram = m.Summoner3Study,
                     TeamId = teamId,
-                    SummonerName = m.Summoner3Name
+                    SummonerName = m.Summoner3Name,
+                    RuStudent = m.Summoner3RUStudent,
+                    CognACDorans = m.Summoner3CognACDorans,
+                    StudentNumber = m.Summoner3StudentNumber
                 };
 
                 var summoner4 = new Participant
@@ -87,7 +100,10 @@ namespace LoLTournament.Controllers
                     RegisterTime = DateTime.Now,
                     StudyProgram = m.Summoner4Study,
                     TeamId = teamId,
-                    SummonerName = m.Summoner4Name
+                    SummonerName = m.Summoner4Name,
+                    RuStudent = m.Summoner4RUStudent,
+                    CognACDorans = m.Summoner4CognACDorans,
+                    StudentNumber = m.Summoner4StudentNumber
                 };
 
                 var summoner5 = new Participant
@@ -99,10 +115,12 @@ namespace LoLTournament.Controllers
                     RegisterTime = DateTime.Now,
                     StudyProgram = m.Summoner5Study,
                     TeamId = teamId,
-                    SummonerName = m.Summoner5Name
+                    SummonerName = m.Summoner5Name,
+                    RuStudent = m.Summoner5RUStudent,
+                    CognACDorans = m.Summoner5CognACDorans,
+                    StudentNumber = m.Summoner5StudentNumber
                 };
 
-                // TODO create database wrapper + mongoclient singleton so we don't have to reconnect constantly
                 Mongo.Participants.Insert(captain);
                 Mongo.Participants.Insert(summoner2);
                 Mongo.Participants.Insert(summoner3);
@@ -165,12 +183,13 @@ namespace LoLTournament.Controllers
                 return null;
 
             var key = WebConfigurationManager.AppSettings["RiotApiKey"];
+            var rateLimit1 = int.Parse(WebConfigurationManager.AppSettings["RateLimitPer10Seconds"]);
+            var rateLimit2 = int.Parse(WebConfigurationManager.AppSettings["RateLimitPer10Minutes"]);
 
             SummonerRegisterInfoModel summoner;
             try
             {
-                // TODO fix cringy magic numbers (rate limits)
-                summoner = new SummonerRegisterInfoModel(RiotApi.GetInstance(key, 3000, 180000).GetSummoner(Region.euw, name));
+                summoner = new SummonerRegisterInfoModel(RiotApi.GetInstance(key, rateLimit1, rateLimit2).GetSummoner(Region.euw, name));
             }
             catch (Exception e)
             {

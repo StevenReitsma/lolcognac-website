@@ -44,6 +44,8 @@ namespace LoLTournament.Models
         public string StudyProgram { get; set; }
         public bool IsCaptain { get; set; }
         public bool RuStudent { get; set; }
+        public bool CognACDorans { get; set; }
+        public string StudentNumber { get; set; }
 
         /// <summary>
         /// Returns the MMR for the participant, based on season 4 tier and season 5 tier and division.
@@ -51,6 +53,7 @@ namespace LoLTournament.Models
         [BsonIgnore]
         public double MMR
         {
+            // TODO 2016: rework for new seasons
             get
             {
                 double tierRanking = 0;

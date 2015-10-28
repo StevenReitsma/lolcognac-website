@@ -18,7 +18,7 @@ namespace LoLTournament.Models
         [Required(ErrorMessage = "Required.")]
         [EmailAddress(ErrorMessage="This is not a valid email address.")]
         public string TeamCaptainEmail { get; set; }
-        [DisplayName("Team captain study program (e.g. Artificial Intelligence, English, Computer Science, etc.)")]
+        [DisplayName("Team captain study program (e.g. B Artificial Intelligence, M English, B Computer Science, etc.)")]
         public string TeamCaptainStudy { get; set; }
         [DisplayName("Team captain is a RU student (will be checked!)")]
         public bool TeamCaptainRUStudent { get; set; }

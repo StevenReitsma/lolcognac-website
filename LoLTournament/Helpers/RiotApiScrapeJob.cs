@@ -26,7 +26,10 @@ namespace LoLTournament.Helpers
         public RiotApiScrapeJob()
         {
             var key = WebConfigurationManager.AppSettings["RiotApiKey"];
-            _api = RiotApi.GetInstance(key, 3000, 180000);
+            var rateLimit1 = int.Parse(WebConfigurationManager.AppSettings["RateLimitPer10Seconds"]);
+            var rateLimit2 = int.Parse(WebConfigurationManager.AppSettings["RateLimitPer10Minutes"]);
+
+            _api = RiotApi.GetInstance(key, rateLimit1, rateLimit2);
 
             // For summoner statistics, always 1 hour
             var intervalSummoners = new TimeSpan(1, 0, 0);

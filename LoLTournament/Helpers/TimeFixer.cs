@@ -17,7 +17,10 @@ namespace LoLTournament.Helpers
         public static void FixMatchCreationDates()
         {
             var key = WebConfigurationManager.AppSettings["RiotApiKey"];
-            var api = RiotApi.GetInstance(key, 3000, 180000);
+            var rateLimit1 = int.Parse(WebConfigurationManager.AppSettings["RateLimitPer10Seconds"]);
+            var rateLimit2 = int.Parse(WebConfigurationManager.AppSettings["RateLimitPer10Minutes"]);
+
+            var api = RiotApi.GetInstance(key, rateLimit1, rateLimit2);
 
             foreach (var m in Mongo.Matches.FindAll())
             {
