@@ -516,9 +516,6 @@
     <Content Include="Views\Schedule\Team.cshtml" />
     <Content Include="Views\Statistics\Index.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Statistics\StudyProgrammeChart.cshtml" />
-    <Content Include="Views\Statistics\StatisticsOverTimeChart.cshtml" />
-    <Content Include="Views\Statistics\ChampionsPlayedChart.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
