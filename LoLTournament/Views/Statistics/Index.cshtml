@@ -1,0 +1,177 @@
+﻿@model LoLTournament.Models.StatisticsViewModel
+
+<div class="statistics-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="intro-message-small">
+                    <br />
+                    <h1>Statistics</h1>
+                    <hr class="intro-divider">
+                    <br />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="content-section-b">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 col-lg-12">
+                <div class="clearfix"></div>
+
+                <h2>Global</h2>
+
+                <ul class="list-group" style="max-width: 300px;">
+                    <li class="list-group-item">
+                        <span class="badge">@Model.AvgKills.ToString("0.0")</span>
+                        Average kills per game
+                    </li>
+                    <li class="list-group-item">
+                        <span class="badge">@Model.AvgDeaths.ToString("0.0")</span>
+                        Average deaths per game
+                    </li>
+                    <li class="list-group-item">
+                        <span class="badge">@Model.AvgAssists.ToString("0.0")</span>
+                        Average assists per game
+                    </li>
+                    <li class="list-group-item">
+                        <span class="badge">@Model.BlueSideWinPercentage.ToString("0.000")</span>
+                        Blue side win percentage
+                    </li>
+                    <li class="list-group-item">
+                        <span class="badge">@Model.TotalGames</span>
+                        Total games played
+                    </li>
+                    <li class="list-group-item">
+                        <span class="badge">@Model.AvgMatchDuration.ToString(@"mm\:ss")</span>
+                        Average match duration
+                    </li>
+                </ul>
+
+
+                <div id="study-programme-pie" style="width: 800px; height: 500px"></div>
+                <div id="statistics-over-time" style="width: 800px; height: 500px"></div>
+                <div id="champions-played-bar" style="width: 800px; height: 500px"></div>
+
+                <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+                <script>
+
+                    function makeStudyProgrammePie() {
+                        $.ajax({
+                            type: 'POST',
+                            dataType: 'json',
+                            contentType: 'application/json',
+                            url: '@Url.Action("StudyProgrammeData")',
+                            data: '{}',
+                            success: function (chartsData) {
+                                var programmes = chartsData.Programmes;
+                                var data = new google.visualization.DataTable();
+
+                                data.addColumn('string', 'StudyProgramme');
+                                data.addColumn('number', 'Count');
+
+                                for (var programme in programmes) {
+                                    data.addRow([programme, programmes[programme]]);
+                                }
+
+                                var chart = new google.visualization.PieChart(document.getElementById('study-programme-pie'));
+
+                                chart.draw(data, {
+                                    title: 'Study Programmes'
+                                });
+                            },
+                            error: function () {
+                                console.error("Error loading pie data from url " + this.url);
+                            }
+                        });
+                    }
+
+                    function makeStatisticsOverTimeChart() {
+                        $.ajax({
+                            type: 'POST',
+                            dataType: 'json',
+                            contentType: 'application/json',
+                            url: '@Url.Action("StatisticsOverTimeData")',
+                            data: '{}',
+                            success: function (chartsData) {
+                                var kills = chartsData.Kills;
+                                var assists = chartsData.Assists;
+                                var data = new google.visualization.DataTable();
+
+                                data.addColumn('string', 'Time');
+                                data.addColumn('number', 'Total Kills');
+                                data.addColumn('number', 'Total Assists')
+
+                                for (var time in kills) {
+                                    data.addRow([time, kills[time], assists[time]]);
+                                }
+
+                                var chart = new google.visualization.LineChart(document.getElementById('statistics-over-time'));
+
+                                chart.draw(data, {
+                                    title: 'Kills and assists over time',
+                                    curveType: 'function',
+                                    legend: { position: 'right' },
+                                    vAxis: {
+                                        viewWindow: {
+                                            min: 0
+                                        }
+                                    }
+
+                                });
+                            },
+                            error: function () {
+                                console.error("Error loading pie data from url " + this.url);
+                            }
+                            
+                        })
+                    }
+
+                    function makeChampionsPlayedChart() {
+                        $.ajax({
+                            type: 'POST',
+                            dataType: 'json',
+                            contentType: 'application/json',
+                            url: '@Url.Action("ChampionsPlayedData")',
+                            data: '{}',
+                            success: function (chartsData) {
+                                var champions = chartsData.ChampionsPlayed;
+                                var data = new google.visualization.DataTable();
+                                
+                                data.addColumn('string', 'Champion');
+                                data.addColumn('number', 'Times Played');
+
+                                for (var champion in champions) {
+                                    data.addRow([champion, champions[champion]]);
+                                }
+
+                                var chart = new google.visualization.BarChart(document.getElementById('champions-played-bar'));
+
+                                chart.draw(data, {
+                                    title: 'Most Played Champions'
+                                });
+                            },
+                            error: function () {
+                                console.error("Error loading pie data from url " + this.url);
+                            }
+                        });
+                    }
+
+                    function makeCharts() {
+                        makeStudyProgrammePie();
+                        makeStatisticsOverTimeChart();
+                        makeChampionsPlayedChart();
+                    }
+
+                    google.setOnLoadCallback(makeCharts);
+                    google.load('visualization', '1', { packages: ['corechart'] });
+
+                   
+                </script>
+                
+            </div>
+        </div>
+    </div>
+</div>

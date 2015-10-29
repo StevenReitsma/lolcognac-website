@@ -34,6 +34,7 @@ namespace LoLTournament.Models
         public long KillsBlueTeam { get; set; }
         public long DeathsBlueTeam { get; set; }
         public long AssistsBlueTeam { get; set; }
+        public int[] ChampionIds { get; set; }
 
         public long KillsPurpleTeam { get; set; }
         public long DeathsPurpleTeam { get; set; }

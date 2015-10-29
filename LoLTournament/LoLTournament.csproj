@@ -98,7 +98,8 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\RegisterController.cs" />
-    <Compile Include="Controllers\TimetableController.cs" />
+    <Compile Include="Controllers\ScheduleController.cs" />
+    <Compile Include="Controllers\StatisticsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -109,6 +110,8 @@
     <Compile Include="Helpers\RiotApiMocker.cs" />
     <Compile Include="Helpers\RiotApiScrapeJob.cs" />
     <Compile Include="Helpers\TimeFixer.cs" />
+    <Compile Include="Models\ChampionsPlayedViewModel.cs" />
+    <Compile Include="Models\StatisticsOverTimeViewModel.cs" />
     <Compile Include="Models\Match.cs" />
     <Compile Include="Models\Participant.cs" />
     <Compile Include="Models\Phase.cs" />
@@ -117,6 +120,7 @@
     <Compile Include="Models\RegisterViewModel.cs" />
     <Compile Include="Models\ScheduleViewModel.cs" />
     <Compile Include="Models\StatisticsViewModel.cs" />
+    <Compile Include="Models\StudyProgrammeViewModel.cs" />
     <Compile Include="Models\SummonerRegisterInfoModel.cs" />
     <Compile Include="Models\Team.cs" />
     <Compile Include="Models\TeambuilderParticipant.cs" />
@@ -510,7 +514,7 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\Schedule\Team.cshtml" />
-    <Content Include="Views\Schedule\Statistics.cshtml" />
+    <Content Include="Views\Statistics\Index.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
