@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Configuration;
 using RiotSharp;
+using MongoDB.Driver.Builders;
 
 namespace LoLTournament.Models
 {
@@ -26,15 +27,11 @@ namespace LoLTournament.Models
                 }
             }
 
-            // Maybe the static api can be scraped once and relevant information can be saved to the database
-            var key = WebConfigurationManager.AppSettings["RiotApiKey"];
-            var api = StaticRiotApi.GetInstance(key);
-
             ChampionsPlayed = championsIdPlayed
                 .Select((s, i) => new { Id = i, Count = s })
                 .OrderByDescending(c => c.Count)
                 .Take(5)
-                .ToDictionary(c => api.GetChampion(Region.euw, c.Id).Name, c => c.Count);   
+                .ToDictionary(c => Mongo.Champions.Find(Query<Champion>.Where(champion => champion.ChampionId == c.Id)).First().Name, c => c.Count);   
         }
     }
 }

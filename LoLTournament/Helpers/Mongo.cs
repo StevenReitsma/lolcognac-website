@@ -9,6 +9,7 @@ namespace LoLTournament.Helpers
         public static MongoCollection<Match> Matches;
         public static MongoCollection<Participant> Participants;
         public static MongoCollection<TeambuilderParticipant> TeamBuilderParticipants;
+        public static MongoCollection<Champion> Champions;
 
         static Mongo()
         {
@@ -20,6 +21,7 @@ namespace LoLTournament.Helpers
             Matches = db.GetCollection<Match>("Matches");
             Participants = db.GetCollection<Participant>("Participants");
             TeamBuilderParticipants = db.GetCollection<TeambuilderParticipant>("TeamBuilderParticipants");
+            Champions = db.GetCollection<Champion>("Champions");
         }
     }
 }
