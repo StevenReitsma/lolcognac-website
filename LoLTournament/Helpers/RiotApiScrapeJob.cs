@@ -22,6 +22,7 @@ namespace LoLTournament.Helpers
     public class RiotApiScrapeJob
     {
         private readonly RiotApi _api;
+        private readonly StaticRiotApi _staticApi;
 
         public RiotApiScrapeJob()
         {
@@ -30,6 +31,7 @@ namespace LoLTournament.Helpers
             var rateLimit2 = int.Parse(WebConfigurationManager.AppSettings["RateLimitPer10Minutes"]);
 
             _api = RiotApi.GetInstance(key, rateLimit1, rateLimit2);
+            _staticApi = StaticRiotApi.GetInstance(key);
 
             // For summoner statistics, always 1 hour
             var intervalSummoners = new TimeSpan(1, 0, 0);
@@ -38,6 +40,17 @@ namespace LoLTournament.Helpers
 
             //new Timer(ScrapeSummoners, null, new TimeSpan(0, 0, 0, 0, 0), intervalSummoners);
             new Timer(ScrapeMatches, null, new TimeSpan(0, 0, 0, 0, 0), intervalMatches);
+            new Timer(ScrapeStatic, null, TimeSpan.Zero, TimeSpan.FromDays(1.0));
+        }
+
+        private void ScrapeStatic(object arg)
+        {
+            Mongo.Champions.DropAllIndexes();
+            var champions = _staticApi.GetChampions(Region.euw).Champions;
+            foreach(var champion in champions.Keys)
+            {
+                Mongo.Champions.Save(new Champion() { Name = champions[champion].Name, ChampionId = champions[champion].Id });
+            }
         }
 
         private void ScrapeMatches(object arg)
