@@ -23,9 +23,9 @@ namespace LoLTournament.Models
         public string TeamCaptainEmail { get; set; }
         [DisplayName("Team captain study program (e.g. B Artificial Intelligence, M English, B Computer Science, etc.)")]
         public string TeamCaptainStudy { get; set; }
-        [DisplayName("Team captain is a RU student (will be checked!)")]
+        [DisplayName("Team captain is a RU student (will be verified)")]
         public bool TeamCaptainRUStudent { get; set; }
-        [DisplayName("Team captain is a member or benefactor of either CognAC or Dorans (will be checked!)")]
+        [DisplayName("Team captain is a member or benefactor of either CognAC or Dorans (will be verified)")]
         public bool TeamCaptainCognACDorans { get; set; }
         [DisplayName("Team captain student number (only if student of RU)")]
         public string TeamCaptainStudentNumber { get; set; }
@@ -43,9 +43,9 @@ namespace LoLTournament.Models
         [DisplayName("Player 2 study program")]
         [Required(ErrorMessage = "Required.")]
         public string Summoner2Study { get; set; }
-        [DisplayName("Player 2 is a RU student (will be checked!)")]
+        [DisplayName("Player 2 is a RU student (will be verified)")]
         public bool Summoner2RUStudent { get; set; }
-        [DisplayName("Player 2 is a member or benefactor of either CognAC or Dorans (will be checked!)")]
+        [DisplayName("Player 2 is a member or benefactor of either CognAC or Dorans (will be verified)")]
         public bool Summoner2CognACDorans { get; set; }
         [DisplayName("Player 2 student number (only if student of RU)")]
         public string Summoner2StudentNumber { get; set; }
@@ -63,9 +63,9 @@ namespace LoLTournament.Models
         [DisplayName("Player 3 study program")]
         [Required(ErrorMessage="Required.")]
         public string Summoner3Study { get; set; }
-        [DisplayName("Player 3 is a RU student (will be checked!)")]
+        [DisplayName("Player 3 is a RU student (will be verified)")]
         public bool Summoner3RUStudent { get; set; }
-        [DisplayName("Player 3 is a member or benefactor of either CognAC or Dorans (will be checked!)")]
+        [DisplayName("Player 3 is a member or benefactor of either CognAC or Dorans (will be verified)")]
         public bool Summoner3CognACDorans { get; set; }
         [DisplayName("Player 3 student number (only if student of RU)")]
         public string Summoner3StudentNumber { get; set; }
@@ -83,9 +83,9 @@ namespace LoLTournament.Models
         [DisplayName("Player 4 study program")]
         [Required(ErrorMessage="Required.")]
         public string Summoner4Study { get; set; }
-        [DisplayName("Player 4 is a RU student (will be checked!)")]
+        [DisplayName("Player 4 is a RU student (will be verified)")]
         public bool Summoner4RUStudent { get; set; }
-        [DisplayName("Player 4 is a member or benefactor of either CognAC or Dorans (will be checked!)")]
+        [DisplayName("Player 4 is a member or benefactor of either CognAC or Dorans (will be verified)")]
         public bool Summoner4CognACDorans { get; set; }
         [DisplayName("Player 4 student number (only if student of RU)")]
         public string Summoner4StudentNumber { get; set; }
@@ -103,9 +103,9 @@ namespace LoLTournament.Models
         [DisplayName("Player 5 study program")]
         [Required(ErrorMessage="Required.")]
         public string Summoner5Study { get; set; }
-        [DisplayName("Player 5 is a RU student (will be checked!)")]
+        [DisplayName("Player 5 is a RU student (will be verified)")]
         public bool Summoner5RUStudent { get; set; }
-        [DisplayName("Player 5 is a member or benefactor of either CognAC or Dorans (will be checked!)")]
+        [DisplayName("Player 5 is a member or benefactor of either CognAC or Dorans (will be verified)")]
         public bool Summoner5CognACDorans { get; set; }
         [DisplayName("Player 5 student number (only if student of RU)")]
         public string Summoner5StudentNumber { get; set; }
