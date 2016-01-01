@@ -17,9 +17,9 @@ namespace LoLTournament.Models
         public List<Match> MatchHistory { get; set; }
         public bool OtherTeamReady { get; set; }
         public bool OtherTeamDefined { get; set; }
-        public long AvgKills { get; set; }
-        public long AvgAssists { get; set; }
-        public long AvgDeaths { get; set; }
+        public double AvgKills { get; set; }
+        public double AvgAssists { get; set; }
+        public double AvgDeaths { get; set; }
         public double WinPercentage { get; set; }
         public TimeSpan AvgPlayTime { get; set; }
 

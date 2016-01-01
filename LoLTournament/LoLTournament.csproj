@@ -450,6 +450,7 @@
     <Content Include="Content\Images\Photos\Thumb\IMG_2297.jpg" />
     <Content Include="Content\Images\Photos\Thumb\IMG_2298.jpg" />
     <Content Include="Content\Images\Photos\Thumb\IMG_2299.jpg" />
+    <Content Include="Content\Images\redbull.png" />
     <Content Include="Content\Images\splash.jpg" />
     <Content Include="Content\Images\splash2.jpg" />
     <Content Include="Content\landing-page.css" />

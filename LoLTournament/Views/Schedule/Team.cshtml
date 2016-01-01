@@ -5,178 +5,201 @@
 @using RiotSharp.LeagueEndpoint
 @model TeamViewModel
 
-@if (@Model == null || @Model.Team == null)
-{
-    <h2>Team does not exist</h2>
-}
-else if (@Model.Team.Participants.Any(x => x.Summoner == null))
-{
-    <h2>Team info has not yet been downloaded from Riot API, this is done every hour, so check back later!</h2>
-}
-else
-{
-    <h2>@Model.Team.Name <span class="label label-success" style="font-size: 11px; vertical-align:middle">Pool @(Model.Team.Pool+1)</span></h2>
-
-    foreach (var p in @Model.Team.Participants.OrderByDescending(x => Math.Max((int)x.Season4Tier, (int)x.Season5Tier)))
-    {
-        var maxTier = (Tier)Math.Max((int)p.Season4Tier, (int)p.Season5Tier);
-        string color;
-        switch (maxTier)
-        {
-            case Tier.Unranked:
-                color = "333";
-                break;
-            case Tier.Bronze:
-                color = "6E3A07";
-                break;
-            case Tier.Silver:
-                color = "ADB3C6";
-                break;
-            case Tier.Gold:
-                color = "F0AD4E";
-                break;
-            case Tier.Platinum:
-                color = "5CB85C";
-                break;
-            case Tier.Diamond:
-                color = "5BC0DE";
-                break;
-            case Tier.Master:
-                color = "337AB7";
-                break;
-            case Tier.Challenger:
-                color = "D9534F";
-                break;
-            default:
-                color = "777";
-                break;
-        }
-        <a href="http://www.lolking.net/summoner/euw/@p.Summoner.Id" style="text-decoration: none;" title="@maxTier"><span class="label" style="background-color: #@color;">@p.Summoner.Name</span></a>
-    }
-
-    <h3>Next match</h3>
-    if (DateTime.Now < DateTime.ParseExact(WebConfigurationManager.AppSettings["TournamentStart"], "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture))
-    {
-        <p>Tournament hasn't started yet.</p>
-    }
-    else if (!Model.OtherTeamDefined)
-    {
-        <p>Your next opponent has not yet been defined because their pool or elimination match has not yet finished. Refresh the page every minute or so or refresh yourself with a drink from the bar.</p>
-    }
-    else if (Model.NextMatch == null)
-    {
-        <p>No more matches to play.</p>
-    }
-    else
-    {
-        <div class="panel panel-info">
-            <div class="panel-heading">
-                <span class="label label-primary" style="font-size: 11px; vertical-align: middle">@Model.NextMatch.Phase.GetDisplayString()</span>
-                <a href="@Url.Action("Team", "Timetable", new RouteValueDictionary {{"teamId", Model.NextMatch.BlueTeamId}})">@Model.NextMatch.BlueTeam.Name</a> versus <a href="@Url.Action("Team", "Schedule", new RouteValueDictionary {{"teamId", Model.NextMatch.PurpleTeamId}})">@Model.NextMatch.PurpleTeam.Name</a>
+<div class="schedule-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="intro-message-small">
+                    <h1>Match schedule</h1>
+                    <hr class="intro-divider">
+                </div>
             </div>
-            <div class="panel-body">
-                @if (Model.OtherTeamReady)
+        </div>
+    </div>
+</div>
+
+<div class="content-section-b">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-lg-12">
+                <div class="clearfix"></div>
+
+                @if (@Model == null || @Model.Team == null)
                 {
-                    if (!IpHelper.IsAllowed(HttpContext.Current))
-                    {
-                        <div class="alert alert-danger" role="alert">You are not connected to the RU network. Connect the correct ethernet cable or connect to eduroam. If you think you are correctly connected, notify crew member Steven.</div>
-                    }
-                    else
-                    {
-                        if (IpHelper.IsOnEduroam(HttpContext.Current))
-                        {
-                            <div class="alert alert-danger" role="alert">You are connected to eduroam instead of to a wired connection. Disable wi-fi to force wired connectivity.</div>
-                        }
-                        <h4>How to enter tournament lobby</h4>
-                        <p>
-                            Go to <b>Play &raquo; Custom &raquo; Tournament Code</b> in your League of Legends client and enter the following code:<br /><br />
-
-                            <input type="text" class="form-control" style="display: inline; cursor: pointer; max-width: 400px;" value="@Model.NextMatch.TournamentCode" onfocus=" this.select() " onclick=" this.select() " readonly/> click box, copy paste
-                            <hr />
-
-                            If one of the participants does not own at least 16 champions &#8213; including free rotation &#8213;, all 10 participants should use the following code:<br /><br />
-
-                            <input type="text" class="form-control" style="display: inline; cursor: pointer; max-width: 400px;" value="@Model.NextMatch.TournamentCodeBlind" onfocus=" this.select() " onclick=" this.select() " readonly/> click box, copy paste
-                            <hr />
-
-                            <b>@Model.NextMatch.BlueTeam.Name</b> is on the <b style="color: #337AB7">blue</b> side (left in lobby), while <b>@Model.NextMatch.PurpleTeam.Name</b> is on the <b style="color: #CC3232;">red</b> side (right in lobby).<br />
-                            No players have to be invited since everyone can join the lobby using the tournament code, even spectators.
-                        </p>
-                    }
+                    <h2>Team does not exist</h2>
+                }
+                else if (@Model.Team.Participants.Any(x => x.Summoner == null))
+                {
+                    <h2>Team info has not yet been downloaded from Riot API, this is done every hour, so check back later!</h2>
                 }
                 else
                 {
-                    <p>The other team has not yet finished their current match. Refresh the page every minute or so or refresh yourself with a drink from the bar.</p>
-                }
-            </div>
-        </div>
-    }
+                    <h2>@Model.Team.Name <span class="label label-success" style="font-size: 11px; vertical-align: middle">Pool @(Model.Team.Pool + 1)</span></h2>
 
-    <h3>Tournament statistics</h3>
-    <ul class="list-group" style="max-width: 300px">
-        <li class="list-group-item">
-            @if (Model.Team.Wins == 0 && Model.Team.Losses == 0)
-            {
-                <span class="badge">N/A</span>
-            }
-            else
-            {
-                <span class="badge">@(Math.Round(Model.WinPercentage))%</span>
-            }
-            Wins
-        </li>
-        <li class="list-group-item">
-            <span class="badge">@Model.AvgKills</span>
-            Average kills per game
-        </li>
-        <li class="list-group-item">
-            <span class="badge">@Model.AvgDeaths</span>
-            Average deaths per game
-        </li>
-        <li class="list-group-item">
-            <span class="badge">@Model.AvgAssists</span>
-            Average assists per game
-        </li>
-        <li class="list-group-item">
-            <span class="badge">@Model.AvgPlayTime.ToString(@"hh\:mm\:ss")</span>
-            Average play time
-        </li>
-    </ul>
-
-    <h3>Match history</h3>
-    if (Model.MatchHistory == null || Model.MatchHistory.Count == 0)
-    {
-        <p>No matches played yet.</p>
-    }
-    else
-    {
-        foreach (var m in Model.MatchHistory)
-        {
-            var color = m.WinnerId == Model.Team.Id ? "success" : "danger";
-            var otherTeamId = Model.Team.Id == m.BlueTeamId ? m.PurpleTeamId : m.BlueTeamId;
-            var otherTeamName = Model.Team.Id == m.BlueTeamId ? m.PurpleTeam.Name : m.BlueTeam.Name;
-
-            <div class="panel panel-@color">
-                <div class="panel-heading">
-                    <div style="float:right" title="@m.Duration">@(m.CreationTime.AddMinutes(10).ToShortTimeString()) - @((m.CreationTime.AddMinutes(10) + m.Duration).ToShortTimeString())</div>
-                    <span class="label label-primary" style="font-size: 11px; vertical-align:middle">@m.Phase.GetDisplayString()</span>
-                    @if (m.Duration == new TimeSpan(0, 0, 0, 0))
+                    foreach (var p in @Model.Team.Participants.OrderByDescending(x => Math.Max((int) x.Season4Tier, (int) x.Season5Tier)))
                     {
-                        <span class="label label-danger" style="font-size: 11px; vertical-align:middle">Losing team left early</span>
+                        var maxTier = (Tier) Math.Max((int) p.Season4Tier, (int) p.Season5Tier);
+                        string color;
+                        switch (maxTier)
+                        {
+                            case Tier.Unranked:
+                                color = "333";
+                                break;
+                            case Tier.Bronze:
+                                color = "6E3A07";
+                                break;
+                            case Tier.Silver:
+                                color = "ADB3C6";
+                                break;
+                            case Tier.Gold:
+                                color = "F0AD4E";
+                                break;
+                            case Tier.Platinum:
+                                color = "5CB85C";
+                                break;
+                            case Tier.Diamond:
+                                color = "5BC0DE";
+                                break;
+                            case Tier.Master:
+                                color = "337AB7";
+                                break;
+                            case Tier.Challenger:
+                                color = "D9534F";
+                                break;
+                            default:
+                                color = "777";
+                                break;
+                        }
+                        <a href="http://www.lolking.net/summoner/euw/@p.Summoner.Id" style="text-decoration: none;" title="@maxTier"><span class="label" style="background-color: #@color;">@p.Summoner.Name</span></a>
                     }
-                    <a href="@Url.Action("Team", "Timetable", new RouteValueDictionary { { "teamId", otherTeamId} })">@otherTeamName</a>
-                </div>
-                <div class="panel-body">
-                    @if (m.Duration != new TimeSpan(0, 0, 0, 0))
+
+                    <h3>Next match</h3>
+                    if (DateTime.Now < DateTime.ParseExact(WebConfigurationManager.AppSettings["TournamentStart"], "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture))
                     {
-                        <a href="http://matchhistory.euw.leagueoflegends.com/en/#match-details/EUW1/@(m.RiotMatchId)/@(Model.Team.Captain.Summoner.Id)?tab=overview">Match statistics</a>
+                        <p>Tournament hasn't started yet.</p>
+                    }
+                    else if (!Model.OtherTeamDefined)
+                    {
+                        <p>Your next opponent has not yet been defined because their pool or elimination match has not yet finished. Refresh the page every minute or so or refresh yourself with a drink from the bar.</p>
+                    }
+                    else if (Model.NextMatch == null)
+                    {
+                        <p>No more matches to play.</p>
                     }
                     else
                     {
-                        <span>No match played.</span>
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                <span class="label label-primary" style="font-size: 11px; vertical-align: middle">@Model.NextMatch.Phase.GetDisplayString()</span>
+                                <a href="@Url.Action("Team", "Timetable", new RouteValueDictionary {{"teamId", Model.NextMatch.BlueTeamId}})">@Model.NextMatch.BlueTeam.Name</a> versus <a href="@Url.Action("Team", "Schedule", new RouteValueDictionary {{"teamId", Model.NextMatch.PurpleTeamId}})">@Model.NextMatch.PurpleTeam.Name</a>
+                            </div>
+                            <div class="panel-body">
+                                @if (Model.OtherTeamReady)
+                                {
+                                    if (!IpHelper.IsAllowed(HttpContext.Current))
+                                    {
+                                        <div class="alert alert-danger" role="alert">You are not connected to the RU network. Connect the correct ethernet cable or connect to eduroam. If you think you are correctly connected, notify crew member Steven.</div>
+                                    }
+                                    else
+                                    {
+                                        if (IpHelper.IsOnEduroam(HttpContext.Current))
+                                        {
+                                            <div class="alert alert-danger" role="alert">You are connected to eduroam instead of to a wired connection. Disable wi-fi to force wired connectivity.</div>
+                                        }
+                                        <h4>How to enter tournament lobby</h4>
+                                        <p>
+                                            Go to <b>Play &raquo; Custom &raquo; Tournament Code</b> in your League of Legends client and enter the following code:<br/><br/>
+
+                                            <input type="text" class="form-control" style="display: inline; cursor: pointer; max-width: 400px;" value="@Model.NextMatch.TournamentCode" onfocus=" this.select() " onclick=" this.select() " readonly/> click box, copy paste
+                                            <hr/>
+
+                                            If one of the participants does not own at least 16 champions &#8213; including free rotation &#8213;, all 10 participants should use the following code:<br/><br/>
+
+                                            <input type="text" class="form-control" style="display: inline; cursor: pointer; max-width: 400px;" value="@Model.NextMatch.TournamentCodeBlind" onfocus=" this.select() " onclick=" this.select() " readonly/> click box, copy paste
+                                            <hr/>
+
+                                            <b>@Model.NextMatch.BlueTeam.Name</b> is on the <b style="color: #337AB7">blue</b> side (left in lobby), while <b>@Model.NextMatch.PurpleTeam.Name</b> is on the <b style="color: #CC3232;">red</b> side (right in lobby).<br/>
+                                            No players have to be invited since everyone can join the lobby using the tournament code, even spectators.
+                                        </p>
+                                    }
+                                }
+                                else
+                                {
+                                    <p>The other team has not yet finished their current match. Refresh the page every minute or so or refresh yourself with a drink from the bar.</p>
+                                }
+                            </div>
+                        </div>
                     }
-                </div>
+
+                    <h3>Tournament statistics</h3>
+                    <ul class="list-group" style="max-width: 300px">
+                        <li class="list-group-item">
+                            @if (Model.Team.Wins == 0 && Model.Team.Losses == 0)
+                            {
+                                <span class="badge">N/A</span>
+                            }
+                            else
+                            {
+                                <span class="badge">@(Math.Round(Model.WinPercentage))%</span>
+                            }
+                            Wins
+                        </li>
+                        <li class="list-group-item">
+                            <span class="badge">@Model.AvgKills.ToString("0.0")</span>
+                            Average kills per game
+                        </li>
+                        <li class="list-group-item">
+                            <span class="badge">@Model.AvgDeaths.ToString("0.0")</span>
+                            Average deaths per game
+                        </li>
+                        <li class="list-group-item">
+                            <span class="badge">@Model.AvgAssists.ToString("0.0")</span>
+                            Average assists per game
+                        </li>
+                        <li class="list-group-item">
+                            <span class="badge">@Model.AvgPlayTime.ToString(@"hh\:mm\:ss")</span>
+                            Average play time
+                        </li>
+                    </ul>
+
+                    <h3>Match history</h3>
+                    if (Model.MatchHistory == null || Model.MatchHistory.Count == 0)
+                    {
+                        <p>No matches played yet.</p>
+                    }
+                    else
+                    {
+                        foreach (var m in Model.MatchHistory)
+                        {
+                            var color = m.WinnerId == Model.Team.Id ? "success" : "danger";
+                            var otherTeamId = Model.Team.Id == m.BlueTeamId ? m.PurpleTeamId : m.BlueTeamId;
+                            var otherTeamName = Model.Team.Id == m.BlueTeamId ? m.PurpleTeam.Name : m.BlueTeam.Name;
+
+                            <div class="panel panel-@color">
+                                <div class="panel-heading">
+                                    <div style="float: right" title="@m.Duration">@(m.CreationTime.AddMinutes(10).ToShortTimeString()) - @((m.CreationTime.AddMinutes(10) + m.Duration).ToShortTimeString())</div>
+                                    <span class="label label-primary" style="font-size: 11px; vertical-align: middle">@m.Phase.GetDisplayString()</span>
+                                    @if (m.Duration == new TimeSpan(0, 0, 0, 0))
+                                    {
+                                        <span class="label label-danger" style="font-size: 11px; vertical-align: middle">Losing team left early</span>
+                                    }
+                                    <a href="@Url.Action("Team", "Schedule", new RouteValueDictionary {{"teamId", otherTeamId}})">@otherTeamName</a>
+                                </div>
+                                <div class="panel-body">
+                                    @if (m.Duration != new TimeSpan(0, 0, 0, 0))
+                                    {
+                                        <a href="http://matchhistory.euw.leagueoflegends.com/en/#match-details/EUW1/@(m.RiotMatchId)/@(Model.Team.Captain.Summoner.Id)?tab=overview">Match statistics</a>
+                                    }
+                                    else
+                                    {
+                                        <span>No match played.</span>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    }
+                }
             </div>
-        }
-    }
-}
+        </div>
+    </div>
+</div>

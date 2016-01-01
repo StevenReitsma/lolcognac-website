@@ -1,70 +1,75 @@
-﻿@using System
-@model LoLTournament.Models.ScheduleViewModel
+﻿@model LoLTournament.Models.ScheduleViewModel
 
-<h2>Match history per team</h2>
-<p>
-    Winners:
-    <ol>
-        <li>The Scientific Approach</li>
-        <li>Gewoon Boyteam</li>
-        <li>Duurt Lan</li>
-        <li>Kappachinos</li>
-    </ol>
-</p>
+<div class="schedule-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="intro-message-small">
+                    <br/>
+                    <h1>Match schedule</h1>
+                    <hr class="intro-divider">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-<table width="100%">
-    <tbody>
-        @{
-            for (int i = 0; i < 2; i++)
-            {
-                <tr>
-                    @for (int j = 0; j < 4; j++)
-                    {
-                        if (i * 16 + 4 * j < Model.Teams.Count)
+<div class="content-section-b">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-lg-12">
+                <div class="clearfix"></div>
+
+                <table width="100%">
+                    <tbody>
+                    @{
+                        for (int i = 0; i < 2; i++)
                         {
-                            <td style="padding-left: 10px; width: 25%">
-                                <ul class="list-group">
-                                    <li class="list-group-item list-group-item-info">
-                                        <b>Pool @(Model.Teams[i * 16 + 4 * j].Pool + 1)</b>
-                                    </li>
-                                    @for (int k = 0; k < 4; k++)
+                            <tr>
+                                @for (int j = 0; j < 4; j++)
+                                {
+                                    if (i*16 + 4*j < Model.Teams.Count)
                                     {
-                                        <li class="list-group-item">
-                                            <a href="@Url.Action("Team", "Timetable", new RouteValueDictionary { { "teamId", @Model.Teams[i * 16 + 4 * j + k].Id } })">@Model.Teams[i * 16 + 4 * j + k].Name</a>
-                                        </li>
+                                        <td style="padding-left: 10px; width: 25%">
+                                            <ul class="list-group">
+                                                <li class="list-group-item list-group-item-info">
+                                                    <b>Pool @(Model.Teams[i*16 + 4*j].Pool + 1)</b>
+                                                </li>
+                                                @for (int k = 0; k < 4; k++)
+                                                {
+                                                    <li class="list-group-item">
+                                                        <a href="@Url.Action("Team", "Schedule", new RouteValueDictionary {{"teamId", @Model.Teams[i*16 + 4*j + k].Id}})">@Model.Teams[i*16 + 4*j + k].Name</a>
+                                                    </li>
+                                                }
+                                            </ul>
+                                        </td>
                                     }
-                                </ul>
-                            </td>
+                                }
+                            </tr>
                         }
                     }
-                </tr>
-            }
-        }
-    </tbody>
-</table>
+                    </tbody>
+                </table>
 
-<h2>Schedule</h2>
+                <h2>Schedule</h2>
 
-<ul>
-    <li>
-        <b>Pool phase:</b> each team plays three matches, one versus each opponent in their pool.
-    </li>
-    <li>
-        <b>Elimination phase:</b> the two best teams of each pool enter the elimination phase, where they will compete against winners of other pools. 'Best' is defined as winning the most matches. If there is a tie, the team with the shortest total match play time is placed higher.<br />
-        <b>Losers' bracket:</b> the two other teams of each pool enter the losers' bracket phase, where they will compete against the non-winners of the other pools.
-    </li>
-    <li>
-        <b>Bronze finale:</b> the two teams that lost their semi-finals will play in the Bronze Finale, determining who gets the third and fourth place.
-    </li>
-    <li>
-        <b>Finale (best out of three):</b> the two teams that won their semi-finals will compete in a series of two to three matches.
-    </li>
-</ul>
+                <ul>
+                    <li>
+                        <b>Pool phase:</b> each team plays three matches, one versus each opponent in their pool.
+                    </li>
+                    <li>
+                        <b>Elimination phase:</b> the two best teams of each pool enter the elimination phase, where they will compete against winners of other pools. 'Best' is defined as winning the most matches. If there is a tie, the team with the shortest total match play time is placed higher. Contrary to last year, there will be no losers' bracket. Instead, we organize separate mini-tournaments (e.g. ARAM) for teams that have been eliminated from the tournament.<br/>
+                    </li>
+                    <li>
+                        <b>Bronze finale:</b> the two teams that lost their semi-finals will play in the Bronze Finale, determining who gets the third and fourth place.
+                    </li>
+                    <li>
+                        <b>Finale (best out of three if time allows, otherwise single match):</b> the two teams that won their semi-finals will compete in a series of matches.
+                    </li>
+                </ul>
 
-<p>
-    Since there is a total of 80 matches that need to be played, we won't show them all on this page. You can click on the team names above to view their next match and their match history.
-    We do show the bracket structure for the elimination phase. The losers' bracket is exactly the same, except you should replace 'Winner' with 'Third' and 'Second' with 'Fourth' in match <b>A</b> to <b>H</b>.
-    Note that match <b>O</b> is a best out of three match for the elimination phase. This is not the case for the losers' bracket. There is also no bronze match for the losers' bracket.
-</p>
-
-<img src="~/Content/Images/bracket.png" style="width:100%"/>
+                <img src="~/Content/Images/bracket.png" style="width: 100%"/>
+            </div>
+        </div>
+    </div>
+</div>
