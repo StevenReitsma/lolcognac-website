@@ -109,6 +109,8 @@ namespace LoLTournament.Models
         public bool Summoner5CognACDorans { get; set; }
         [DisplayName("Player 5 student number (only if student of RU)")]
         public string Summoner5StudentNumber { get; set; }
+        [DisplayName("Payment method")]
+        public PaymentMethod PaymentMethod { get; set; }
 
         public DateTime RegistrationCloseDate
         {

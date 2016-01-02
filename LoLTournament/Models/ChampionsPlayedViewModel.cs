@@ -17,21 +17,21 @@ namespace LoLTournament.Models
         {
             var matches = Mongo.Matches.FindAll();
 
-            int[] championsIdPlayed = new int[1000];
+            // Flatten all champion id's
+            var playedChampions = matches.SelectMany(match => match.ChampionIds);
 
-            foreach(var match in matches) 
-            {
-                foreach(var id in match.ChampionIds) 
-                {
-                    championsIdPlayed[id]++;
-                }
-            }
+            // Create groups, count contents, check for 0-count, order by count and put in dictionary
+            var counts = from id in playedChampions
+                group id by id
+                into g
+                where g.Any()
+                orderby g.Count() descending 
+                select new {g.Key, Count = g.Count()};
 
-            ChampionsPlayed = championsIdPlayed
-                .Select((s, i) => new { Id = i, Count = s })
-                .OrderByDescending(c => c.Count)
+            // Take top 5 and convert id -> name
+            ChampionsPlayed = counts
                 .Take(5)
-                .ToDictionary(c => Mongo.Champions.Find(Query<Champion>.Where(champion => champion.ChampionId == c.Id)).First().Name, c => c.Count);   
+                .ToDictionary(c => Mongo.Champions.Find(Query<Champion>.Where(champion => champion.ChampionId == c.Key)).First().Name, c => c.Count);   
         }
     }
 }

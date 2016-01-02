@@ -34,8 +34,6 @@
                     <p>
                         Don't have a team yet? Use the <a href="@Url.Action("Teambuilder", "Register")">team builder</a>!
                     </p>
-
-                    
                 }
                 else
                 {
@@ -55,7 +53,10 @@
             <div class="row">
                 <div class="col-lg-12 col-lg-12">
                     <div class="clearfix"></div>
-                    <div class="alert alert-warning" role="alert">The tournament is full. However, you can still register. Your team will be placed on the waiting list and notified when a spot becomes available.</div>
+
+                    <div class="alert alert-warning" role="alert">There are 12 more spots available for teams that consist fully of CognAC and/or Dorans members and/or benefactors.</div>
+                    <div class="alert alert-warning" role="alert">There are 20 more spots available for teams with 4 or 5 RU students.</div>
+
                     <div id="ParentDiv">
                         @{ Html.RenderPartial("Form"); }
                     </div>

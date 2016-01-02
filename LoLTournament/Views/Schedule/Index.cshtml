@@ -31,15 +31,17 @@
                 }
                 else if (Model.Teams.Count() >= 32)
                 {
-                    <div class="alert alert-warning" role="alert">The tournament is full. However, you can still register. If you have more RU students in your team than there are RU students in another team, you will take their place. <strong>The list below is not yet final</strong>. 20 February, you will receive an email telling you whether you can participate or not. The higher you are on the list, the less likely you are to descend into the waiting list. If you have five RU students in your team you cannot descend at all.</div>
+                    <div class="alert alert-warning" role="alert">The tournament is full and registration is closed.</div>
                 }
                 else if (Model.Teams.Count() == 31)
                 {
-                    <div class="alert alert-warning" role="alert">There is only <b>@(32 - Model.Teams.Count())</b> more spot available.</div>
+                    <div class="alert alert-warning" role="alert">There is only <b>@(32 - Model.Teams.Count())</b> more spot available.
+                    </div>
                 }
                 else
                 {
-                    <div class="alert alert-warning" role="alert">There are only <b>@(32 - Model.Teams.Count())</b> more spots available.</div>
+                    <div class="alert alert-warning" role="alert">There are <b>@(32 - Model.Teams.Count())</b> more spots available. <a href="@Url.Action("Index", "Register")">Register</a> now to reserve your spot!
+                    </div>
                 }
 
                 <h3>Registered teams</h3>
@@ -50,26 +52,14 @@
                 else
                 {
                     <ul>
-                        @{ int i = 0; }
                         @foreach (var t in Model.Teams)
                         {
-                            i++;
                             <li>
                                 @t.Name
-                                @if (HttpContext.Current.Request.Params["admin_method"] == "GiveMMR")
-                                {
-                                    <strong>RU: @t.AmountOfRuStudents | MMR: @Math.Round(t.MMR)</strong>
-                                }
-                                @if (i == 32)
-                                {
-                                    break;
-                                    <hr />
-                                    <strong>Waiting list:</strong>
-                                }
                             </li>
                         }
                     </ul>
-                            }
+                }
 
                 @if (Model.TeambuilderParticipants.Any())
                 {

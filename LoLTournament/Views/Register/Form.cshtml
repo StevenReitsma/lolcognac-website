@@ -1,10 +1,13 @@
-﻿@model LoLTournament.Models.RegisterViewModel
+﻿@using LoLTournament.Models
+@model LoLTournament.Models.RegisterViewModel
 
 @using (Ajax.BeginForm("Index", "Register", new AjaxOptions() { HttpMethod = "POST", UpdateTargetId = "ParentDiv" }))
 {
     <div class="form-group">
         <strong>@Html.DisplayNameFor(x => x.TeamName)</strong>
         @Html.TextBoxFor(x => x.TeamName, new { @class = "form-control" }) @Html.ValidationMessageFor(model => model.TeamName)
+
+
         <hr />
     </div>
     <div class="form-group">
@@ -213,14 +216,22 @@
     <div class="form-group">
         <strong>@Html.DisplayNameFor(x => x.Summoner5StudentNumber)</strong>
         <div>
-            <div style="display:inline-block; width: 280px;">@Html.TextBoxFor(x => x.Summoner5StudentNumber, new { @class = "form-control" })</div> <div>@Html.ValidationMessageFor(model => model.Summoner5StudentNumber)</div>
+            <div style="display: inline-block; width: 280px;">@Html.TextBoxFor(x => x.Summoner5StudentNumber, new {@class = "form-control"})</div>
+            <div>@Html.ValidationMessageFor(model => model.Summoner5StudentNumber)</div>
+        </div>
+        <hr/>
+    </div>
+    <div class="form-group">
+        <strong>@Html.DisplayNameFor(x => x.PaymentMethod)</strong>
+        <div>
+            <div style="display:inline-block; width: 280px;">@Html.EnumDropDownListFor(x => x.PaymentMethod, new { @class = "form-control" })</div> <div>@Html.ValidationMessageFor(model => model.PaymentMethod)</div>
         </div>
         <hr />
     </div>
 
-    <button type="submit" class="btn btn-default">Register</button>
+    <button type="submit" class="btn btn-default">To payment</button>
     <p>
-        Please be patient after clicking Register. Your League of Legends account data is downloaded from the Riot servers which can take a few seconds.
+        Please be patient after clicking the button. Your League of Legends account data is downloaded from the Riot servers which can take a few seconds.
     </p>
 }
 

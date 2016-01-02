@@ -21,7 +21,12 @@ namespace LoLTournament.Models
             
             var timeSetting = WebConfigurationManager.AppSettings["TournamentStart"];
             DateTime tournamentStart = DateTime.ParseExact(timeSetting, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
-            DateTime tournamentEnd = matches.Last().FinishDate;
+            var lastMatch = matches.LastOrDefault();
+
+            if (lastMatch == null)
+                return;
+
+            DateTime tournamentEnd = lastMatch.FinishDate;
 
             for (DateTime currentTime = tournamentStart; currentTime <= tournamentEnd; currentTime += new TimeSpan(0, 5, 0))
             {
