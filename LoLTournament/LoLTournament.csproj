@@ -96,6 +96,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\RegisterController.cs" />
     <Compile Include="Controllers\ScheduleController.cs" />
@@ -107,11 +108,13 @@
     <Compile Include="Helpers\ExportHelper.cs" />
     <Compile Include="Helpers\IpHelper.cs" />
     <Compile Include="Helpers\Mongo.cs" />
+    <Compile Include="Helpers\NavigationLink.cs" />
     <Compile Include="Helpers\RiotApiMocker.cs" />
     <Compile Include="Helpers\RiotApiScrapeJob.cs" />
     <Compile Include="Helpers\TimeFixer.cs" />
     <Compile Include="Models\Champion.cs" />
     <Compile Include="Models\ChampionsPlayedViewModel.cs" />
+    <Compile Include="Models\PaymentMethod.cs" />
     <Compile Include="Models\StatisticsOverTimeViewModel.cs" />
     <Compile Include="Models\Match.cs" />
     <Compile Include="Models\Participant.cs" />
@@ -131,6 +134,34 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Admin\AdminLTE.css" />
+    <Content Include="Content\Admin\AdminLTE.min.css" />
+    <Content Include="Content\Admin\skins\skin-black-light.css" />
+    <Content Include="Content\Admin\skins\skin-black-light.min.css" />
+    <Content Include="Content\Admin\skins\skin-black.css" />
+    <Content Include="Content\Admin\skins\skin-black.min.css" />
+    <Content Include="Content\Admin\skins\skin-blue-light.css" />
+    <Content Include="Content\Admin\skins\skin-blue-light.min.css" />
+    <Content Include="Content\Admin\skins\skin-blue.css" />
+    <Content Include="Content\Admin\skins\skin-blue.min.css" />
+    <Content Include="Content\Admin\skins\skin-green-light.css" />
+    <Content Include="Content\Admin\skins\skin-green-light.min.css" />
+    <Content Include="Content\Admin\skins\skin-green.css" />
+    <Content Include="Content\Admin\skins\skin-green.min.css" />
+    <Content Include="Content\Admin\skins\skin-purple-light.css" />
+    <Content Include="Content\Admin\skins\skin-purple-light.min.css" />
+    <Content Include="Content\Admin\skins\skin-purple.css" />
+    <Content Include="Content\Admin\skins\skin-purple.min.css" />
+    <Content Include="Content\Admin\skins\skin-red-light.css" />
+    <Content Include="Content\Admin\skins\skin-red-light.min.css" />
+    <Content Include="Content\Admin\skins\skin-red.css" />
+    <Content Include="Content\Admin\skins\skin-red.min.css" />
+    <Content Include="Content\Admin\skins\skin-yellow-light.css" />
+    <Content Include="Content\Admin\skins\skin-yellow-light.min.css" />
+    <Content Include="Content\Admin\skins\skin-yellow.css" />
+    <Content Include="Content\Admin\skins\skin-yellow.min.css" />
+    <Content Include="Content\Admin\skins\_all-skins.css" />
+    <Content Include="Content\Admin\skins\_all-skins.min.css" />
     <Content Include="Content\blueimp-gallery.min.css" />
     <Content Include="Content\bootstrap-image-gallery.css" />
     <Content Include="Content\bootstrap-image-gallery.min.css" />
@@ -473,6 +504,8 @@
     <None Include="Properties\PublishProfiles\Local VM.pubxml" />
     <None Include="Properties\PublishProfiles\VPS CognAC.pubxml" />
     <None Include="Scripts\jquery-2.1.1.intellisense.js" />
+    <Content Include="Scripts\Admin\app.js" />
+    <Content Include="Scripts\Admin\app.min.js" />
     <Content Include="Scripts\bootstrap-image-gallery.js" />
     <Content Include="Scripts\bootstrap-image-gallery.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -518,6 +551,11 @@
     <Content Include="Views\Schedule\Team.cshtml" />
     <Content Include="Views\Statistics\Index.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Admin\_AdminLayout.cshtml" />
+    <Content Include="Views\Admin\Index.cshtml" />
+    <Content Include="Views\Admin\Teams.cshtml" />
+    <Content Include="Views\Admin\Participants.cshtml" />
+    <Content Include="Views\Admin\Finance.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,0 +1,39 @@
+﻿@{
+    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+}
+
+<h1>Finances</h1>
+
+<div class="box">
+    <div class="box-header">
+        <h3 class="box-title">Transactions</h3>
+    </div><!-- /.box-header -->
+    <div class="box-body no-padding">
+        <table class="table table-striped table-hover">
+            <tr>
+                <th style="width: 10px">#</th>
+                <th>ID</th>
+                <th>Team</th>
+                <th>Method</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Payee name</th>
+                <th>Payee IBAN</th>
+                <th>Payment date</th>
+                <th>Actions</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td><code>tr_7UhSN1zuXS</code></td>
+                <td><a href="@Url.Action("Team", "Admin", new RouteValueDictionary {{"teamId", "TEAMID"}})">Test Team</a></td>
+                <td>iDEAL</td>
+                <td>&euro; 26,50</td>
+                <td><span class="badge bg-green">Payment received</span></td>
+                <td>Test Person</td>
+                <td>NL00 ABCD 0123 4567 89</td>
+                <td><i class="fa fa-clock-o"></i> 01-01-2016 13:37</td>
+                <td><a href="@Url.Action("Refund", "Admin", new RouteValueDictionary {{"transactionId", "TRANSACTIONID"}})"><i class="fa fa-undo text-red" title="Refund"></i></a></td>
+            </tr>
+        </table>
+    </div><!-- /.box-body -->
+</div><!-- /.box -->

@@ -1,0 +1,118 @@
+﻿@{
+    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+}
+
+<h1>Dashboard</h1>
+
+<div class="row">
+    <div class="col-lg-3 col-xs-6">
+        <!-- small box -->
+        <div class="small-box bg-aqua">
+            <div class="inner">
+                <h3>0</h3>
+                <p>teams</p>
+            </div>
+            <div class="icon">
+                <i class="ion ion-ios-people"></i>
+            </div>
+            <a href="@Url.Action("Teams", "Admin")" class="small-box-footer">view <i class="fa fa-arrow-circle-right"></i></a>
+        </div>
+    </div><!-- ./col -->
+    <div class="col-lg-3 col-xs-6">
+        <!-- small box -->
+        <div class="small-box bg-green">
+            <div class="inner">
+                <h3>0</h3>
+                <p>people looking for a team</p>
+            </div>
+            <div class="icon">
+                <i class="ion ion-ios-person-outline"></i>
+            </div>
+            <a href="@Url.Action("TeamBuilder", "Admin")" class="small-box-footer">view <i class="fa fa-arrow-circle-right"></i></a>
+        </div>
+    </div><!-- ./col -->
+    <div class="col-lg-3 col-xs-6">
+        <!-- small box -->
+        <div class="small-box bg-yellow">
+            <div class="inner">
+                <h3>&euro; 0,00</h3>
+                <p>received in payments</p>
+            </div>
+            <div class="icon">
+                <i class="ion ion-cash"></i>
+            </div>
+            <a href="@Url.Action("Finance", "Admin")" class="small-box-footer">view <i class="fa fa-arrow-circle-right"></i></a>
+        </div>
+    </div><!-- ./col -->
+    <div class="col-lg-3 col-xs-6">
+        <!-- small box -->
+        <div class="small-box bg-red">
+            <div class="inner">
+                <h3>0</h3>
+                <p>pending payments</p>
+            </div>
+            <div class="icon">
+                <i class="ion ion-load-a"></i>
+            </div>
+            <a href="@Url.Action("Finance", "Admin")" class="small-box-footer">view <i class="fa fa-arrow-circle-right"></i></a>
+        </div>
+    </div><!-- ./col -->
+</div><!-- /.row -->
+
+
+<!-- row -->
+<div class="row">
+    <div class="col-lg-6">
+        <!-- The time line -->
+        <ul class="timeline">
+            <!-- timeline time label -->
+            <li class="time-label">
+                <span class="bg-red">
+                    11 February 2016
+                </span>
+            </li>
+            <!-- /.timeline-label -->
+            <!-- timeline item -->
+            <li>
+                <i class="fa fa-money bg-orange"></i>
+                <div class="timeline-item">
+                    <span class="time"><i class="fa fa-clock-o"></i> 13:37</span>
+                    <h3 class="timeline-header">Payment received from team <a href="@Url.Action("Team", "Admin", new RouteValueDictionary {{"teamId", "TEAMID"}})">Duurt Lan</a>
+                    </h3>
+                    <div class="timeline-body">
+                        &euro; 25,00 received through iDEAL.
+                    </div>
+                    <div class="timeline-footer">
+                        <a class="btn btn-primary btn-xs">View payment details</a>
+                    </div>
+                </div>
+            </li>
+            <!-- END timeline item -->
+            <li class="time-label">
+                <span class="bg-red">
+                    10 February 2016
+                </span>
+            </li>
+            <!-- timeline item -->
+            <li>
+                <i class="fa fa-user-plus bg-aqua"></i>
+                <div class="timeline-item">
+                    <span class="time"><i class="fa fa-clock-o"></i> 12:05</span>
+                    <h3 class="timeline-header">Team <a href="@Url.Action("Team", "Admin", new RouteValueDictionary {{"teamId", "TEAMID"}})">Duurt Lan</a> registered
+                    </h3>
+                </div>
+            </li>
+            <li>
+                <i class="fa fa-wheelchair bg-green"></i>
+                <div class="timeline-item">
+                    <span class="time"><i class="fa fa-clock-o"></i> 08:54</span>
+                    <h3 class="timeline-header"><a href="@Url.Action("TeamBuilder", "Admin")">Piet Piraat</a> is looking for a team</h3>
+                </div>
+            </li>
+            <!-- END timeline item -->
+            <li>
+                <i class="fa fa-clock-o bg-gray"></i>
+            </li>
+        </ul>
+    </div><!-- /.col -->
+</div><!-- /.row -->

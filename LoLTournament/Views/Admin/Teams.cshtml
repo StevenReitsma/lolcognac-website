@@ -1,0 +1,114 @@
+﻿@{
+    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+}
+
+<h1>Teams</h1>
+
+<div class="box">
+    <div class="box-header">
+        <h3 class="box-title">Currently registered teams</h3>
+    </div><!-- /.box-header -->
+    <div class="box-body no-padding">
+        <table class="table table-striped table-hover">
+            <tr>
+                <th style="width: 10px">#</th>
+                <th>Name</th>
+                <th>Payment status</th>
+                <th>RU students</th>
+                <th>Dorans/CognAC members</th>
+                <th>Pool</th>
+                <th>Phase</th>
+                <th>MMR</th>
+                <th>Actions</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td><a href="@Url.Action("Team", "Admin", new RouteValueDictionary {{"teamId", "TEAMID"}})">Test Team</a></td>
+                <td><span class="badge bg-green">Payment received</span></td>
+                <td>
+                    <div class="progress progress-xs" style="width:75px">
+                        <div class="progress-bar progress-bar-green" style="width: 100%"></div>
+                    </div>
+                </td>
+                <td>
+                    <div class="progress progress-xs" style="width: 75px">
+                        <div class="progress-bar progress-bar-green" style="width: 100%"></div>
+                    </div>
+                </td>
+                <td>Pool 1</td>
+                <td>Pool phase</td>
+                <td>1289</td>
+                <td>
+                    <a href="@Url.Action("DeleteTeam", "Admin", new RouteValueDictionary {{"teamId", "TEAMID"}})"><i class="fa fa-minus-circle text-red" title="Delete team"></i></a>
+                    <a href="@Url.Action("DisqualifyTeam", "Admin", new RouteValueDictionary {{"teamId", "TEAMID"}})"><i class="fa fa-sign-out text-orange" title="Disqualify team"></i></a>
+                </td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Test Team 2</td>
+                <td><span class="badge bg-orange">Payment pending</span></td>
+                <td>
+                    <div class="progress progress-xs" style="width: 75px">
+                        <div class="progress-bar progress-bar-green" style="width: 100%"></div>
+                    </div>
+                </td>
+                <td>
+                    <div class="progress progress-xs" style="width: 75px">
+                        <div class="progress-bar progress-bar-danger" style="width: 80%"></div>
+                    </div>
+                </td>
+                <td>Pool 1</td>
+                <td>Pool phase</td>
+                <td>878</td>
+                <td>
+                    <a href="@Url.Action("DeleteTeam", "Admin", new RouteValueDictionary {{"teamId", "TEAMID"}})"><i class="fa fa-minus-circle text-red" title="Delete team"></i></a>
+                    <a href="@Url.Action("DisqualifyTeam", "Admin", new RouteValueDictionary {{"teamId", "TEAMID"}})"><i class="fa fa-sign-out text-orange" title="Disqualify team"></i></a>
+                </td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Test Team 3</td>
+                <td><span class="badge bg-orange">Payment pending</span></td>
+                <td>
+                    <div class="progress progress-xs" style="width:75px">
+                        <div class="progress-bar progress-bar-green" style="width: 80%"></div>
+                    </div>
+                </td>
+                <td>
+                    <div class="progress progress-xs" style="width: 75px">
+                        <div class="progress-bar progress-bar-red" style="width: 20%"></div>
+                    </div>
+                </td>
+                <td>Pool 2</td>
+                <td>Pool phase</td>
+                <td>6334</td>
+                <td>
+                    <a href="@Url.Action("DeleteTeam", "Admin", new RouteValueDictionary {{"teamId", "TEAMID"}})"><i class="fa fa-minus-circle text-red" title="Delete team"></i></a>
+                    <a href="@Url.Action("DisqualifyTeam", "Admin", new RouteValueDictionary {{"teamId", "TEAMID"}})"><i class="fa fa-sign-out text-orange" title="Disqualify team"></i></a>
+                </td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>Test Team 2</td>
+                <td><span class="badge bg-red">Payment error</span></td>
+                <td>
+                    <div class="progress progress-xs" style="width:75px">
+                        <div class="progress-bar progress-bar-red" style="width: 20%"></div>
+                    </div>
+                </td>
+                <td>
+                    <div class="progress progress-xs" style="width: 75px">
+                        <div class="progress-bar progress-bar-green" style="width: 100%"></div>
+                    </div>
+                </td>
+                <td>Pool 3</td>
+                <td>Elimination phase</td>
+                <td>3452</td>
+                <td>
+                    <a href="@Url.Action("DeleteTeam", "Admin", new RouteValueDictionary {{"teamId", "TEAMID"}})"><i class="fa fa-minus-circle text-red" title="Delete team"></i></a>
+                    <a href="@Url.Action("DisqualifyTeam", "Admin", new RouteValueDictionary {{"teamId", "TEAMID"}})"><i class="fa fa-sign-out text-orange" title="Disqualify team"></i></a>
+                </td>
+            </tr>
+        </table>
+    </div><!-- /.box-body -->
+</div><!-- /.box -->

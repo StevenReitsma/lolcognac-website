@@ -1,4 +1,5 @@
 ﻿/// <autosync enabled="true" />
+/// <reference path="admin/app.min.js" />
 /// <reference path="bootstrap.min.js" />
 /// <reference path="bootstrap-image-gallery.min.js" />
 /// <reference path="jquery.blueimp-gallery.min.js" />
