@@ -21,7 +21,7 @@
             <div class="col-lg-12 col-lg-12">
                 <div class="clearfix"></div>
 
-                @if (DateTime.Now < Model.RegistrationCloseDate)
+                @if (DateTime.Now < Model.RegistrationCloseDate && DateTime.Now >= Model.RegistrationStartDate)
                 {
                     <p class="lead">
                         Fill in the form below to register your team for the CognAC League of Legends Tournament 2016.
@@ -46,7 +46,7 @@
     </div>
 </div>
 
-@if (DateTime.Now < Model.RegistrationCloseDate)
+@if (DateTime.Now < Model.RegistrationCloseDate && DateTime.Now >= Model.RegistrationStartDate)
 {
     <div class="content-section-b">
         <div class="container">

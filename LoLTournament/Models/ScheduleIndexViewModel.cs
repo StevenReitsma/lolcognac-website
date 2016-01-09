@@ -35,5 +35,16 @@ namespace LoLTournament.Models
                 return registrationClose;
             }
         }
+
+        public DateTime RegistrationStartDate
+        {
+            get
+            {
+                var timeSetting = WebConfigurationManager.AppSettings["RegistrationStart"];
+                var registrationStart = DateTime.ParseExact(timeSetting, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
+
+                return registrationStart;
+            }
+        }
     }
 }

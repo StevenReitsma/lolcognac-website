@@ -1,6 +1,4 @@
-﻿@using System
-@using System.Linq
-@using System.Web
+﻿@using System.Linq
 @using LoLTournament.Models
 @model ScheduleIndexViewModel
 
@@ -25,7 +23,7 @@
             <div class="col-lg-12 col-lg-12">
                 <div class="clearfix"></div>
 
-                @if (DateTime.Now >= Model.RegistrationCloseDate)
+                @if (DateTime.Now >= Model.RegistrationCloseDate || DateTime.Now <= Model.RegistrationStartDate)
                 {
                     <div class="alert alert-warning" role="alert">Registration is closed.</div>
                 }
