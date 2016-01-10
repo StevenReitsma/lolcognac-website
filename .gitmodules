@@ -1,3 +1,0 @@
-[submodule "mollie-api-csharp"]
-	path = mollie-api-csharp
-	url = git@github.com:foxip/mollie-api-csharp.git
