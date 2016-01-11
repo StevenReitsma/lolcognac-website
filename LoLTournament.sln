@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoLTournament", "LoLTournam
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RiotSharp", "RiotSharp\RiotSharp.csproj", "{3815E113-140C-4EE7-B0B9-7797C9352311}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mollie.Api", "mollie-api-csharp\Mollie.Api\Mollie.Api.csproj", "{0CDEBABF-0EE3-4403-9DF5-52E9542854CE}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{3815E113-140C-4EE7-B0B9-7797C9352311}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3815E113-140C-4EE7-B0B9-7797C9352311}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3815E113-140C-4EE7-B0B9-7797C9352311}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0CDEBABF-0EE3-4403-9DF5-52E9542854CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0CDEBABF-0EE3-4403-9DF5-52E9542854CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0CDEBABF-0EE3-4403-9DF5-52E9542854CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0CDEBABF-0EE3-4403-9DF5-52E9542854CE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

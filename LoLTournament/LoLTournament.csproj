@@ -53,9 +53,14 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\mongocsharpdriver.1.10.0\lib\net35\MongoDB.Driver.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Abstractions" />
     <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -98,6 +103,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\PaymentController.cs" />
     <Compile Include="Controllers\RegisterController.cs" />
     <Compile Include="Controllers\ScheduleController.cs" />
     <Compile Include="Controllers\StatisticsController.cs" />
@@ -105,6 +111,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\BracketHelper.cs" />
+    <Compile Include="Helpers\Mollie.cs" />
     <Compile Include="Helpers\ExportHelper.cs" />
     <Compile Include="Helpers\IpHelper.cs" />
     <Compile Include="Helpers\Mongo.cs" />
@@ -114,7 +121,16 @@
     <Compile Include="Helpers\TimeFixer.cs" />
     <Compile Include="Models\Champion.cs" />
     <Compile Include="Models\ChampionsPlayedViewModel.cs" />
-    <Compile Include="Models\PaymentMethod.cs" />
+    <Compile Include="Models\Financial\CardSecurityType.cs" />
+    <Compile Include="Models\Financial\Payment.cs" />
+    <Compile Include="Models\Financial\PaymentMath.cs" />
+    <Compile Include="Models\Financial\PaymentDetails.cs" />
+    <Compile Include="Models\Financial\PaymentLinks.cs" />
+    <Compile Include="Models\Financial\PaymentMethod.cs" />
+    <Compile Include="Models\Financial\PaymentMode.cs" />
+    <Compile Include="Models\Financial\PaymentRefundStatus.cs" />
+    <Compile Include="Models\Financial\PaymentStatus.cs" />
+    <Compile Include="Models\Financial\PaymentTemplate.cs" />
     <Compile Include="Models\StatisticsOverTimeViewModel.cs" />
     <Compile Include="Models\Match.cs" />
     <Compile Include="Models\Participant.cs" />
@@ -569,6 +585,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Payment\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

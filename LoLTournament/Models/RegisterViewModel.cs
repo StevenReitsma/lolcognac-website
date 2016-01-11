@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Web.Configuration;
+using LoLTournament.Models.Financial;
 
 namespace LoLTournament.Models
 {

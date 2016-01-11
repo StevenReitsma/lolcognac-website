@@ -11,6 +11,7 @@ using MongoDB.Driver;
 using RiotSharp;
 using LoLTournament.Helpers;
 using System.Globalization;
+using LoLTournament.Models.Financial;
 
 namespace LoLTournament.Controllers
 {
@@ -139,6 +140,17 @@ namespace LoLTournament.Controllers
 
                 // Add team to database
                 Mongo.Teams.Insert(team);
+
+                // Create iDeal payment
+                var key = WebConfigurationManager.AppSettings["MollieTestKey"];
+                var client = new MollieClient {ApiKey = key};
+
+                var template = new PaymentTemplate {Amount = PaymentMath.CalculateAmount(team), Description = "CognAC League of Legends Tournament 2016", RedirectUrl = "https://lolcognac.nl", Method = m.PaymentMethod };
+                var status = client.StartPayment(template);
+
+                status.TeamId = team.Id;
+
+                Mongo.Payments.Insert(status);
 
                 return PartialView("OK", m);
             }

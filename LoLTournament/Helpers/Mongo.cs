@@ -1,4 +1,5 @@
 ﻿using LoLTournament.Models;
+using LoLTournament.Models.Financial;
 using MongoDB.Driver;
 
 namespace LoLTournament.Helpers
@@ -10,6 +11,7 @@ namespace LoLTournament.Helpers
         public static MongoCollection<Participant> Participants;
         public static MongoCollection<TeambuilderParticipant> TeamBuilderParticipants;
         public static MongoCollection<Champion> Champions;
+        public static MongoCollection<Payment> Payments;
 
         static Mongo()
         {
@@ -22,6 +24,7 @@ namespace LoLTournament.Helpers
             Participants = db.GetCollection<Participant>("Participants");
             TeamBuilderParticipants = db.GetCollection<TeambuilderParticipant>("TeamBuilderParticipants");
             Champions = db.GetCollection<Champion>("Champions");
+            Payments = db.GetCollection<Payment>("Payments");
         }
     }
 }
