@@ -12,6 +12,7 @@ using RiotSharp;
 using LoLTournament.Helpers;
 using System.Globalization;
 using LoLTournament.Models.Financial;
+using MongoDB.Driver.Builders;
 
 namespace LoLTournament.Controllers
 {
@@ -34,12 +35,46 @@ namespace LoLTournament.Controllers
         {
             var timeSetting = WebConfigurationManager.AppSettings["RegistrationClose"];
             var registrationClose = DateTime.ParseExact(timeSetting, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
+            timeSetting = WebConfigurationManager.AppSettings["RegistrationStart"];
+            var registrationStart = DateTime.ParseExact(timeSetting, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
+            timeSetting = WebConfigurationManager.AppSettings["RegistrationStartEarlyBird"];
+            var registrationStartEarlyBird = DateTime.ParseExact(timeSetting, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
 
-            if (DateTime.Now >= registrationClose) // if registration date has passed
+            // Check registration date, throw 403 otherwise.
+            if (DateTime.Now >= registrationClose || DateTime.Now < registrationStartEarlyBird)
             {
                 Response.StatusCode = 403;
                 return PartialView();
             }
+
+            // Get amount of RU students, CognAC and Dorans
+            var permitCount = Convert.ToInt16(m.TeamCaptainRUStudent || m.TeamCaptainCognAC || m.TeamCaptainDorans) +
+                              Convert.ToInt16(m.Summoner2RUStudent || m.Summoner2CognAC || m.Summoner2Dorans) +
+                              Convert.ToInt16(m.Summoner3RUStudent || m.Summoner3CognAC || m.Summoner3Dorans) +
+                              Convert.ToInt16(m.Summoner4RUStudent || m.Summoner4CognAC || m.Summoner4Dorans) +
+                              Convert.ToInt16(m.Summoner5RUStudent || m.Summoner5CognAC || m.Summoner5Dorans);
+            var earlyBirdCount = Convert.ToInt16(m.TeamCaptainCognAC || m.TeamCaptainDorans) +
+                                 Convert.ToInt16(m.Summoner2CognAC || m.Summoner2Dorans) +
+                                 Convert.ToInt16(m.Summoner3CognAC || m.Summoner3Dorans) +
+                                 Convert.ToInt16(m.Summoner4CognAC || m.Summoner4Dorans) +
+                                 Convert.ToInt16(m.Summoner5CognAC || m.Summoner5Dorans);
+
+            // Check for at least 4 permitted clients
+            if (permitCount < 4)
+                ModelState.AddModelError("permitCount", "The team does not exist of at least 4 RU students, CognAC members, or Dorans members.");
+
+            // Check for early-bird access
+            if (DateTime.Now >= registrationStartEarlyBird && DateTime.Now < registrationStart)
+            {
+                if (earlyBirdCount < 1)
+                    ModelState.AddModelError("earlyBirdAccess",
+                        "Registrations are currently only open for teams that have at least one CognAC or Dorans member.");
+
+                if (Mongo.Teams.Count(Query<Team>.Where(x => !x.Cancelled)) >= 12)
+                    ModelState.AddModelError("earlyBirdFull",
+                        "All 12 early-bird spots are now taken. You can retry registering after the tournament registration officially opens for all students.");
+            }
+
 
             if (ModelState.IsValid)
             {
@@ -58,7 +93,8 @@ namespace LoLTournament.Controllers
                     TeamId = teamId,
                     SummonerName = m.TeamCaptainName,
                     RuStudent = m.TeamCaptainRUStudent,
-                    CognACDorans = m.TeamCaptainCognACDorans,
+                    CognAC = m.TeamCaptainCognAC,
+                    Dorans = m.TeamCaptainDorans,
                     StudentNumber = m.TeamCaptainStudentNumber
                 };
 
@@ -73,7 +109,8 @@ namespace LoLTournament.Controllers
                     TeamId = teamId,
                     SummonerName = m.Summoner2Name,
                     RuStudent = m.Summoner2RUStudent,
-                    CognACDorans = m.Summoner2CognACDorans,
+                    CognAC = m.Summoner2CognAC,
+                    Dorans = m.Summoner2Dorans,
                     StudentNumber = m.Summoner2StudentNumber
                 };
 
@@ -88,7 +125,8 @@ namespace LoLTournament.Controllers
                     TeamId = teamId,
                     SummonerName = m.Summoner3Name,
                     RuStudent = m.Summoner3RUStudent,
-                    CognACDorans = m.Summoner3CognACDorans,
+                    CognAC = m.Summoner3CognAC,
+                    Dorans = m.Summoner3Dorans,
                     StudentNumber = m.Summoner3StudentNumber
                 };
 
@@ -103,7 +141,8 @@ namespace LoLTournament.Controllers
                     TeamId = teamId,
                     SummonerName = m.Summoner4Name,
                     RuStudent = m.Summoner4RUStudent,
-                    CognACDorans = m.Summoner4CognACDorans,
+                    CognAC = m.Summoner4CognAC,
+                    Dorans = m.Summoner4Dorans,
                     StudentNumber = m.Summoner4StudentNumber
                 };
 
@@ -118,7 +157,8 @@ namespace LoLTournament.Controllers
                     TeamId = teamId,
                     SummonerName = m.Summoner5Name,
                     RuStudent = m.Summoner5RUStudent,
-                    CognACDorans = m.Summoner5CognACDorans,
+                    CognAC = m.Summoner5CognAC,
+                    Dorans = m.Summoner5Dorans,
                     StudentNumber = m.Summoner5StudentNumber
                 };
 
@@ -135,7 +175,8 @@ namespace LoLTournament.Controllers
                     CaptainId = captain.Id,
                     Id = teamId,
                     Name = m.TeamName,
-                    ParticipantsIds = listParticipantIds
+                    ParticipantsIds = listParticipantIds,
+                    Cancelled = false,
                 };
 
                 // Add team to database
@@ -145,12 +186,16 @@ namespace LoLTournament.Controllers
                 var key = WebConfigurationManager.AppSettings["MollieTestKey"];
                 var client = new MollieClient {ApiKey = key};
 
-                var template = new PaymentTemplate {Amount = PaymentMath.CalculateAmount(team), Description = "CognAC League of Legends Tournament 2016", RedirectUrl = "https://lolcognac.nl", Method = m.PaymentMethod };
+                var template = new PaymentTemplate {Amount = team.Price, Description = "CognAC League of Legends Tournament 2016", RedirectUrl = "https://lolcognac.nl/Payment/Status/" + team.Id, Method = m.PaymentMethod };
                 var status = client.StartPayment(template);
+                m.PaymentUrl = status.Links.PaymentUrl;
 
                 status.TeamId = team.Id;
 
                 Mongo.Payments.Insert(status);
+
+                // Send email
+                EmailHelper.SendOfficialLoLRegistrationReminder(captain.Email, captain.FullName);
 
                 return PartialView("OK", m);
             }

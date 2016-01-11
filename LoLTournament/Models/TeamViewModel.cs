@@ -31,7 +31,7 @@ namespace LoLTournament.Models
         public TeamViewModel(ObjectId teamId) : this()
         {
             // Initialize team
-            Team = Mongo.Teams.Find(Query<Team>.Where(x => x.Id == teamId)).SingleOrDefault();
+            Team = Mongo.Teams.Find(Query<Team>.Where(x => x.Id == teamId && !x.Cancelled)).SingleOrDefault();
 
             if (Team == null)
                 return;

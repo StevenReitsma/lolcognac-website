@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using LoLTournament.Models;
 using MongoDB.Driver;
+using MongoDB.Driver.Builders;
 
 namespace LoLTournament.Helpers
 {
@@ -17,7 +18,7 @@ namespace LoLTournament.Helpers
         public static void CreatePoolStructure()
         {
             // Get competing teams
-            var validTeams = Mongo.Teams.FindAll()
+            var validTeams = Mongo.Teams.Find(Query<Team>.Where(x => !x.Cancelled))
                 .OrderByDescending(x => x.AmountOfRuStudents)
                 .ThenBy(x => x.Participants.Sum(y => y.RegisterTime.Ticks))
                 .Take(32)

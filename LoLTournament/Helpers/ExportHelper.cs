@@ -5,6 +5,7 @@ using System.Web;
 using LoLTournament.Models;
 using MongoDB.Driver;
 using System.Linq;
+using MongoDB.Driver.Builders;
 
 namespace LoLTournament.Helpers
 {
@@ -18,7 +19,7 @@ namespace LoLTournament.Helpers
             var csv = new StringBuilder();
             csv.AppendLine("SummonerName, Season5Tier, Season5Division, TeamName");
 
-            var validTeams = Mongo.Teams.FindAll()
+            var validTeams = Mongo.Teams.Find(Query<Team>.Where(x => !x.Cancelled))
                 .OrderByDescending(x => x.AmountOfRuStudents)
                 .ThenBy(x => x.Participants.Sum(y => y.RegisterTime.Ticks))
                 .Take(32)
@@ -45,7 +46,7 @@ namespace LoLTournament.Helpers
             var csv = new StringBuilder();
             csv.AppendLine("SummonerName, FullName, TeamName, StudyProgram, Captain, RU");
 
-            var validTeams = Mongo.Teams.FindAll()
+            var validTeams = Mongo.Teams.Find(Query<Team>.Where(x => !x.Cancelled))
                 .OrderByDescending(x => x.AmountOfRuStudents)
                 .ThenBy(x => x.Participants.Sum(y => y.RegisterTime.Ticks))
                 .Take(32)

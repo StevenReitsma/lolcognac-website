@@ -1,0 +1,82 @@
+﻿@using LoLTournament.Models.Financial
+@model LoLTournament.Models.PaymentStatusViewModel
+
+<div class="register-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="intro-message-small">
+                    <br />
+                    <h1>Payment status</h1>
+                    <hr class="intro-divider">
+                    <br />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="content-section-b">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-lg-12">
+                <div class="clearfix"></div>
+
+                <h2>@Model.TeamName</h2>
+                <p class="lead">
+                    You may refresh this page at any time to get an up-to-date status on your payment.
+                </p>
+
+                @if (Model.Status == PaymentStatus.Paid || Model.Status == PaymentStatus.Paidout)
+                {
+                    <div class="alert alert-success" role="alert" style="font-size: 18px;">
+                        <p class="lead">
+                            Your payment has been received. Remember to sign up at the official League of Legends website as well. You can do this <a href="">here</a>.
+                        </p>
+                    </div>
+                }
+                else if (Model.Status == PaymentStatus.Open)
+                {
+                    <div class="alert alert-warning" role="alert" style="font-size: 18px;">
+                        <p class="lead">
+                            You have not yet made any payments. Use <a href="@Model.PaymentUrl">this link</a> to pay. Remember to sign up at the official League of Legends website as well. You can do this <a href="">here</a>.
+                        </p>
+                    </div>
+                }
+                else if (Model.Status == PaymentStatus.Cancelled)
+                {
+                    <div class="alert alert-danger" role="alert" style="font-size: 18px;">
+                        <p class="lead">
+                            You have cancelled your payment. Your team registration has been deleted.
+                        </p>
+                    </div>
+                }
+                else if (Model.Status == PaymentStatus.Expired)
+                {
+                    <div class="alert alert-danger" role="alert" style="font-size: 18px;">
+                        <p class="lead">
+                            Your payment has expired. Your team registration has been deleted.
+                        </p>
+                    </div>
+                }
+                else if (Model.Status == PaymentStatus.Pending)
+                {
+                    <div class="alert alert-warning" role="alert" style="font-size: 18px;">
+                        <p class="lead">
+                            Your payment is pending. Remember to sign up at the official League of Legends website as well. You can do this <a href="">here</a>.
+                        </p>
+                    </div>
+                }
+                else if (Model.Status == PaymentStatus.Refunded)
+                {
+                    <div class="alert alert-danger" role="alert" style="font-size: 18px;">
+                        <p class="lead">
+                            Your payment has been refunded. Your team registration has been deleted.
+                        </p>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+</div>

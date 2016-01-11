@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-using MongoDB.Driver;
 using MongoDB.Driver.Builders;
 using LoLTournament.Helpers;
+using Microsoft.Ajax.Utilities;
 
 namespace LoLTournament.Models
 {
@@ -18,6 +18,11 @@ namespace LoLTournament.Models
         public Phase Phase { get; set; }
         public int FinalRanking { get; set; }
         public bool OnHold { get; set; }
+
+        /// <summary>
+        /// Whether the registration has been cancelled.
+        /// </summary>
+        public bool Cancelled { get; set; }
 
         [BsonIgnore]
         public List<Participant> Participants
@@ -95,7 +100,7 @@ namespace LoLTournament.Models
         {
             get
             {
-                return Mongo.Teams.Find(Query<Team>.Where(x => x.Pool == Pool)).OrderByDescending(x => x.Wins).ThenBy(x => x.TotalWinsPlayTime).ToList().FindIndex(x => x.Id == Id);
+                return Mongo.Teams.Find(Query<Team>.Where(x => x.Pool == Pool && !x.Cancelled)).OrderByDescending(x => x.Wins).ThenBy(x => x.TotalWinsPlayTime).ToList().FindIndex(x => x.Id == Id);
             }
         }
 
@@ -161,6 +166,63 @@ namespace LoLTournament.Models
             }
 
             return null;
+        }
+
+        [BsonIgnore]
+        public int RuStudentsCount
+        {
+            get
+            {
+                return Participants.Count(x => x.RuStudent);
+            }
+        }
+
+        [BsonIgnore]
+        public int CognACCount
+        {
+            get
+            {
+                return Participants.Count(x => x.CognAC);
+            }
+        }
+
+        [BsonIgnore]
+        public int DoransCount
+        {
+            get
+            {
+                return Participants.Count(x => x.Dorans);
+            }
+        }
+
+        /// <summary>
+        /// The price this team has to pay.
+        /// </summary>
+        [BsonIgnore]
+        public decimal Price
+        {
+            get
+            {
+                decimal price = 0m;
+
+                foreach (var p in Participants)
+                {
+                    // RU + CognAC: 3.00 euro
+                    if (p.RuStudent && p.CognAC)
+                        price += 3.0m;
+                    // RU: 5.00 euro
+                    else if (p.RuStudent && !p.CognAC)
+                        price += 5.0m;
+                    // CognAC: 4.50 euro
+                    else if (!p.RuStudent && p.CognAC)
+                        price += 4.5m;
+                    // None: 6.50 euro
+                    else if (!p.RuStudent && !p.CognAC)
+                        price += 6.5m;
+                }
+
+                return price;
+            }
         }
     }
 }

@@ -1,11 +1,14 @@
 ﻿@model LoLTournament.Models.RegisterViewModel
            
-<h2>Registration successful</h2>
+<h2>Registration almost complete!</h2>
 
-<div class="bg-success">
-    <div style="padding:15px;">
-        You have successfully registered <strong>@Model.TeamName</strong> for the CognAC League of Legends Tournament 2016!
-        Please note that canceling your registration is not possible under normal circumstances.
-        Remember to register for the tournament through the official League of Legends website as well. You can do this <a href="#">here</a>.
+<p class="lead">
+    <div class="alert alert-warning" role="alert" style="font-size: 18px;">
+        <a href="@Model.PaymentUrl">
+            Please click here to complete your payment using the selected payment method
+        </a>
+        <br/><br/>
+        <img src="https://upload.wikimedia.org/wikipedia/en/e/e9/IDEAL_Logo.png" height="32"/>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Bitcoin_logo.svg/2000px-Bitcoin_logo.svg.png" height="32" />
     </div>
-</div>
+</p>

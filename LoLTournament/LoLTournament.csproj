@@ -111,6 +111,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\BracketHelper.cs" />
+    <Compile Include="Helpers\EmailHelper.cs" />
     <Compile Include="Helpers\Mollie.cs" />
     <Compile Include="Helpers\ExportHelper.cs" />
     <Compile Include="Helpers\IpHelper.cs" />
@@ -123,7 +124,6 @@
     <Compile Include="Models\ChampionsPlayedViewModel.cs" />
     <Compile Include="Models\Financial\CardSecurityType.cs" />
     <Compile Include="Models\Financial\Payment.cs" />
-    <Compile Include="Models\Financial\PaymentMath.cs" />
     <Compile Include="Models\Financial\PaymentDetails.cs" />
     <Compile Include="Models\Financial\PaymentLinks.cs" />
     <Compile Include="Models\Financial\PaymentMethod.cs" />
@@ -131,6 +131,7 @@
     <Compile Include="Models\Financial\PaymentRefundStatus.cs" />
     <Compile Include="Models\Financial\PaymentStatus.cs" />
     <Compile Include="Models\Financial\PaymentTemplate.cs" />
+    <Compile Include="Models\PaymentStatusViewModel.cs" />
     <Compile Include="Models\StatisticsOverTimeViewModel.cs" />
     <Compile Include="Models\Match.cs" />
     <Compile Include="Models\Participant.cs" />
@@ -582,10 +583,10 @@
     <Content Include="Views\Admin\Teams.cshtml" />
     <Content Include="Views\Admin\Participants.cshtml" />
     <Content Include="Views\Admin\Finance.cshtml" />
+    <Content Include="Views\Payment\Status.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Payment\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

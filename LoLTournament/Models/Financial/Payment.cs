@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Linq;
+using System.Web.Configuration;
+using LoLTournament.Helpers;
 using MongoDB.Bson;
+using MongoDB.Driver.Builders;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -117,5 +121,53 @@ namespace LoLTournament.Models.Financial
         /// </summary>
         [JsonProperty("profileId")]
         public string ProfileId { get; set; }
+    
+        /// <summary>
+        /// Updates the Mollie payment in the database.
+        /// </summary>
+        public void Update()
+        {
+            var key = WebConfigurationManager.AppSettings["MollieTestKey"];
+            var client = new MollieClient { ApiKey = key };
+            var updatedPayment = client.GetStatus(MollieId);
+
+            var oldStatus = Status;
+
+            Status = updatedPayment.Status;
+            AmountRefunded = updatedPayment.AmountRefunded;
+            AmountRemaining = updatedPayment.AmountRemaining;
+            CancelledDateTime = updatedPayment.CancelledDateTime;
+            CreatedDateTime = updatedPayment.CreatedDateTime;
+            Details = updatedPayment.Details;
+            PaidDateTime = updatedPayment.PaidDateTime;
+            ExpiredDateTime = updatedPayment.ExpiredDateTime;
+            Locale = updatedPayment.Locale;
+
+            Mongo.Payments.Save(this);
+
+            var team = Mongo.Teams.FindOne(Query<Team>.Where(x => x.Id == TeamId));
+
+            // If payment status did not change, return
+            if (oldStatus == Status) return;
+
+            // Cancel team in database
+            if (Status == PaymentStatus.Cancelled || Status == PaymentStatus.Refunded ||
+                Status == PaymentStatus.Expired)
+            {
+                team.Cancelled = true;
+
+                Mongo.Teams.Save(team);
+
+                // Send email
+                var captain = team.Participants.Single(x => x.IsCaptain);
+                EmailHelper.SendPaymentFailure(captain.Email, captain.FullName, Status);
+            }
+            else if (Status == PaymentStatus.Paid)
+            {
+                // Send email
+                var captain = team.Participants.Single(x => x.IsCaptain);
+                EmailHelper.SendPaymentSuccess(captain.Email, captain.FullName);
+            }
+        }
     }
 }

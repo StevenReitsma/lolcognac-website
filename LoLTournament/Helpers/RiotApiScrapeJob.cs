@@ -53,6 +53,10 @@ namespace LoLTournament.Helpers
             }
         }
 
+        /// <summary>
+        /// DEPRECATED TODO
+        /// </summary>
+        /// <param name="arg"></param>
         private void ScrapeMatches(object arg)
         {
             var timeSetting = WebConfigurationManager.AppSettings["TournamentStart"];
@@ -215,8 +219,8 @@ namespace LoLTournament.Helpers
                     if (PoolFinished(otherPool, Mongo.Matches))
                     {
                         // Get ranking for pools
-                        var poolARanking = GetPoolRanking(pool, Mongo.Teams);
-                        var poolBRanking = GetPoolRanking(otherPool, Mongo.Teams);
+                        var poolARanking = GetPoolRanking(pool);
+                        var poolBRanking = GetPoolRanking(otherPool);
 
                         // We can now create the brackets for these pools
                         // Winner bracket
@@ -264,7 +268,7 @@ namespace LoLTournament.Helpers
                     else
                     {
                         // Set all teams in pool to Hold
-                        var teams = Mongo.Teams.Find(Query<Team>.Where(x => x.Pool == pool));
+                        var teams = Mongo.Teams.Find(Query<Team>.Where(x => x.Pool == pool && !x.Cancelled));
                         foreach (var t in teams)
                         {
                             t.OnHold = true;
@@ -573,12 +577,10 @@ namespace LoLTournament.Helpers
         /// Returns the pool ranking, with the first element being the pool winner and the last being the loser.
         /// </summary>
         /// <param name="pool"></param>
-        /// <param name="teamCol"></param>
-        /// <param name="matchCol"></param>
         /// <returns></returns>
-        private static List<Team> GetPoolRanking(int pool, MongoCollection<Team> teamCol)
+        private static List<Team> GetPoolRanking(int pool)
         {
-            return teamCol.Find(Query<Team>.Where(x => x.Pool == pool)).OrderBy(x => x.PoolRank).ToList();
+            return Mongo.Teams.Find(Query<Team>.Where(x => x.Pool == pool && !x.Cancelled)).OrderBy(x => x.PoolRank).ToList();
         }
 
         /// <summary>

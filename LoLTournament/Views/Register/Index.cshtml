@@ -21,11 +21,11 @@
             <div class="col-lg-12 col-lg-12">
                 <div class="clearfix"></div>
 
-                @if (DateTime.Now < Model.RegistrationCloseDate && DateTime.Now >= Model.RegistrationStartDate)
+                @if (DateTime.Now < Model.RegistrationCloseDate && DateTime.Now >= Model.RegistrationStartDateEarlyBird)
                 {
                     <p class="lead">
                         Fill in the form below to register your team for the CognAC League of Legends Tournament 2016.
-                        Note that your registration is permanent and cannot be canceled. 
+                        Note that your registration is permanent and cannot be canceled.
                         Also note that <strong>you need to register on the official League of Legends website as well.</strong> This can be done <a href="http://events.euw.leagueoflegends.com/">here</a>.
                         Your registration is not valid otherwise.
                         You need to login to the League of Legends website with your League of Legends account and join the tournament by clicking <em>Register</em>.
@@ -34,19 +34,27 @@
                     <p>
                         Don't have a team yet? Use the <a href="@Url.Action("Teambuilder", "Register")">team builder</a>!
                     </p>
+
+                    if (DateTime.Now < Model.RegistrationStartDate)
+                    {
+                        <br />
+                        <div class="alert alert-danger" role="alert">
+                            Tournament registration is currently only open to CognAC and Dorans members. The registration opens up to everyone soon.
+                        </div>
+                    }
                 }
                 else
                 {
-                <div class="alert alert-warning" role="alert">
-                    The tournament registration is closed.
-                </div>
+                    <div class="alert alert-warning" role="alert">
+                        The tournament registration is closed.
+                    </div>
                 }
             </div>
         </div>
     </div>
 </div>
 
-@if (DateTime.Now < Model.RegistrationCloseDate && DateTime.Now >= Model.RegistrationStartDate)
+@if (DateTime.Now < Model.RegistrationCloseDate && DateTime.Now >= Model.RegistrationStartDateEarlyBird)
 {
     <div class="content-section-b">
         <div class="container">

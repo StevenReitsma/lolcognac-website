@@ -1,8 +1,9 @@
 ﻿using System.Net;
-using System.Web.Configuration;
 using System.Web.Mvc;
 using LoLTournament.Helpers;
+using LoLTournament.Models;
 using LoLTournament.Models.Financial;
+using MongoDB.Bson;
 using MongoDB.Driver.Builders;
 
 namespace LoLTournament.Controllers
@@ -17,16 +18,21 @@ namespace LoLTournament.Controllers
             var payment = Mongo.Payments.FindOne(Query<Payment>.Where(x => x.MollieId == id));
 
             // Check on iDeal payment
-            var key = WebConfigurationManager.AppSettings["MollieTestKey"];
-            var client = new MollieClient { ApiKey = key };
-
-            var status = client.GetStatus(id);
-            status.TeamId = payment.TeamId;
-            status.Id = payment.Id;
-
-            Mongo.Payments.Save(payment);
+            payment.Update();
 
             return new HttpStatusCodeResult(HttpStatusCode.OK);
+        }
+
+        [HttpGet]
+        public ActionResult Status(string id)
+        {
+            var team = Mongo.Teams.FindOne(Query<Team>.Where(x => x.Id == ObjectId.Parse(id)));
+            var payment = Mongo.Payments.FindOne(Query<Payment>.Where(x => x.TeamId == team.Id));
+            payment.Update();
+
+            var model = new PaymentStatusViewModel { TeamName = team.Name, Status = payment.Status, PaymentUrl = payment.Links.PaymentUrl };
+
+            return View(model);
         }
     }
 }
