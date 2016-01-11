@@ -5,6 +5,7 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver.Builders;
 using LoLTournament.Helpers;
+using LoLTournament.Models.Financial;
 using Microsoft.Ajax.Utilities;
 
 namespace LoLTournament.Models
@@ -169,15 +170,6 @@ namespace LoLTournament.Models
         }
 
         [BsonIgnore]
-        public int RuStudentsCount
-        {
-            get
-            {
-                return Participants.Count(x => x.RuStudent);
-            }
-        }
-
-        [BsonIgnore]
         public int CognACCount
         {
             get
@@ -223,6 +215,12 @@ namespace LoLTournament.Models
 
                 return price;
             }
+        }
+
+        [BsonIgnore]
+        public Payment Payment
+        {
+            get { return Mongo.Payments.FindOne(Query<Payment>.Where(x => x.TeamId == Id)); }
         }
     }
 }

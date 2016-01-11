@@ -1,6 +1,8 @@
 ﻿@{
     Layout = "~/Views/Admin/_AdminLayout.cshtml";
 }
+@using LoLTournament.Models.Financial
+@model LoLTournament.Models.Admin.AdminTeamsViewModel
 
 <h1>Teams</h1>
 
@@ -11,104 +13,53 @@
     <div class="box-body no-padding">
         <table class="table table-striped table-hover">
             <tr>
-                <th style="width: 10px">#</th>
                 <th>Name</th>
                 <th>Payment status</th>
-                <th>RU students</th>
-                <th>Dorans/CognAC members</th>
+                <th width="5%">RU</th>
+                <th width="5%">CognAC</th>
+                <th width="5%">Dorans</th>
                 <th>Pool</th>
-                <th>Phase</th>
                 <th>MMR</th>
                 <th>Actions</th>
             </tr>
-            <tr>
-                <td>1</td>
-                <td><a href="@Url.Action("Team", "Admin", new RouteValueDictionary {{"teamId", "TEAMID"}})">Test Team</a></td>
-                <td><span class="badge bg-green">Payment received</span></td>
-                <td>
-                    <div class="progress progress-xs" style="width:75px">
-                        <div class="progress-bar progress-bar-green" style="width: 100%"></div>
-                    </div>
-                </td>
-                <td>
-                    <div class="progress progress-xs" style="width: 75px">
-                        <div class="progress-bar progress-bar-green" style="width: 100%"></div>
-                    </div>
-                </td>
-                <td>Pool 1</td>
-                <td>Pool phase</td>
-                <td>1289</td>
-                <td>
-                    <a href="@Url.Action("DeleteTeam", "Admin", new RouteValueDictionary {{"teamId", "TEAMID"}})"><i class="fa fa-minus-circle text-red" title="Delete team"></i></a>
-                    <a href="@Url.Action("DisqualifyTeam", "Admin", new RouteValueDictionary {{"teamId", "TEAMID"}})"><i class="fa fa-sign-out text-orange" title="Disqualify team"></i></a>
-                </td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td>Test Team 2</td>
-                <td><span class="badge bg-orange">Payment pending</span></td>
-                <td>
-                    <div class="progress progress-xs" style="width: 75px">
-                        <div class="progress-bar progress-bar-green" style="width: 100%"></div>
-                    </div>
-                </td>
-                <td>
-                    <div class="progress progress-xs" style="width: 75px">
-                        <div class="progress-bar progress-bar-danger" style="width: 80%"></div>
-                    </div>
-                </td>
-                <td>Pool 1</td>
-                <td>Pool phase</td>
-                <td>878</td>
-                <td>
-                    <a href="@Url.Action("DeleteTeam", "Admin", new RouteValueDictionary {{"teamId", "TEAMID"}})"><i class="fa fa-minus-circle text-red" title="Delete team"></i></a>
-                    <a href="@Url.Action("DisqualifyTeam", "Admin", new RouteValueDictionary {{"teamId", "TEAMID"}})"><i class="fa fa-sign-out text-orange" title="Disqualify team"></i></a>
-                </td>
-            </tr>
-            <tr>
-                <td>3</td>
-                <td>Test Team 3</td>
-                <td><span class="badge bg-orange">Payment pending</span></td>
-                <td>
-                    <div class="progress progress-xs" style="width:75px">
-                        <div class="progress-bar progress-bar-green" style="width: 80%"></div>
-                    </div>
-                </td>
-                <td>
-                    <div class="progress progress-xs" style="width: 75px">
-                        <div class="progress-bar progress-bar-red" style="width: 20%"></div>
-                    </div>
-                </td>
-                <td>Pool 2</td>
-                <td>Pool phase</td>
-                <td>6334</td>
-                <td>
-                    <a href="@Url.Action("DeleteTeam", "Admin", new RouteValueDictionary {{"teamId", "TEAMID"}})"><i class="fa fa-minus-circle text-red" title="Delete team"></i></a>
-                    <a href="@Url.Action("DisqualifyTeam", "Admin", new RouteValueDictionary {{"teamId", "TEAMID"}})"><i class="fa fa-sign-out text-orange" title="Disqualify team"></i></a>
-                </td>
-            </tr>
-            <tr>
-                <td>4</td>
-                <td>Test Team 2</td>
-                <td><span class="badge bg-red">Payment error</span></td>
-                <td>
-                    <div class="progress progress-xs" style="width:75px">
-                        <div class="progress-bar progress-bar-red" style="width: 20%"></div>
-                    </div>
-                </td>
-                <td>
-                    <div class="progress progress-xs" style="width: 75px">
-                        <div class="progress-bar progress-bar-green" style="width: 100%"></div>
-                    </div>
-                </td>
-                <td>Pool 3</td>
-                <td>Elimination phase</td>
-                <td>3452</td>
-                <td>
-                    <a href="@Url.Action("DeleteTeam", "Admin", new RouteValueDictionary {{"teamId", "TEAMID"}})"><i class="fa fa-minus-circle text-red" title="Delete team"></i></a>
-                    <a href="@Url.Action("DisqualifyTeam", "Admin", new RouteValueDictionary {{"teamId", "TEAMID"}})"><i class="fa fa-sign-out text-orange" title="Disqualify team"></i></a>
-                </td>
-            </tr>
+            @foreach (var t in Model.Teams)
+            {
+                <tr style="@(t.Cancelled ? "color:#ccc" : "")">
+                    <td><a href="@Url.Action("Team", "Admin", new RouteValueDictionary {{"teamId", @t.Id}})">@t.Name</a></td>
+                    <td>
+                        @if (@t.Payment.Status == PaymentStatus.Cancelled || @t.Payment.Status == PaymentStatus.Expired || @t.Payment.Status == PaymentStatus.Refunded)
+                        {
+                            <span class="badge bg-red">@t.Payment.Status</span>
+                        }
+                        else if (@t.Payment.Status == PaymentStatus.Paid || @t.Payment.Status == PaymentStatus.Paidout)
+                        {
+                            <span class="badge bg-green">@t.Payment.Status</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-orange">@t.Payment.Status</span>
+                        }
+                    </td>
+                    <td>
+                        @t.AmountOfRuStudents
+                    </td>
+                    <td>
+                        @t.CognACCount
+                    </td>
+                    <td>
+                        @t.DoransCount
+                    </td>
+                    <td>Pool @(t.Pool+1)</td>
+                    <td>@t.MMR</td>
+                    <td>
+                        @if (!t.Cancelled)
+                        {
+                            <a href="@Url.Action("DeleteTeam", "Admin", new RouteValueDictionary {{"teamId", @t.Id}})"><i class="fa fa-minus-circle text-red" title="Delete team"></i></a>
+                            <a href="@Url.Action("DisqualifyTeam", "Admin", new RouteValueDictionary {{"teamId", @t.Id}})"><i class="fa fa-sign-out text-orange" title="Disqualify team"></i></a>
+                        }
+                    </td>
+                </tr>
+            }
         </table>
     </div><!-- /.box-body -->
 </div><!-- /.box -->

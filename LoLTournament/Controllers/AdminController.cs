@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
+using LoLTournament.Models.Admin;
 
 namespace LoLTournament.Controllers
 {
@@ -11,13 +8,13 @@ namespace LoLTournament.Controllers
         // GET: Admin
         public ActionResult Index()
         {
-            return View();
+            return View(new AdminDashboardViewModel());
         }
 
         // GET: Admin/Teams
         public ActionResult Teams()
         {
-            return View();
+            return View(new AdminTeamsViewModel());
         }
 
         // GET: Admin/Participants
@@ -29,7 +26,7 @@ namespace LoLTournament.Controllers
         // GET: Admin/Finance
         public ActionResult Finance()
         {
-            return View();
+            return View(new AdminFinanceViewModel());
         }
     }
 }

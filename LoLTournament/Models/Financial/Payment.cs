@@ -3,9 +3,9 @@ using System.Linq;
 using System.Web.Configuration;
 using LoLTournament.Helpers;
 using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver.Builders;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 namespace LoLTournament.Models.Financial
 {
@@ -168,6 +168,15 @@ namespace LoLTournament.Models.Financial
                 var captain = team.Participants.Single(x => x.IsCaptain);
                 EmailHelper.SendPaymentSuccess(captain.Email, captain.FullName);
             }
+        }
+
+        /// <summary>
+        /// Returns the name of the team associated with this payment.
+        /// </summary>
+        [BsonIgnore]
+        public string TeamName
+        {
+            get { return Mongo.Teams.FindOne(Query<Team>.Where(x => x.Id == TeamId)).Name; }
         }
     }
 }

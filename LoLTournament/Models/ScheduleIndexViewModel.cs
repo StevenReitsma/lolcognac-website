@@ -14,7 +14,7 @@ namespace LoLTournament.Models
         {
             get
             {
-                return Mongo.Teams.Find(Query<Team>.Where(x => !x.Cancelled)).OrderByDescending(x => x.AmountOfRuStudents).ThenBy(x => x.Participants.Sum(y => y.RegisterTime.Ticks));
+                return Mongo.Teams.Find(Query<Team>.Where(x => !x.Cancelled)).OrderBy(x => x.Participants.Sum(y => y.RegisterTime.Ticks));
             }
         }
 

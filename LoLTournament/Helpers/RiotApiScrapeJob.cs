@@ -38,8 +38,8 @@ namespace LoLTournament.Helpers
             // For matches, every minute
             var intervalMatches = new TimeSpan(0, 1, 0);
 
-            //new Timer(ScrapeSummoners, null, new TimeSpan(0, 0, 0, 0, 0), intervalSummoners);
-            new Timer(ScrapeMatches, null, new TimeSpan(0, 0, 0, 0, 0), intervalMatches);
+            //new Timer(ScrapeSummoners, null, TimeSpan.Zero, intervalSummoners);
+            new Timer(ScrapeMatches, null, TimeSpan.Zero, intervalMatches);
             new Timer(ScrapeStatic, null, TimeSpan.Zero, TimeSpan.FromDays(1.0));
         }
 

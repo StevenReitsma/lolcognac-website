@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using MongoDB.Driver;
 using LoLTournament.Helpers;
 using MongoDB.Driver.Builders;
 
@@ -15,10 +12,8 @@ namespace LoLTournament.Models
         public ScheduleViewModel()
         {
             Teams = Mongo.Teams.Find(Query<Team>.Where(x => !x.Cancelled))
-                   .OrderByDescending(x => x.AmountOfRuStudents)
-                   .ThenBy(x => x.Participants.Sum(y => y.RegisterTime.Ticks))
-                   .Take(32)
-                   .OrderBy(x => x.Pool)
+                   .OrderBy(x => x.Participants.Sum(y => y.RegisterTime.Ticks))
+                   .ThenBy(x => x.Pool)
                    .ThenBy(x => x.Name)
                    .ToList();
 

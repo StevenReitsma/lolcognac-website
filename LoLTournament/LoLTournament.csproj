@@ -120,6 +120,9 @@
     <Compile Include="Helpers\RiotApiMocker.cs" />
     <Compile Include="Helpers\RiotApiScrapeJob.cs" />
     <Compile Include="Helpers\TimeFixer.cs" />
+    <Compile Include="Models\Admin\AdminDashboardViewModel.cs" />
+    <Compile Include="Models\Admin\AdminFinanceViewModel.cs" />
+    <Compile Include="Models\Admin\AdminTeamsViewModel.cs" />
     <Compile Include="Models\Champion.cs" />
     <Compile Include="Models\ChampionsPlayedViewModel.cs" />
     <Compile Include="Models\Financial\CardSecurityType.cs" />

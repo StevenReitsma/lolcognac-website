@@ -1,6 +1,8 @@
 ﻿@{
     Layout = "~/Views/Admin/_AdminLayout.cshtml";
 }
+@using LoLTournament.Models.Financial
+@model LoLTournament.Models.Admin.AdminFinanceViewModel
 
 <h1>Finances</h1>
 
@@ -11,7 +13,6 @@
     <div class="box-body no-padding">
         <table class="table table-striped table-hover">
             <tr>
-                <th style="width: 10px">#</th>
                 <th>ID</th>
                 <th>Team</th>
                 <th>Method</th>
@@ -22,18 +23,43 @@
                 <th>Payment date</th>
                 <th>Actions</th>
             </tr>
-            <tr>
-                <td>1</td>
-                <td><code>tr_7UhSN1zuXS</code></td>
-                <td><a href="@Url.Action("Team", "Admin", new RouteValueDictionary {{"teamId", "TEAMID"}})">Test Team</a></td>
-                <td>iDEAL</td>
-                <td>&euro; 26,50</td>
-                <td><span class="badge bg-green">Payment received</span></td>
-                <td>Test Person</td>
-                <td>NL00 ABCD 0123 4567 89</td>
-                <td><i class="fa fa-clock-o"></i> 01-01-2016 13:37</td>
-                <td><a href="@Url.Action("Refund", "Admin", new RouteValueDictionary {{"transactionId", "TRANSACTIONID"}})"><i class="fa fa-undo text-red" title="Refund"></i></a></td>
-            </tr>
+            @foreach (var p in Model.Payments)
+            {
+                <tr>
+                    <td><code>@p.MollieId</code></td>
+                    <td><a href="@Url.Action("Team", "Admin", new RouteValueDictionary {{"teamId", @p.TeamId}})">@p.TeamName</a></td>
+                    <td>@p.Method</td>
+                    <td>&euro; @p.Amount</td>
+                    <td>
+                        @if (@p.Status == PaymentStatus.Cancelled || @p.Status == PaymentStatus.Expired || @p.Status == PaymentStatus.Refunded)
+                        {
+                            <span class="badge bg-red">@p.Status</span>
+                        }
+                        else if (@p.Status == PaymentStatus.Paid || @p.Status == PaymentStatus.Paidout)
+                        {
+                            <span class="badge bg-green">@p.Status</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-orange">@p.Status</span>
+                        }
+                    </td>
+                    <td>
+                        @if (@p.Details != null)
+                        {
+                            @p.Details.ConsumerName
+                        }
+                    </td>
+                    <td>
+                        @if (@p.Details != null)
+                        {
+                            @p.Details.ConsumerAccount
+                        }
+                    </td>
+                    <td><i class="fa fa-clock-o"></i> @p.PaidDateTime</td>
+                    <td><a href="@Url.Action("Refund", "Admin", new RouteValueDictionary {{"transactionId", @p.Id}})"><i class="fa fa-undo text-red" title="Refund"></i></a></td>
+                </tr>
+            }
         </table>
     </div><!-- /.box-body -->
 </div><!-- /.box -->
