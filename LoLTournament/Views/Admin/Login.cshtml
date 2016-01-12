@@ -1,0 +1,23 @@
+﻿@{
+    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+}
+@model LoLTournament.Models.Admin.AdminLoginViewModel
+
+<h1>Login</h1>
+
+@using (Html.BeginForm("Login", "Admin", new { ReturnUrl = Request.QueryString["ReturnUrl"] }, FormMethod.Post, new { @class = "form-signin" }))
+{
+    if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger" style="text-align: center; width: 300px;">
+            @Html.ValidationMessage("UserViewModel", "Wrong username or password")
+        </div>
+    }
+
+    @Html.TextBoxFor(x => x.Username, new { @class = "form-control", @placeholder = "Username", @required = true, @autofocus = true, @style = "margin-bottom:5px;" })
+    @Html.PasswordFor(x => x.Password, new { @class = "form-control", @placeholder = "Password", @required = true, @autofocus = true })
+
+    <br/>
+
+    <button class="btn btn-lg btn-primary btn-small" type="submit">Login</button>
+}

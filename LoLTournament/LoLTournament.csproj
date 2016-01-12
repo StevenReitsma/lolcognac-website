@@ -63,6 +63,7 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
@@ -101,6 +102,8 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Authentication\MongoMembershipProvider.cs" />
+    <Compile Include="Authentication\MongoRoleProvider.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PaymentController.cs" />
@@ -111,6 +114,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\BracketHelper.cs" />
+    <Compile Include="Helpers\UserHelper.cs" />
     <Compile Include="Helpers\EmailHelper.cs" />
     <Compile Include="Helpers\Mollie.cs" />
     <Compile Include="Helpers\ExportHelper.cs" />
@@ -122,7 +126,9 @@
     <Compile Include="Helpers\TimeFixer.cs" />
     <Compile Include="Models\Admin\AdminDashboardViewModel.cs" />
     <Compile Include="Models\Admin\AdminFinanceViewModel.cs" />
+    <Compile Include="Models\Admin\AdminLoginViewModel.cs" />
     <Compile Include="Models\Admin\AdminTeamsViewModel.cs" />
+    <Compile Include="Models\Admin\User.cs" />
     <Compile Include="Models\Champion.cs" />
     <Compile Include="Models\ChampionsPlayedViewModel.cs" />
     <Compile Include="Models\Financial\CardSecurityType.cs" />
@@ -587,6 +593,8 @@
     <Content Include="Views\Admin\Participants.cshtml" />
     <Content Include="Views\Admin\Finance.cshtml" />
     <Content Include="Views\Payment\Status.cshtml" />
+    <Content Include="Views\Admin\Login.cshtml" />
+    <Content Include="Views\Admin\AuthenticationError.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
