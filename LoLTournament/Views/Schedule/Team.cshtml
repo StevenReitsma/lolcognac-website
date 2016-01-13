@@ -91,14 +91,14 @@
                         <div class="panel panel-info">
                             <div class="panel-heading">
                                 <span class="label label-primary" style="font-size: 11px; vertical-align: middle">@Model.NextMatch.Phase.GetDisplayString()</span>
-                                <a href="@Url.Action("Team", "Timetable", new RouteValueDictionary {{"teamId", Model.NextMatch.BlueTeamId}})">@Model.NextMatch.BlueTeam.Name</a> versus <a href="@Url.Action("Team", "Schedule", new RouteValueDictionary {{"teamId", Model.NextMatch.PurpleTeamId}})">@Model.NextMatch.PurpleTeam.Name</a>
+                                <a href="@Url.Action("Team", "Schedule", new RouteValueDictionary {{"teamId", Model.NextMatch.BlueTeamId}})">@Model.NextMatch.BlueTeam.Name</a> versus <a href="@Url.Action("Team", "Schedule", new RouteValueDictionary {{"teamId", Model.NextMatch.PurpleTeamId}})">@Model.NextMatch.PurpleTeam.Name</a>
                             </div>
                             <div class="panel-body">
                                 @if (Model.OtherTeamReady)
                                 {
                                     if (!IpHelper.IsAllowed(HttpContext.Current))
                                     {
-                                        <div class="alert alert-danger" role="alert">You are not connected to the RU network. Connect the correct ethernet cable or connect to eduroam. If you think you are correctly connected, notify crew member Steven.</div>
+                                        <div class="alert alert-danger" role="alert">You are not connected to the RU network. Connect the correct ethernet cable or connect to eduroam. If you think you are correctly connected, ask for help at the Info Desk.</div>
                                     }
                                     else
                                     {
@@ -110,12 +110,12 @@
                                         <p>
                                             Go to <b>Play &raquo; Custom &raquo; Tournament Code</b> in your League of Legends client and enter the following code:<br/><br/>
 
-                                            <input type="text" class="form-control" style="display: inline; cursor: pointer; max-width: 400px;" value="@Model.NextMatch.TournamentCode" onfocus=" this.select() " onclick=" this.select() " readonly/> click box, copy paste
+                                            <input type="text" class="form-control" style="display: inline; cursor: pointer; max-width: 400px;" value="@Model.NextMatch.TournamentCode" onfocus="this.select()" onclick="this.select()" readonly/> click box, copy paste
                                             <hr/>
 
                                             If one of the participants does not own at least 16 champions &#8213; including free rotation &#8213;, all 10 participants should use the following code:<br/><br/>
 
-                                            <input type="text" class="form-control" style="display: inline; cursor: pointer; max-width: 400px;" value="@Model.NextMatch.TournamentCodeBlind" onfocus=" this.select() " onclick=" this.select() " readonly/> click box, copy paste
+                                            <input type="text" class="form-control" style="display: inline; cursor: pointer; max-width: 400px;" value="@Model.NextMatch.TournamentCodeBlind" onfocus="this.select()" onclick="this.select()" readonly/> click box, copy paste
                                             <hr/>
 
                                             <b>@Model.NextMatch.BlueTeam.Name</b> is on the <b style="color: #337AB7">blue</b> side (left in lobby), while <b>@Model.NextMatch.PurpleTeam.Name</b> is on the <b style="color: #CC3232;">red</b> side (right in lobby).<br/>

@@ -39,8 +39,8 @@ namespace LoLTournament.Helpers
             var intervalMatches = new TimeSpan(0, 1, 0);
 
             //new Timer(ScrapeSummoners, null, TimeSpan.Zero, intervalSummoners);
-            new Timer(ScrapeMatches, null, TimeSpan.Zero, intervalMatches);
-            new Timer(ScrapeStatic, null, TimeSpan.Zero, TimeSpan.FromDays(1.0));
+            //new Timer(ScrapeMatches, null, TimeSpan.Zero, intervalMatches);
+            //new Timer(ScrapeStatic, null, TimeSpan.Zero, TimeSpan.FromDays(1.0));
         }
 
         private void ScrapeStatic(object arg)

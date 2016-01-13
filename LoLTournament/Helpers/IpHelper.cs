@@ -1,12 +1,16 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using System.Web;
+using System.Web.Configuration;
 
 namespace LoLTournament.Helpers
 {
     public class IpHelper
     {
+        private static readonly IPNetwork EsportsNetwork = IPNetwork.Parse(WebConfigurationManager.AppSettings["EsportsNetwork"]);
+        private static readonly IPNetwork EduroamNetwork = IPNetwork.Parse(WebConfigurationManager.AppSettings["EduroamNetwork"]);
+        private static readonly IPNetwork LocalhostNetwork = IPNetwork.Parse("127.0.0.1");
+        private static readonly IPNetwork LocalhostNetworkIPv6 = IPNetwork.Parse("::1");
+
         public static string GetIpAddress(HttpContext context)
         {
             var ipAddress = context.Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
@@ -25,26 +29,20 @@ namespace LoLTournament.Helpers
         public static bool IsAllowed(HttpContext context)
         {
             var ip = GetIpAddress(context);
-            var whitelist = new List<string> { "145.102.16.*", "145.116.*.*", "127.0.0.1", "::1" }; // 131.174.*.* is generic RU, 145.102.16.0/24 subnet reserved for the tournament by C&CZ, 145.116.*.* is eduroam.
 
-            return whitelist.Any(x => Match(x, ip));
-        }
+            var userIsOnEsportsNetwork = IPNetwork.Contains(EsportsNetwork, IPAddress.Parse(ip));
+            var userIsOnEduroamNetwork = IPNetwork.Contains(EduroamNetwork, IPAddress.Parse(ip));
+            var userIsLocalhost = IPNetwork.Contains(LocalhostNetwork, IPAddress.Parse(ip));
+            var userIsLocalhostIPv6 = IPNetwork.Contains(LocalhostNetworkIPv6, IPAddress.Parse(ip));
 
-        private static bool Match(string pattern, string ipAddr)
-        {
-            byte[] subnetMask = IPAddress.Parse(string.Join(".", pattern.Split('.').Select(s => s == "*" ? "0" : "255"))).GetAddressBytes();
-            byte[] patternIp = IPAddress.Parse(pattern.Replace('*', '0')).GetAddressBytes();
-            byte[] ip = IPAddress.Parse(ipAddr).GetAddressBytes();
-
-            return subnetMask.Where((t, i) => (t & patternIp[i]) != (t & ip[i])).Any() == false;
+            return userIsOnEsportsNetwork || userIsOnEduroamNetwork || userIsLocalhost || userIsLocalhostIPv6;
         }
 
         public static bool IsOnEduroam(HttpContext context)
         {
             var ip = GetIpAddress(context);
-            var eduroam = new List<string> {"145.116.*.*"};
 
-            return eduroam.Any(x => Match(x, ip));
+            return IPNetwork.Contains(EduroamNetwork, IPAddress.Parse(ip));
         }
     }
 }
