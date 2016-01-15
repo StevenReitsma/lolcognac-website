@@ -114,7 +114,6 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\BracketHelper.cs" />
-    <Compile Include="Helpers\UserHelper.cs" />
     <Compile Include="Helpers\EmailHelper.cs" />
     <Compile Include="Helpers\Mollie.cs" />
     <Compile Include="Helpers\ExportHelper.cs" />
@@ -130,6 +129,7 @@
     <Compile Include="Models\Admin\AdminTeamsViewModel.cs" />
     <Compile Include="Models\Admin\User.cs" />
     <Compile Include="Models\Champion.cs" />
+    <Compile Include="Models\ChampionsBannedViewModel.cs" />
     <Compile Include="Models\ChampionsPlayedViewModel.cs" />
     <Compile Include="Models\Financial\CardSecurityType.cs" />
     <Compile Include="Models\Financial\Payment.cs" />
