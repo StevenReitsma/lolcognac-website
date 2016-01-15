@@ -162,6 +162,10 @@ namespace LoLTournament.Helpers
                 nextMatch.FinishDate = DateTime.Now;
 
                 nextMatch.ChampionIds = matchData.Participants.Select(p => p.ChampionId).ToArray();
+                nextMatch.BanIds = matchData.Teams
+                    .SelectMany(team => team.Bans)
+                    .Select(ban => ban.ChampionId)
+                    .ToArray();
 
                 nextMatch.WinnerId = matchData.Participants.First(x => x.TeamId == 100).Stats.Winner
                     ? nextMatch.BlueTeamId
