@@ -28,5 +28,10 @@ namespace LoLTournament.Controllers
         {
             return Json(new ChampionsPlayedViewModel());
         }
+
+        public JsonResult ChampionsBannedData()
+        {
+            return Json(new ChampionsBannedViewModel());
+        }
     }
 }

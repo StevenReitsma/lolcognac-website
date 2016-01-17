@@ -147,7 +147,7 @@
             contentType: 'application/json',
             url: '@Url.Action("StatisticsOverTimeData")',
             data: '{}',
-            success: function (chartsData) {
+            success: function(chartsData) {
                 var kills = chartsData.Kills;
                 var assists = chartsData.Assists;
                 var data = new google.visualization.DataTable();
@@ -175,11 +175,11 @@
 
                 });
             },
-            error: function () {
+            error: function() {
                 console.error("Error loading pie data from url " + this.url);
             }
 
-        })
+        });
     }
 
     function makeChampionsPlayedChart() {
@@ -212,10 +212,40 @@
         });
     }
 
+    function makeChampionsBannedChart() {
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            contentType: 'application/json',
+            url: '@Url.Action("ChampionsBannedData")',
+            data: '{}',
+            success: function(chartsData) {
+                var champions = chartsData.ChampionsBanned;
+                var data = new google.visualization.DataTable();
+
+                data.addColumn('string', 'Champion');
+                data.addColumn('number', 'Times banned');
+
+                for (var champion in champions) {
+                    data.addRow([champion, champions[champion]]);
+                }
+
+                var chart = new google.visualization.BarChart(document.getElementById('bans-bar'));
+                chart.draw(data, {
+                    title: ''
+                });
+            },
+            error: function () {
+                console.error("Error loading pie data from url " + this.url);
+            }
+        });
+    }
+
     function makeCharts() {
         makeStudyProgrammePie();
         makeStatisticsOverTimeChart();
         makeChampionsPlayedChart();
+        makeChampionsBannedChart();
     }
 
     google.setOnLoadCallback(makeCharts);
