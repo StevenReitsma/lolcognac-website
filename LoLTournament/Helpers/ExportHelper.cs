@@ -17,7 +17,7 @@ namespace LoLTournament.Helpers
         public static void ExportBadgeList()
         {
             var csv = new StringBuilder();
-            csv.AppendLine("SummonerName, Season5Tier, Season5Division, TeamName");
+            csv.AppendLine("SummonerName, CurrentSeasonTier, CurrentSeasonDivision, TeamName");
 
             var validTeams = Mongo.Teams.Find(Query<Team>.Where(x => !x.Cancelled))
                 .OrderByDescending(x => x.AmountOfRuStudents)
@@ -29,7 +29,7 @@ namespace LoLTournament.Helpers
             {
                 if (validTeams.Any(x => x.Id == p.TeamId))
                 {
-                    var str = string.Format("{0},{1},{2},{3}", p.Summoner.Name, p.Season5Tier, p.Season5Division,
+                    var str = string.Format("{0},{1},{2},{3}", p.Summoner.Name, p.CurrentSeasonTier, p.CurrentSeasonDivision,
                         p.Team.Name);
                     csv.AppendLine(str);
                 }

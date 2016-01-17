@@ -17,5 +17,9 @@ namespace LoLTournament.Models
         public string StudyProgram { get; set; }
         public bool IsCaptain { get; set; }
         public string Roles { get; set; }
+        public string StudentNumber { get; set; }
+        public bool RUStudent { get; set; }
+        public bool CognAC { get; set; }
+        public bool Dorans { get; set; }
     }
 }

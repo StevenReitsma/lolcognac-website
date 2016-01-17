@@ -3,14 +3,14 @@
 @using LoLTournament.Helpers
 @using LoLTournament.Models
 @using RiotSharp.LeagueEndpoint
-@model TeamViewModel
+@model LoLTournament.Models.TeamViewModel
 
 <div class="schedule-header">
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
                 <div class="intro-message-small">
-                    <h1>Match schedule</h1>
+                    <h1>Team overview</h1>
                     <hr class="intro-divider">
                 </div>
             </div>
@@ -34,11 +34,11 @@
                 }
                 else
                 {
-                    <h2>@Model.Team.Name <span class="label label-success" style="font-size: 11px; vertical-align: middle">Pool @(Model.Team.Pool + 1)</span></h2>
+                    <h2>@Model.Team.Name <span class="label label-success" style="font-size: 11px; vertical-align: middle">Pool Unknown</span></h2>
 
-                    foreach (var p in @Model.Team.Participants.OrderByDescending(x => Math.Max((int) x.Season4Tier, (int) x.Season5Tier)))
+                    foreach (var p in @Model.Team.Participants.OrderBy(x => Math.Max((int) x.PreviousSeasonTier, (int) x.CurrentSeasonTier)))
                     {
-                        var maxTier = (Tier) Math.Max((int) p.Season4Tier, (int) p.Season5Tier);
+                        var maxTier = (Tier) Math.Max((int) p.PreviousSeasonTier, (int) p.CurrentSeasonTier);
                         string color;
                         switch (maxTier)
                         {

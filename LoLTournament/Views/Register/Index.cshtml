@@ -21,15 +21,25 @@
             <div class="col-lg-12 col-lg-12">
                 <div class="clearfix"></div>
 
-                @if (DateTime.Now < Model.RegistrationCloseDate && DateTime.Now >= Model.RegistrationStartDateEarlyBird)
+
+                @if (DateTime.Now < Model.RegistrationStartDate && DateTime.Now >= Model.RegistrationStartDateEarlyBird && Model.TeamCount >= 12)
+                {
+                    <div class="alert alert-danger" role="alert">
+                        All CognAC and Dorans exclusive spots have been taken. More spots open will open up for everyone soon.
+                    </div>
+                }
+                else if (DateTime.Now < Model.RegistrationCloseDate && DateTime.Now >= Model.RegistrationStartDate && Model.TeamCount >= 32)
+                {
+                    <div class="alert alert-danger" role="alert">
+                        The tournament is full.
+                    </div>
+                }
+                else if (DateTime.Now < Model.RegistrationCloseDate && DateTime.Now >= Model.RegistrationStartDateEarlyBird)
                 {
                     <p class="lead">
                         Fill in the form below to register your team for the CognAC League of Legends Tournament 2016.
                         Note that your registration is permanent and cannot be canceled.
-                        Also note that <strong>you need to register on the official League of Legends website as well.</strong> This can be done <a href="http://events.euw.leagueoflegends.com/">here</a>.
-                        Your registration is not valid otherwise.
-                        You need to login to the League of Legends website with your League of Legends account and join the tournament by clicking <em>Register</em>.
-                        Make sure to enter your team name in the required field.
+                        Also note that <strong>you need to register on the official League of Legends website as well.</strong> You will receive an email on how to do this later.
                     </p>
                     <p>
                         Don't have a team yet? Use the <a href="@Url.Action("Teambuilder", "Register")">team builder</a>!
@@ -54,7 +64,8 @@
     </div>
 </div>
 
-@if (DateTime.Now < Model.RegistrationCloseDate && DateTime.Now >= Model.RegistrationStartDateEarlyBird)
+@if (DateTime.Now < Model.RegistrationStartDate && DateTime.Now >= Model.RegistrationStartDateEarlyBird && Model.TeamCount < 12 ||
+     DateTime.Now < Model.RegistrationCloseDate && DateTime.Now >= Model.RegistrationStartDate && Model.TeamCount < 32)
 {
     <div class="content-section-b">
         <div class="container">

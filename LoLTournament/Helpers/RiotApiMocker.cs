@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Builders;
@@ -14,6 +15,22 @@ namespace LoLTournament.Helpers
 {
     public class RiotApiMocker
     {
+        /// <summary>
+        /// Alternative constructor to call internal constructors.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public static T CreateInstance<T>(params object[] args)
+        {
+            var type = typeof(T);
+            var instance = type.Assembly.CreateInstance(
+                type.FullName, false,
+                BindingFlags.Instance | BindingFlags.NonPublic,
+                null, args, null, null);
+            return (T)instance;
+        }
+
         /// <summary>
         /// Simulates a finished match between two teams.
         /// </summary>
@@ -45,7 +62,7 @@ namespace LoLTournament.Helpers
             {
                 GameMode = GameMode.Classic,
                 GameType = GameType.CustomGame,
-                SubType = GameSubType.None,
+                GameSubType = GameSubType.None,
                 MapType = MapType.SummonersRift,
                 CreateDate = new DateTime(2015, 2, 26, 19, 02, 18),
                 FellowPlayers = fellowPlayers,

@@ -47,5 +47,16 @@ namespace LoLTournament.Models
                 return registrationStart;
             }
         }
+
+        public DateTime RegistrationStartEarlyBird
+        {
+            get
+            {
+                var timeSetting = WebConfigurationManager.AppSettings["RegistrationStartEarlyBird"];
+                var registrationStart = DateTime.ParseExact(timeSetting, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
+
+                return registrationStart;
+            }
+        }
     }
 }

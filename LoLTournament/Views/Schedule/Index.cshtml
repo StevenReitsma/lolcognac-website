@@ -22,7 +22,13 @@
             <div class="col-lg-12 col-lg-12">
                 <div class="clearfix"></div>
 
-                @if (DateTime.Now >= Model.RegistrationCloseDate || DateTime.Now <= Model.RegistrationStartDate)
+                @if (DateTime.Now >= Model.RegistrationStartEarlyBird && DateTime.Now <= Model.RegistrationStartDate)
+                {
+                    <div class="alert alert-warning" role="alert">
+                        Tournament registration is currently only open to CognAC and Dorans members. The registration opens up to everyone soon.
+                    </div>
+                }
+                else if (DateTime.Now >= Model.RegistrationCloseDate || DateTime.Now <= Model.RegistrationStartEarlyBird)
                 {
                     <div class="alert alert-warning" role="alert">Registration is closed.</div>
                 }
@@ -35,9 +41,21 @@
                     <div class="alert alert-warning" role="alert">There is only <b>@(32 - Model.Teams.Count())</b> more spot available.
                     </div>
                 }
+                else if (Model.Teams.Count() == 11)
+                {
+                    <div class="alert alert-warning" role="alert">
+                        There is only <b>@(12 - Model.Teams.Count())</b> more exclusive spot available for CognAC and Dorans members.
+                    </div>
+                }
+                else if (DateTime.Now >= Model.RegistrationStartEarlyBird && DateTime.Now < Model.RegistrationStartDate)
+                {
+                    <div class="alert alert-warning" role="alert">There are <b>@(12 - Model.Teams.Count())</b> more exclusive spots available for CognAC and Dorans members. <a href="@Url.Action("Index", "Register")">Register</a> now to reserve your spot! Registration opens up to all RU students January 25th.
+                    </div>
+                }
                 else
                 {
-                    <div class="alert alert-warning" role="alert">There are <b>@(32 - Model.Teams.Count())</b> more spots available. <a href="@Url.Action("Index", "Register")">Register</a> now to reserve your spot!
+                    <div class="alert alert-warning" role="alert">
+                        There are <b>@(32 - Model.Teams.Count())</b> more spots available. <a href="@Url.Action("Index", "Register")">Register</a> now to reserve your spot!
                     </div>
                 }
 
@@ -52,7 +70,7 @@
                         @foreach (var t in Model.Teams)
                         {
                             <li>
-                                @t.Name
+                                <a href="@Url.Action("Team", "Schedule", new RouteValueDictionary {{"teamId", @t.Id}})">@t.Name</a>
                             </li>
                         }
                     </ul>

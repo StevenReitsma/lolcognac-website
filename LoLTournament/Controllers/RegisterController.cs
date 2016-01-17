@@ -66,9 +66,9 @@ namespace LoLTournament.Controllers
             // Check for early-bird access
             if (DateTime.Now >= registrationStartEarlyBird && DateTime.Now < registrationStart)
             {
-                if (earlyBirdCount < 1)
+                if (earlyBirdCount < 5)
                     ModelState.AddModelError("earlyBirdAccess",
-                        "Registrations are currently only open for teams that have at least one CognAC or Dorans member.");
+                        "Registrations are currently only open for teams that have at least five CognAC and/or Dorans members.");
 
                 if (Mongo.Teams.Count(Query<Team>.Where(x => !x.Cancelled)) >= 12)
                     ModelState.AddModelError("earlyBirdFull",
@@ -189,6 +189,7 @@ namespace LoLTournament.Controllers
                 var template = new PaymentTemplate {Amount = team.Price, Description = "CognAC League of Legends Tournament 2016", RedirectUrl = "https://lolcognac.nl/Payment/Status/" + team.Id, Method = m.PaymentMethod };
                 var status = client.StartPayment(template);
                 m.PaymentUrl = status.Links.PaymentUrl;
+                m.Price = status.Amount;
 
                 status.TeamId = team.Id;
 
@@ -220,7 +221,11 @@ namespace LoLTournament.Controllers
                     RegisterTime = DateTime.Now,
                     StudyProgram = m.Study,
                     SummonerName = m.Name,
-                    Roles = m.Role
+                    Roles = m.Role,
+                    StudentNumber = m.StudentNumber,
+                    RUStudent = m.RUStudent,
+                    CognAC = m.CognAC,
+                    Dorans = m.Dorans
                 };
 
                 Mongo.TeamBuilderParticipants.Insert(buildee);

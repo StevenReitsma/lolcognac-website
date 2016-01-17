@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using MongoDB.Driver.Builders;
 
 namespace LoLTournament.Models
 {
@@ -13,7 +14,7 @@ namespace LoLTournament.Models
 
         public StudyProgrammeViewModel()
         {
-            var participants = Mongo.Participants.FindAll();
+            var participants = Mongo.Participants.Find(Query<Participant>.Where(x => x.StudyProgram != null));
             Programmes = participants.GroupBy(p => p.StudyProgram)
                 .OrderByDescending(group => group.Count())
                 .ToDictionary(g => g.Key, g => g.Count());

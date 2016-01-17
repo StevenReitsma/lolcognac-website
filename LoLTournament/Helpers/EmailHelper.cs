@@ -14,7 +14,7 @@ namespace LoLTournament.Helpers
 
         public static void SendOfficialLoLRegistrationReminder(string toMail, string toName)
         {
-            SendMail(toMail, toName, "Registration complete", "Hi team captain!\n\nWe have received your registration. We would like to remind you that to complete your registration you and all your team members should also register at the official League of Legends website. You can do this through the following URL:\n\nhttps://leagueoflegends.com\n\nBest, CognAC League of Legends Committee");
+            SendMail(toMail, toName, "Registration complete", "Hi team captain!\n\nWe have received your registration. We would like to remind you that to complete your registration you and all your team members should also register at the official League of Legends website. You will receive an email on how to do this later.\n\nBest, CognAC League of Legends Committee");
         }
 
         public static void SendPaymentFailure(string toMail, string toName, PaymentStatus? status)

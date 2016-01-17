@@ -38,7 +38,7 @@ namespace LoLTournament.Helpers
             // For matches, every minute
             var intervalMatches = new TimeSpan(0, 1, 0);
 
-            //new Timer(ScrapeSummoners, null, TimeSpan.Zero, intervalSummoners);
+            new Timer(ScrapeSummoners, null, TimeSpan.Zero, intervalSummoners);
             //new Timer(ScrapeMatches, null, TimeSpan.Zero, intervalMatches);
             //new Timer(ScrapeStatic, null, TimeSpan.Zero, TimeSpan.FromDays(1.0));
         }
@@ -49,7 +49,7 @@ namespace LoLTournament.Helpers
             var champions = _staticApi.GetChampions(Region.euw).Champions;
             foreach(var champion in champions.Keys)
             {
-                Mongo.Champions.Save(new Champion() { Name = champions[champion].Name, ChampionId = champions[champion].Id });
+                Mongo.Champions.Save(new Champion { Name = champions[champion].Name, ChampionId = champions[champion].Id });
             }
         }
 
@@ -90,7 +90,7 @@ namespace LoLTournament.Helpers
                     where 
                         m.GameMode == GameMode.Classic &&
                         m.GameType == GameType.CustomGame &&
-                        (m.SubType == GameSubType.None || m.SubType == GameSubType.Normal) &&
+                        (m.GameSubType == GameSubType.None || m.GameSubType == GameSubType.Normal) &&
                         m.MapType == MapType.SummonersRift &&
                         m.FellowPlayers.Count == 9 &&
                         !m.Invalid
@@ -589,9 +589,6 @@ namespace LoLTournament.Helpers
         /// <param name="arg">Unused</param>
         private void ScrapeSummoners(object arg)
         {
-            // Fix time creation date and match statistics
-            TimeFixer.FixMatchCreationDates();
-
             // Disable during tournament to save API calls
             var timeSetting = WebConfigurationManager.AppSettings["TournamentStart"];
             var tournamentStart = DateTime.ParseExact(timeSetting, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
@@ -617,66 +614,70 @@ namespace LoLTournament.Helpers
                     continue;
                 }
 
-                // Get Season 4 league
-                var season4Tier = Tier.Unranked;
+                // Get previous season league
+                var previousTier = Tier.Unranked;
                 try
                 {
-                    var previousSeason = _api.GetMatchHistory(Region.euw, s.Id, 0, 1, null,
-                        new List<Queue> {Queue.RankedSolo5x5});
+                    var rankedGames = _api.GetMatchList(Region.euw, s.Id, null, new List<Queue> {Queue.RankedSolo5x5});
 
-                    if (previousSeason != null)
-                        season4Tier = previousSeason[0].Participants[0].HighestAchievedSeasonTier;
+                    if (rankedGames != null && rankedGames.Matches.Count > 0)
+                    {
+                        var id = rankedGames.Matches.First().MatchID;
+                        var match = _api.GetMatch(Region.euw, id);
+                        if (match != null)
+                            previousTier = match.Participants.Single(x => x.ParticipantId == match.ParticipantIdentities.Single(y => y.Player.SummonerId == s.Id).ParticipantId).HighestAchievedSeasonTier;
+                    }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    // Unranked in season 4
+                    // Unranked in previous season
                 }
 
-                // Get wins and losses in season 4
+                // Get wins and losses in previous season
                 int wins;
                 int losses;
                 try
                 {
-                    var winLoss = _api.GetStatsSummaries(Region.euw, s.Id, Season.Season2014);
+                    var winLoss = _api.GetStatsSummaries(Region.euw, s.Id, Season.Season2015); // change each year
                     var winLossSoloQueue =
                         winLoss.Single(x => x.PlayerStatSummaryType == PlayerStatsSummaryType.RankedSolo5x5);
                     wins = winLossSoloQueue.Wins;
                     losses = winLossSoloQueue.Losses;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    // No matches played in season 4
+                    // No matches played in previous season
                     wins = 0;
                     losses = 0;
                 }
 
-                // Get Season 5 league
+                // Get current league
                 Tier tier;
                 int divisionInt;
                 try
                 {
-                    var season5League = _api.GetLeagues(Region.euw, new List<int> {(int) s.Id});
-                    var season5LeagueSoloQueue = season5League.First().Value.Single(x => x.Queue == Queue.RankedSolo5x5);
-                    tier = season5LeagueSoloQueue.Tier;
+                    var currentLeague = _api.GetLeagues(Region.euw, new List<int> {(int) s.Id});
+                    var currentLeagueSoloQueue = currentLeague.First().Value.Single(x => x.Queue == Queue.RankedSolo5x5);
+                    tier = currentLeagueSoloQueue.Tier;
                     var division =
-                        season5LeagueSoloQueue.Entries.Single(x => x.PlayerOrTeamId == s.Id.ToString()).Division;
+                        currentLeagueSoloQueue.Entries.Single(x => x.PlayerOrTeamId == s.Id.ToString()).Division;
 
                     divisionInt = RomanToInt(division);
                 }
                 catch (Exception)
                 {
-                    // Unranked in season 5
+                    // Unranked in current season
                     tier = Tier.Unranked;
                     divisionInt = 0;
                 }
 
                 // Set values and update DB
                 p.Summoner = s;
-                p.Season4Wins = wins;
-                p.Season4Losses = losses;
-                p.Season4Tier = season4Tier;
-                p.Season5Tier = tier;
-                p.Season5Division = divisionInt;
+                p.PreviousSeasonWins = wins;
+                p.PreviousSeasonLosses = losses;
+                p.PreviousSeasonTier = previousTier;
+                p.CurrentSeasonTier = tier;
+                p.CurrentSeasonDivision = divisionInt;
                 p.LastUpdateTime = DateTime.Now;
 
                 Mongo.Participants.Save(p);

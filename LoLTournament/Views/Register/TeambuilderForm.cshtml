@@ -19,14 +19,40 @@
     <div class="form-group">
         <strong>@Html.DisplayNameFor(x => x.Email)</strong>
         <div>
-            <div style="display:inline-block; width: 280px;">@Html.TextBoxFor(x => x.Email, new { @class = "form-control" })</div> <div>@Html.ValidationMessageFor(model => model.Email)</div>
+            <div style="display: inline-block; width: 280px;">@Html.TextBoxFor(x => x.Email, new {@class = "form-control"})</div>
+            <div>@Html.ValidationMessageFor(model => model.Email)</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div>
+            @Html.CheckBoxFor(x => x.RUStudent) <strong style="vertical-align:top; padding-left:10px;">@Html.DisplayNameFor(x => x.RUStudent)</strong> <div>@Html.ValidationMessageFor(model => model.RUStudent)</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div>
+            @Html.CheckBoxFor(x => x.CognAC) <strong style="vertical-align: top; padding-left: 10px;">@Html.DisplayNameFor(x => x.CognAC)</strong>
+            <div>@Html.ValidationMessageFor(model => model.CognAC)</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div>
+            @Html.CheckBoxFor(x => x.Dorans) <strong style="vertical-align: top; padding-left: 10px;">@Html.DisplayNameFor(x => x.Dorans)</strong>
+            <div>@Html.ValidationMessageFor(model => model.Dorans)</div>
         </div>
     </div>
     <div class="form-group">
         <strong>@Html.DisplayNameFor(x => x.Study)</strong>
         <div>
-            <div style="display:inline-block; width: 280px;">@Html.TextBoxFor(x => x.Study, new { @class = "form-control" })</div> <div>@Html.ValidationMessageFor(model => model.Study)</div>
+            <div style="display: inline-block; width: 280px;">@Html.TextBoxFor(x => x.Study, new {@class = "form-control"})</div>
+            <div>@Html.ValidationMessageFor(model => model.Study)</div>
         </div>
+    </div>
+    <div class="form-group">
+        <strong>@Html.DisplayNameFor(x => x.StudentNumber)</strong>
+        <div>
+            <div style="display:inline-block; width: 280px;">@Html.TextBoxFor(x => x.StudentNumber, new { @class = "form-control" })</div> <div>@Html.ValidationMessageFor(model => model.StudentNumber)</div>
+        </div>
+        <hr />
     </div>
     <div class="form-group">
         <strong>@Html.DisplayNameFor(x => x.Role)</strong>

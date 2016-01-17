@@ -13,15 +13,15 @@ namespace LoLTournament.Models
     public class Participant
     {
         [BsonIgnore]
-        private const double Season4Ratio = 0.67;
+        private const double PreviousRatio = 0.67;
 
         public ObjectId Id { get; set; }
         public Summoner Summoner { get; set; }
-        public Tier Season4Tier { get; set; }
-        public Tier Season5Tier { get; set; }
-        public int Season5Division { get; set; }
-        public int Season4Wins { get; set; }
-        public int Season4Losses { get; set; }
+        public Tier PreviousSeasonTier { get; set; }
+        public Tier CurrentSeasonTier { get; set; }
+        public int CurrentSeasonDivision { get; set; }
+        public int PreviousSeasonWins { get; set; }
+        public int PreviousSeasonLosses { get; set; }
         public string SummonerName { get; set; }
         public string Email { get; set; }
         public string FullName { get; set; }
@@ -54,21 +54,20 @@ namespace LoLTournament.Models
         [BsonIgnore]
         public double MMR
         {
-            // TODO 2016: rework for new seasons
             get
             {
                 double tierRanking = 0;
 
-                if (Season4Tier != Tier.Unranked)
-                    tierRanking += (int)Season4Tier * 5 + 3; // the +3 is because this is the average division
+                if (PreviousSeasonTier != Tier.Unranked)
+                    tierRanking += (int)PreviousSeasonTier * 5 + 3; // the +3 is because this is the average division
 
-                // If also ranked in season 5, take weighted average (season 4 = 0.67, season 5 = 0.33)
-                if (Season5Tier != Tier.Unranked)
+                // If also ranked in current season, take weighted average (previous = 0.67, current = 0.33)
+                if (CurrentSeasonTier != Tier.Unranked)
                 {
-                    tierRanking *= Season4Ratio;
-                    tierRanking += (1 - Season4Ratio) * ((int)Season5Tier * 5 + 5 - Season5Division);
-                    if (Season4Tier != Tier.Unranked)
-                        tierRanking /= (1 - Season4Ratio); // undo ratio multiplication
+                    tierRanking *= PreviousRatio;
+                    tierRanking += (1 - PreviousRatio) * ((int)CurrentSeasonTier * 5 + 5 - CurrentSeasonDivision);
+                    if (PreviousSeasonTier != Tier.Unranked)
+                        tierRanking /= (1 - PreviousRatio); // undo ratio multiplication
                 }
 
                 return tierRanking * 3;

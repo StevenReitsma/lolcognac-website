@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Web.Configuration;
+using LoLTournament.Helpers;
 using LoLTournament.Models.Financial;
 
 namespace LoLTournament.Models
@@ -120,6 +121,7 @@ namespace LoLTournament.Models
         public PaymentMethod PaymentMethod { get; set; }
 
         public string PaymentUrl { get; set; }
+        public decimal Price { get; set; }
 
         public DateTime RegistrationCloseDate
         {
@@ -152,6 +154,11 @@ namespace LoLTournament.Models
 
                 return registrationStart;
             }
+        }
+
+        public long TeamCount
+        {
+            get { return Mongo.Teams.Count(); }
         }
     }
 }
