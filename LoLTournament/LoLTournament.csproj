@@ -141,6 +141,8 @@
     <Compile Include="Models\Admin\AdminDashboardViewModel.cs" />
     <Compile Include="Models\Admin\AdminFinanceViewModel.cs" />
     <Compile Include="Models\Admin\AdminLoginViewModel.cs" />
+    <Compile Include="Models\Admin\AdminParticipantsViewModel.cs" />
+    <Compile Include="Models\Admin\AdminTeamBuilderViewModel.cs" />
     <Compile Include="Models\Admin\AdminTeamsViewModel.cs" />
     <Compile Include="Models\Admin\User.cs" />
     <Compile Include="Models\Champion.cs" />
@@ -612,6 +614,8 @@
     <Content Include="Views\Payment\Status.cshtml" />
     <Content Include="Views\Admin\Login.cshtml" />
     <Content Include="Views\Admin\AuthenticationError.cshtml" />
+    <Content Include="Views\Admin\Team.cshtml" />
+    <Content Include="Views\Admin\TeamBuilder.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

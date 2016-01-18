@@ -33,14 +33,9 @@ namespace LoLTournament.Helpers
             _api = RiotApi.GetInstance(key, rateLimit1, rateLimit2);
             _staticApi = StaticRiotApi.GetInstance(key);
 
-            // For summoner statistics, always 1 hour
-            var intervalSummoners = new TimeSpan(1, 0, 0);
-            // For matches, every minute
-            var intervalMatches = new TimeSpan(0, 1, 0);
-
-            new Timer(ScrapeSummoners, null, TimeSpan.Zero, intervalSummoners);
+            new Timer(ScrapeSummoners, null, TimeSpan.Zero, TimeSpan.FromMinutes(15));
             //new Timer(ScrapeMatches, null, TimeSpan.Zero, intervalMatches);
-            //new Timer(ScrapeStatic, null, TimeSpan.Zero, TimeSpan.FromDays(1.0));
+            new Timer(ScrapeStatic, null, TimeSpan.Zero, TimeSpan.FromDays(1.0));
         }
 
         private void ScrapeStatic(object arg)

@@ -59,13 +59,13 @@ namespace LoLTournament.Models
                 double tierRanking = 0;
 
                 if (PreviousSeasonTier != Tier.Unranked)
-                    tierRanking += (int)PreviousSeasonTier * 5 + 3; // the +3 is because this is the average division
+                    tierRanking += (int)(6-PreviousSeasonTier) * 5 + 3; // the +3 is because this is the average division
 
                 // If also ranked in current season, take weighted average (previous = 0.67, current = 0.33)
                 if (CurrentSeasonTier != Tier.Unranked)
                 {
                     tierRanking *= PreviousRatio;
-                    tierRanking += (1 - PreviousRatio) * ((int)CurrentSeasonTier * 5 + 5 - CurrentSeasonDivision);
+                    tierRanking += (1 - PreviousRatio) * ((int)(6-CurrentSeasonTier) * 5 + 5 - CurrentSeasonDivision);
                     if (PreviousSeasonTier != Tier.Unranked)
                         tierRanking /= (1 - PreviousRatio); // undo ratio multiplication
                 }

@@ -127,7 +127,8 @@ namespace LoLTournament.Models.Financial
         /// </summary>
         public void Update()
         {
-            var key = WebConfigurationManager.AppSettings["MollieTestKey"];
+            var key = WebConfigurationManager.AppSettings["MollieLiveKey"];
+
             var client = new MollieClient { ApiKey = key };
             var updatedPayment = client.GetStatus(MollieId);
 

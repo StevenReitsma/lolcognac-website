@@ -56,7 +56,13 @@
                             @p.Details.ConsumerAccount
                         }
                     </td>
-                    <td><i class="fa fa-clock-o"></i> @p.PaidDateTime</td>
+                    <td>
+                        <i class="fa fa-clock-o"></i>
+                        @if (p.PaidDateTime != null)
+                        {
+                            @TimeZoneInfo.ConvertTimeFromUtc(p.PaidDateTime.Value, TimeZoneInfo.Local)
+                        }
+                    </td>
                     <td><a href="@Url.Action("Refund", "Admin", new RouteValueDictionary {{"transactionId", @p.Id}})"><i class="fa fa-undo text-red" title="Refund"></i></a></td>
                 </tr>
             }

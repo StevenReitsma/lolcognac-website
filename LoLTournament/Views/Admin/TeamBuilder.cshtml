@@ -1,0 +1,80 @@
+﻿@{
+    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+}
+@model LoLTournament.Models.Admin.AdminTeamBuilderViewModel
+
+<h1>Team builders</h1>
+
+<div class="box">
+    <div class="box-header">
+        <h3 class="box-title">Currently registered team builders</h3>
+    </div><!-- /.box-header -->
+    <div class="box-body no-padding">
+        <table class="table table-striped table-hover">
+            <tr>
+                <th>Name</th>
+                <th>Summoner name</th>
+                <th>Study programme</th>
+                <th>E-mail</th>
+                <th>Student number</th>
+                <th>RU student</th>
+                <th>CognAC member</th>
+                <th>Dorans member</th>
+                <th>Team captain</th>
+                <th>Register date</th>
+            </tr>
+            @foreach (var p in Model.TeamBuilders)
+            {
+                <tr>
+                    <td>@p.FullName</td>
+                    <td>@p.SummonerName</td>
+                    <td>@p.StudyProgram</td>
+                    <td>@p.Email</td>
+                    <td>@p.StudentNumber</td>
+                    <td>
+                        @if (@p.RUStudent)
+                        {
+                            <span class="badge bg-green">Yes</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-red">No</span>
+                        }
+                    </td>
+                    <td>
+                        @if (@p.CognAC)
+                        {
+                            <span class="badge bg-green">Yes</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-red">No</span>
+                        }
+                    </td>
+                    <td>
+                        @if (@p.Dorans)
+                        {
+                            <span class="badge bg-green">Yes</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-red">No</span>
+                        }
+                    </td>
+                    <td>
+                        @if (@p.IsCaptain)
+                        {
+                            <span class="badge bg-green">Yes</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-red">No</span>
+                        }
+                    </td>
+
+                    <td><i class="fa fa-clock-o"></i> @TimeZoneInfo.ConvertTimeFromUtc(p.RegisterTime, TimeZoneInfo.Local)</td>
+                </tr>
+                            }
+        </table>
+    </div><!-- /.box-body -->
+</div><!-- /.box -->

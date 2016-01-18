@@ -1,6 +1,10 @@
 ﻿using System.Web.Mvc;
 using System.Web.Security;
+using LoLTournament.Helpers;
+using LoLTournament.Models;
 using LoLTournament.Models.Admin;
+using MongoDB.Bson;
+using MongoDB.Driver.Builders;
 
 namespace LoLTournament.Controllers
 {
@@ -21,11 +25,18 @@ namespace LoLTournament.Controllers
             return View(new AdminTeamsViewModel());
         }
 
+        [Authorize]
+        public ActionResult Team()
+        {
+            var id = HttpContext.Request.QueryString["teamId"];
+            return View(Mongo.Teams.FindOne(Query<Team>.Where(x => x.Id == ObjectId.Parse(id))));
+        }
+
         // GET: Admin/Participants
         [Authorize]
         public ActionResult Participants()
         {
-            return View();
+            return View(new AdminParticipantsViewModel());
         }
 
         // GET: Admin/Finance
@@ -74,6 +85,12 @@ namespace LoLTournament.Controllers
         {
             FormsAuthentication.SignOut();
             return RedirectToAction("Login", "Admin");
+        }
+
+        // GET: Admin/TeamBuilder
+        public ActionResult TeamBuilder()
+        {
+            return View(new AdminTeamBuilderViewModel());
         }
     }
 }
