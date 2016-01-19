@@ -31,7 +31,7 @@ namespace LoLTournament.Helpers
                 }
                 catch (Exception)
                 {
-                    File.AppendAllText("C:\\Users\\Steven\\Desktop\\test.txt", m.BlueTeam.Name + " vs. " + m.PurpleTeam.Name + " (" + m.Phase + "." + m.Priority + ")\n");
+                    File.AppendAllText("C:\\Users\\Steven\\Desktop\\test.txt", m.BlueTeam.Name + " vs. " + m.RedTeam.Name + " (" + m.Phase + "." + m.Priority + ")\n");
                     continue;
                 }
 
@@ -39,9 +39,9 @@ namespace LoLTournament.Helpers
                 m.DeathsBlueTeam = game.Participants.Where(x => x.TeamId == 100).Sum(x => x.Stats.Deaths);
                 m.KillsBlueTeam = game.Participants.Where(x => x.TeamId == 100).Sum(x => x.Stats.Kills);
 
-                m.AssistsPurpleTeam = game.Participants.Where(x => x.TeamId == 200).Sum(x => x.Stats.Assists);
-                m.DeathsPurpleTeam = game.Participants.Where(x => x.TeamId == 200).Sum(x => x.Stats.Deaths);
-                m.KillsPurpleTeam = game.Participants.Where(x => x.TeamId == 200).Sum(x => x.Stats.Kills);
+                m.AssistsRedTeam = game.Participants.Where(x => x.TeamId == 200).Sum(x => x.Stats.Assists);
+                m.DeathsRedTeam = game.Participants.Where(x => x.TeamId == 200).Sum(x => x.Stats.Deaths);
+                m.KillsRedTeam = game.Participants.Where(x => x.TeamId == 200).Sum(x => x.Stats.Kills);
 
                 m.CreationTime = game.MatchCreation + new TimeSpan(0, 2, 10, 0) + game.MatchDuration;
                 Mongo.Matches.Save(m);

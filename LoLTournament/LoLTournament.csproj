@@ -60,6 +60,7 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.IPNetwork, Version=2.0.3.0, Culture=neutral, PublicKeyToken=764160545cf0d618, processorArchitecture=MSIL">
       <HintPath>..\packages\IPNetwork2.2.0.3\lib\net40\System.Net.IPNetwork.dll</HintPath>
       <Private>True</Private>
@@ -122,6 +123,7 @@
     <Compile Include="Authentication\MongoRoleProvider.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\MatchController.cs" />
     <Compile Include="Controllers\PaymentController.cs" />
     <Compile Include="Controllers\RegisterController.cs" />
     <Compile Include="Controllers\ScheduleController.cs" />
@@ -131,6 +133,7 @@
     </Compile>
     <Compile Include="Helpers\BracketHelper.cs" />
     <Compile Include="Helpers\EmailHelper.cs" />
+    <Compile Include="Helpers\JsonDotNetValueProviderFactory.cs" />
     <Compile Include="Helpers\Mollie.cs" />
     <Compile Include="Helpers\ExportHelper.cs" />
     <Compile Include="Helpers\IpHelper.cs" />
@@ -138,6 +141,7 @@
     <Compile Include="Helpers\NavigationLink.cs" />
     <Compile Include="Helpers\RiotApiScrapeJob.cs" />
     <Compile Include="Helpers\TimeFixer.cs" />
+    <Compile Include="Helpers\Util.cs" />
     <Compile Include="Models\Admin\AdminDashboardViewModel.cs" />
     <Compile Include="Models\Admin\AdminFinanceViewModel.cs" />
     <Compile Include="Models\Admin\AdminLoginViewModel.cs" />
@@ -174,6 +178,9 @@
     <Compile Include="Models\TeambuilderViewModel.cs" />
     <Compile Include="Models\TeamViewModel.cs" />
     <Compile Include="Models\ScheduleIndexViewModel.cs" />
+    <Compile Include="Models\TournamentApi\CallbackResult.cs" />
+    <Compile Include="Models\TournamentApi\DateTimeConverterFromLong.cs" />
+    <Compile Include="Models\TournamentApi\TournamentSummoner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -619,6 +626,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Match\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

@@ -23,9 +23,9 @@ namespace LoLTournament.Models
 
             if(matches.Count() > 0)
             {
-                AvgKills = matches.Sum(x => x.KillsBlueTeam + x.KillsPurpleTeam) / TotalGames;
-                AvgDeaths = matches.Sum(x => x.DeathsBlueTeam + x.DeathsPurpleTeam) / TotalGames;
-                AvgAssists = matches.Sum(x => x.AssistsBlueTeam + x.AssistsPurpleTeam) / TotalGames;
+                AvgKills = matches.Sum(x => x.KillsBlueTeam + x.KillsRedTeam) / TotalGames;
+                AvgDeaths = matches.Sum(x => x.DeathsBlueTeam + x.DeathsRedTeam) / TotalGames;
+                AvgAssists = matches.Sum(x => x.AssistsBlueTeam + x.AssistsRedTeam) / TotalGames;
                 AvgMatchDuration = TimeSpan.FromSeconds(matches.Average(x => x.Duration.TotalSeconds));
                 BlueSideWinPercentage = matches.Where(match => match.Finished).Where(match => match.BlueTeamId == match.WinnerId).Count() / TotalGames;
             }

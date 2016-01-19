@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
@@ -21,6 +22,10 @@ namespace LoLTournament
             //ExportHelper.ExportEntryList();
             //BracketHelper.CreatePoolStructure();
             //BracketHelper.CreateFinaleStructure();
+
+            //Remove and JsonValueProviderFactory and add JsonDotNetValueProviderFactory
+            ValueProviderFactories.Factories.Remove(ValueProviderFactories.Factories.OfType<JsonValueProviderFactory>().FirstOrDefault());
+            ValueProviderFactories.Factories.Add(new JsonDotNetValueProviderFactory());
         }
     }
 }

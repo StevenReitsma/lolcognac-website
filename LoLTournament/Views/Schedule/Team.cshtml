@@ -91,7 +91,7 @@
                         <div class="panel panel-info">
                             <div class="panel-heading">
                                 <span class="label label-primary" style="font-size: 11px; vertical-align: middle">@Model.NextMatch.Phase.GetDisplayString()</span>
-                                <a href="@Url.Action("Team", "Schedule", new RouteValueDictionary {{"teamId", Model.NextMatch.BlueTeamId}})">@Model.NextMatch.BlueTeam.Name</a> versus <a href="@Url.Action("Team", "Schedule", new RouteValueDictionary {{"teamId", Model.NextMatch.PurpleTeamId}})">@Model.NextMatch.PurpleTeam.Name</a>
+                                <a href="@Url.Action("Team", "Schedule", new RouteValueDictionary {{"teamId", Model.NextMatch.BlueTeamId}})">@Model.NextMatch.BlueTeam.Name</a> versus <a href="@Url.Action("Team", "Schedule", new RouteValueDictionary {{"teamId", Model.NextMatch.RedTeamId}})">@Model.NextMatch.RedTeam.Name</a>
                             </div>
                             <div class="panel-body">
                                 @if (Model.OtherTeamReady)
@@ -118,7 +118,7 @@
                                             <input type="text" class="form-control" style="display: inline; cursor: pointer; max-width: 400px;" value="@Model.NextMatch.TournamentCodeBlind" onfocus="this.select()" onclick="this.select()" readonly/> click box, copy paste
                                             <hr/>
 
-                                            <b>@Model.NextMatch.BlueTeam.Name</b> is on the <b style="color: #337AB7">blue</b> side (left in lobby), while <b>@Model.NextMatch.PurpleTeam.Name</b> is on the <b style="color: #CC3232;">red</b> side (right in lobby).<br/>
+                                            <b>@Model.NextMatch.BlueTeam.Name</b> is on the <b style="color: #337AB7">blue</b> side (left in lobby), while <b>@Model.NextMatch.RedTeam.Name</b> is on the <b style="color: #CC3232;">red</b> side (right in lobby).<br/>
                                             No players have to be invited since everyone can join the lobby using the tournament code, even spectators.
                                         </p>
                                     }
@@ -172,8 +172,8 @@
                         foreach (var m in Model.MatchHistory)
                         {
                             var color = m.WinnerId == Model.Team.Id ? "success" : "danger";
-                            var otherTeamId = Model.Team.Id == m.BlueTeamId ? m.PurpleTeamId : m.BlueTeamId;
-                            var otherTeamName = Model.Team.Id == m.BlueTeamId ? m.PurpleTeam.Name : m.BlueTeam.Name;
+                            var otherTeamId = Model.Team.Id == m.BlueTeamId ? m.RedTeamId : m.BlueTeamId;
+                            var otherTeamName = Model.Team.Id == m.BlueTeamId ? m.RedTeam.Name : m.BlueTeam.Name;
 
                             <div class="panel panel-@color">
                                 <div class="panel-heading">

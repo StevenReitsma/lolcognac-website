@@ -53,7 +53,7 @@ namespace LoLTournament.Helpers
                         var purple = teams[j].MMR >= teams[k].MMR ? teams[j].Id : teams[k].Id;
 
                         // Create match and add to database
-                        var match = new Match { BlueTeamId = blue, PurpleTeamId = purple, Phase = Phase.Pool, Priority = p };
+                        var match = new Match { BlueTeamId = blue, RedTeamId = purple, Phase = Phase.Pool, Priority = p };
                         Mongo.Matches.Save(match);
                     }
                 }

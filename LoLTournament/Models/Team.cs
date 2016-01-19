@@ -70,7 +70,7 @@ namespace LoLTournament.Models
         {
             get
             {
-                return Mongo.Matches.Find(Query<Match>.Where(x => x.Finished && x.WinnerId != Id && (x.BlueTeamId == Id || x.PurpleTeamId == Id))).Count();
+                return Mongo.Matches.Find(Query<Match>.Where(x => x.Finished && x.WinnerId != Id && (x.BlueTeamId == Id || x.RedTeamId == Id))).Count();
             }
         }
 
@@ -80,7 +80,7 @@ namespace LoLTournament.Models
             get
             {
                 return
-                    TimeSpan.FromSeconds(Mongo.Matches.Find(Query<Match>.Where(x => x.Finished && (x.BlueTeamId == Id || x.PurpleTeamId == Id)))
+                    TimeSpan.FromSeconds(Mongo.Matches.Find(Query<Match>.Where(x => x.Finished && (x.BlueTeamId == Id || x.RedTeamId == Id)))
                         .Sum(x => x.Duration.TotalSeconds));
             }
         }
@@ -91,7 +91,7 @@ namespace LoLTournament.Models
             get
             {
                 return
-                    TimeSpan.FromSeconds(Mongo.Matches.Find(Query<Match>.Where(x => x.Finished && x.WinnerId == Id && (x.BlueTeamId == Id || x.PurpleTeamId == Id)))
+                    TimeSpan.FromSeconds(Mongo.Matches.Find(Query<Match>.Where(x => x.Finished && x.WinnerId == Id && (x.BlueTeamId == Id || x.RedTeamId == Id)))
                         .Sum(x => x.Duration.TotalSeconds));
             }
         }
@@ -114,7 +114,7 @@ namespace LoLTournament.Models
                         Query<Match>.Where(
                             x =>
                                 !x.Finished && x.Phase == Phase.Pool &&
-                                (x.BlueTeamId == Id || x.PurpleTeamId == Id)))
+                                (x.BlueTeamId == Id || x.RedTeamId == Id)))
                         .OrderBy(x => x.Priority)
                         .FirstOrDefault();
             }
@@ -125,7 +125,7 @@ namespace LoLTournament.Models
                         Query<Match>.Where(
                             x =>
                                 !x.Finished && x.Phase == Phase.Finale &&
-                                (x.BlueTeamId == Id || x.PurpleTeamId == Id)))
+                                (x.BlueTeamId == Id || x.RedTeamId == Id)))
                         .OrderBy(x => x.Priority)
                         .FirstOrDefault();
             }
@@ -136,7 +136,7 @@ namespace LoLTournament.Models
                         Query<Match>.Where(
                             x =>
                                 !x.Finished && x.Phase == Phase.BronzeFinale &&
-                                (x.BlueTeamId == Id || x.PurpleTeamId == Id))).FirstOrDefault();
+                                (x.BlueTeamId == Id || x.RedTeamId == Id))).FirstOrDefault();
             }
             if (Phase == Phase.WinnerBracket)
             {
@@ -145,7 +145,7 @@ namespace LoLTournament.Models
                         Query<Match>.Where(
                             x =>
                                 !x.Finished && x.Phase == Phase.WinnerBracket &&
-                                (x.BlueTeamId == Id || x.PurpleTeamId == Id))).FirstOrDefault();
+                                (x.BlueTeamId == Id || x.RedTeamId == Id))).FirstOrDefault();
             }
             if (Phase == Phase.LoserBracket)
             {
@@ -154,7 +154,7 @@ namespace LoLTournament.Models
                         Query<Match>.Where(
                             x =>
                                 !x.Finished && x.Phase == Phase.LoserBracket &&
-                                (x.BlueTeamId == Id || x.PurpleTeamId == Id))).FirstOrDefault();
+                                (x.BlueTeamId == Id || x.RedTeamId == Id))).FirstOrDefault();
             }
             if (Phase == Phase.LoserFinale)
             {
@@ -163,7 +163,7 @@ namespace LoLTournament.Models
                         Query<Match>.Where(
                             x =>
                                 !x.Finished && x.Phase == Phase.LoserFinale &&
-                                (x.BlueTeamId == Id || x.PurpleTeamId == Id))).FirstOrDefault();
+                                (x.BlueTeamId == Id || x.RedTeamId == Id))).FirstOrDefault();
             }
 
             return null;

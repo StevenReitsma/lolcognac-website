@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-using MongoDB.Driver;
 using MongoDB.Driver.Builders;
 using LoLTournament.Helpers;
 
@@ -16,7 +13,7 @@ namespace LoLTournament.Models
         public long RiotMatchId { get; set; }
 
         public ObjectId BlueTeamId { get; set; }
-        public ObjectId PurpleTeamId { get; set; }
+        public ObjectId RedTeamId { get; set; }
         public Phase Phase { get; set; }
         public int Priority { get; set; } // used to indicate order for Pool and Finale (best out of three) phase
 
@@ -25,6 +22,7 @@ namespace LoLTournament.Models
         public ObjectId WinnerId { get; set; }
         public TimeSpan Duration { get; set; }
         public DateTime CreationTime { get; set; }
+        public DateTime StartTime { get; set; }
 
         /// <summary>
         /// The date that the data was entered into the system.
@@ -37,9 +35,15 @@ namespace LoLTournament.Models
         public int[] ChampionIds { get; set; }
         public int[] BanIds { get; set; }
 
-        public long KillsPurpleTeam { get; set; }
-        public long DeathsPurpleTeam { get; set; }
-        public long AssistsPurpleTeam { get; set; }
+        public long KillsRedTeam { get; set; }
+        public long DeathsRedTeam { get; set; }
+        public long AssistsRedTeam { get; set; }
+
+        public string TournamentCode { get; set; }
+        public bool Invalid { get; set; }
+        public string InvalidReason { get; set; }
+
+        public bool PlayedWrongSide { get; set; }
 
         [BsonIgnore]
         public Team BlueTeam {
@@ -50,11 +54,11 @@ namespace LoLTournament.Models
         }
 
         [BsonIgnore]
-        public Team PurpleTeam
+        public Team RedTeam
         {
             get
             {
-                return Mongo.Teams.Find(Query<Team>.Where(x => x.Id == PurpleTeamId)).FirstOrDefault();
+                return Mongo.Teams.Find(Query<Team>.Where(x => x.Id == RedTeamId)).FirstOrDefault();
             }
         }
 
@@ -64,26 +68,6 @@ namespace LoLTournament.Models
             get
             {
                 return Mongo.Teams.Find(Query<Team>.Where(x => x.Id == WinnerId)).FirstOrDefault();
-            }
-        }
-
-        [BsonIgnore]
-        public string TournamentCode
-        {
-            get
-            {
-                return
-                    "pvpnet://lol/customgame/joinorcreate/map11/pick6/team5/specALL/" + Convert.ToBase64String(Encoding.UTF8.GetBytes("{\"name\": \"" + @BlueTeam.Name.Substring(0, Math.Min(10, BlueTeam.Name.Length)) + "..(B)+" + @PurpleTeam.Name.Substring(0, Math.Min(10, PurpleTeam.Name.Length)) + "..(R)" + "\",\"extra\":\"\",\"password\":\"CognAC" + Id + "\",\"report\":\"\"}"));
-            }
-        }
-
-        [BsonIgnore]
-        public string TournamentCodeBlind
-        {
-            get
-            {
-                return
-                    "pvpnet://lol/customgame/joinorcreate/map11/pick1/team5/specALL/" + Convert.ToBase64String(Encoding.UTF8.GetBytes("{\"name\": \"" + @BlueTeam.Name.Substring(0, Math.Min(10, BlueTeam.Name.Length)) + "..(B)+" + @PurpleTeam.Name.Substring(0, Math.Min(10, PurpleTeam.Name.Length)) + "..(R)[BP]" + "\",\"extra\":\"\",\"password\":\"CognAC" + Id + "\",\"report\":\"\"}"));
             }
         }
     }

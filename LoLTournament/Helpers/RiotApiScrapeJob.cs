@@ -1,18 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Web.Configuration;
 using LoLTournament.Models;
 using MongoDB.Driver;
 using MongoDB.Driver.Builders;
 using RiotSharp;
-using RiotSharp.GameEndpoint;
 using RiotSharp.LeagueEndpoint;
-using RiotSharp.MatchEndpoint;
 using RiotSharp.StatsEndpoint;
 using RiotSharp.SummonerEndpoint;
-using Participant = LoLTournament.Models.Participant;
 using Season = RiotSharp.StatsEndpoint.Season;
 using System.Globalization;
 using Team = LoLTournament.Models.Team;
@@ -33,9 +29,10 @@ namespace LoLTournament.Helpers
             _api = RiotApi.GetInstance(key, rateLimit1, rateLimit2);
             _staticApi = StaticRiotApi.GetInstance(key);
 
+#if !DEBUG
             new Timer(ScrapeSummoners, null, TimeSpan.Zero, TimeSpan.FromMinutes(15));
-            //new Timer(ScrapeMatches, null, TimeSpan.Zero, intervalMatches);
             new Timer(ScrapeStatic, null, TimeSpan.Zero, TimeSpan.FromDays(1.0));
+#endif
         }
 
         private void ScrapeStatic(object arg)
@@ -49,149 +46,10 @@ namespace LoLTournament.Helpers
         }
 
         /// <summary>
-        /// DEPRECATED TODO
-        /// </summary>
-        /// <param name="arg"></param>
-        private void ScrapeMatches(object arg)
-        {
-            var timeSetting = WebConfigurationManager.AppSettings["TournamentStart"];
-            var tournamentStart = DateTime.ParseExact(timeSetting, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
-
-            // Tournament is currently ongoing
-            var teamCaptains = Mongo.Teams.FindAll().Select(x => x.Captain);
-
-            // For each team captain
-            foreach (var tc in teamCaptains)
-            {
-                // Get match that this team is currently playing (or should be)
-                var nextMatch = tc.Team.GetNextMatch();
-                    
-                // No match?
-                if (nextMatch == null)
-                    continue;
-
-                // Query Riot match history for team captain
-                var matchHistory = tc.Summoner.GetRecentGames();
-
-                // Get:
-                //         matches that have gameMode = CLASSIC
-                //         matches that have gameType = CUSTOM_GAME
-                //         matches that have subType = NONE or NORMAL
-                //         matches that have mapId = 11
-                //         matches that has creation date >= tournament start date
-                //         matches that have 9 fellow players
-                //         matches that are not invalid
-                var validMatches = from m in matchHistory
-                    where 
-                        m.GameMode == GameMode.Classic &&
-                        m.GameType == GameType.CustomGame &&
-                        (m.GameSubType == GameSubType.None || m.GameSubType == GameSubType.Normal) &&
-                        m.MapType == MapType.SummonersRift &&
-                        m.FellowPlayers.Count == 9 &&
-                        !m.Invalid
-                    select m;
-
-                Game validMatch = null;
-
-                // Check for each match whether it has valid participants
-                foreach (var match in validMatches)
-                {
-                    bool valid =
-                        match.FellowPlayers.All(
-                            p =>
-                                nextMatch.BlueTeam.Participants.Any(x => x.Summoner.Id == p.SummonerId) ||
-                                nextMatch.PurpleTeam.Participants.Any(x => x.Summoner.Id == p.SummonerId));
-
-                    if (valid)
-                    {
-                        validMatch = match;
-                        break;
-                    }
-                }
-
-                // No valid match for this team captain
-                if (validMatch == null)
-                    continue;
-
-                // Get full match statistics
-                MatchDetail matchData = null;
-                try
-                {
-                    matchData = _api.GetMatch(Region.euw, validMatch.GameId);
-
-                }
-                catch (Exception)
-                {
-                    // wtf?
-                }
-
-                if (matchData == null)
-                {
-                    nextMatch.WinnerId = (validMatch.Statistics.Team == 100 && validMatch.Statistics.Win) || (validMatch.Statistics.Team == 200 && !validMatch.Statistics.Win)
-                        ? nextMatch.BlueTeamId
-                        : nextMatch.PurpleTeamId;
-                    nextMatch.Duration = validMatch.Statistics.TimePlayed;
-                    nextMatch.CreationTime = validMatch.CreateDate + new TimeSpan(0, 2, 0, 0); // add two hours for timezone difference
-                    nextMatch.RiotMatchId = validMatch.GameId;
-                    nextMatch.Finished = true;
-                    nextMatch.FinishDate = DateTime.Now;
-                    nextMatch.ChampionIds = validMatch.FellowPlayers.Select(p => p.ChampionId).Concat(new[] { validMatch.ChampionId }).ToArray();
-                    // Save to database
-                    Mongo.Matches.Save(nextMatch);
-
-                    NewMatch(nextMatch);
-                    continue;
-                }
-
-                // validMatch is now the Riot-Match for nextMatch, so set fields
-                nextMatch.AssistsBlueTeam = matchData.Participants.Where(x => x.TeamId == 100).Sum(x => x.Stats.Assists);
-                nextMatch.DeathsBlueTeam = matchData.Participants.Where(x => x.TeamId == 100).Sum(x => x.Stats.Deaths);
-                nextMatch.KillsBlueTeam = matchData.Participants.Where(x => x.TeamId == 100).Sum(x => x.Stats.Kills);
-
-                nextMatch.AssistsPurpleTeam = matchData.Participants.Where(x => x.TeamId == 200).Sum(x => x.Stats.Assists);
-                nextMatch.DeathsPurpleTeam = matchData.Participants.Where(x => x.TeamId == 200).Sum(x => x.Stats.Deaths);
-                nextMatch.KillsPurpleTeam = matchData.Participants.Where(x => x.TeamId == 200).Sum(x => x.Stats.Kills);
-
-                nextMatch.Duration = matchData.MatchDuration;
-                nextMatch.CreationTime = matchData.MatchCreation + new TimeSpan(0, 2, 0, 0); // add two hours for timezone difference;
-                nextMatch.FinishDate = DateTime.Now;
-
-                nextMatch.ChampionIds = matchData.Participants.Select(p => p.ChampionId).ToArray();
-                nextMatch.BanIds = matchData.Teams
-                    .SelectMany(team => team.Bans)
-                    .Select(ban => ban.ChampionId)
-                    .ToArray();
-
-                nextMatch.WinnerId = matchData.Participants.First(x => x.TeamId == 100).Stats.Winner
-                    ? nextMatch.BlueTeamId
-                    : nextMatch.PurpleTeamId;
-
-                // Check if teams played correct side. If not, switch winner.
-                // If captain team equals team that should have played blue side
-                bool shouldPlayBlue = nextMatch.BlueTeamId == tc.TeamId; // team captain should have played blue side
-                bool playedBlue = matchData.Participants.Any(x => x.TeamId == 100 && x.ParticipantId == tc.Summoner.Id); // team captain played blue side
-                if ((shouldPlayBlue && !playedBlue) || (!shouldPlayBlue && playedBlue)) // if sides don't match up
-                    // Switch
-                    nextMatch.WinnerId = nextMatch.WinnerId == nextMatch.BlueTeamId
-                        ? nextMatch.PurpleTeamId
-                        : nextMatch.BlueTeamId;
-
-                nextMatch.Finished = true;
-                nextMatch.RiotMatchId = validMatch.GameId;
-
-                // Save to database
-                Mongo.Matches.Save(nextMatch);
-
-                // New match hook
-                NewMatch(nextMatch);
-            }
-        }
-
-        /// <summary>
         /// Checks whether the match that was just played has consequences for the structure of the rest of the tournament. If so, push these consequences into the database.
         /// </summary>
         /// <param name="finishedMatch">The match that was just finished.</param>
-        private static void NewMatch(Match finishedMatch)
+        public static void NewMatch(Match finishedMatch)
         {
             var finishedMatchWinner = finishedMatch.Winner;
 
@@ -200,7 +58,7 @@ namespace LoLTournament.Helpers
                 var pool = finishedMatch.BlueTeam.Pool;
                 
                 // Check whether the pool is finished
-                if (PoolFinished(pool, Mongo.Matches))
+                if (PoolFinished(pool))
                 {
                     // Pool is finished
                     // To create brackets, one of the other pools also needs to be finished.
@@ -215,7 +73,7 @@ namespace LoLTournament.Helpers
                         otherPool = pool - 1;
 
                     // If coupled pool is also finished
-                    if (PoolFinished(otherPool, Mongo.Matches))
+                    if (PoolFinished(otherPool))
                     {
                         // Get ranking for pools
                         var poolARanking = GetPoolRanking(pool);
@@ -223,14 +81,14 @@ namespace LoLTournament.Helpers
 
                         // We can now create the brackets for these pools
                         // Winner bracket
-                        var match = new Match {BlueTeamId = poolARanking[0].Id, PurpleTeamId = poolBRanking[1].Id, Phase = Phase.WinnerBracket, Priority = Math.Min(pool, otherPool)};
-                        var match2 = new Match { BlueTeamId = poolBRanking[0].Id, PurpleTeamId = poolARanking[1].Id, Phase = Phase.WinnerBracket, Priority = Math.Max(pool, otherPool)};
+                        var match = new Match {BlueTeamId = poolARanking[0].Id, RedTeamId = poolBRanking[1].Id, Phase = Phase.WinnerBracket, Priority = Math.Min(pool, otherPool)};
+                        var match2 = new Match { BlueTeamId = poolBRanking[0].Id, RedTeamId = poolARanking[1].Id, Phase = Phase.WinnerBracket, Priority = Math.Max(pool, otherPool)};
                         Mongo.Matches.Save(match);
                         Mongo.Matches.Save(match2);
 
                         // Loser bracket
-                        var match3 = new Match { BlueTeamId = poolARanking[2].Id, PurpleTeamId = poolBRanking[3].Id, Phase = Phase.LoserBracket, Priority = Math.Min(pool, otherPool) };
-                        var match4 = new Match { BlueTeamId = poolBRanking[2].Id, PurpleTeamId = poolARanking[3].Id, Phase = Phase.LoserBracket, Priority = Math.Max(pool, otherPool) };
+                        var match3 = new Match { BlueTeamId = poolARanking[2].Id, RedTeamId = poolBRanking[3].Id, Phase = Phase.LoserBracket, Priority = Math.Min(pool, otherPool) };
+                        var match4 = new Match { BlueTeamId = poolBRanking[2].Id, RedTeamId = poolARanking[3].Id, Phase = Phase.LoserBracket, Priority = Math.Max(pool, otherPool) };
                         Mongo.Matches.Save(match3);
                         Mongo.Matches.Save(match4);
 
@@ -279,7 +137,7 @@ namespace LoLTournament.Helpers
                 else if (finishedMatch.Priority == 2)
                 {
                     // Set match teams on hold since they don't have any matches left
-                    Team[] teams = {finishedMatch.BlueTeam, finishedMatch.PurpleTeam};
+                    Team[] teams = {finishedMatch.BlueTeam, finishedMatch.RedTeam};
                     foreach (var t in teams)
                     {
                         t.OnHold = true;
@@ -319,7 +177,7 @@ namespace LoLTournament.Helpers
                         var match = new Match
                         {
                             BlueTeamId = finishedMatch.WinnerId,
-                            PurpleTeamId = otherTeam.Id,
+                            RedTeamId = otherTeam.Id,
                             Phase = finishedMatch.Phase,
                             Priority = Math.Min(finishedMatch.Priority, otherPrio) + 8
                         };
@@ -366,7 +224,7 @@ namespace LoLTournament.Helpers
                         var match = new Match
                         {
                             BlueTeamId = finishedMatch.WinnerId,
-                            PurpleTeamId = matchFinished.First().WinnerId,
+                            RedTeamId = matchFinished.First().WinnerId,
                             Phase = finishedMatch.Phase,
                             Priority = Math.Min(finishedMatch.Priority, otherPrio) + 4
                         };
@@ -402,24 +260,24 @@ namespace LoLTournament.Helpers
                     {
                         var match = Mongo.Matches.Find(Query<Match>.Where(x => x.Phase == Phase.Finale && x.Priority == 0)).First();
                         match.BlueTeamId = finishedMatch.WinnerId;
-                        match.PurpleTeamId = matchFinished.First().WinnerId;
+                        match.RedTeamId = matchFinished.First().WinnerId;
                         Mongo.Matches.Save(match);
 
                         // Switch sides
                         match = Mongo.Matches.Find(Query<Match>.Where(x => x.Phase == Phase.Finale && x.Priority == 1)).First();
                         match.BlueTeamId = matchFinished.First().WinnerId;
-                        match.PurpleTeamId = finishedMatch.WinnerId;
+                        match.RedTeamId = finishedMatch.WinnerId;
                         Mongo.Matches.Save(match);
 
                         // Switch sides again
                         match = Mongo.Matches.Find(Query<Match>.Where(x => x.Phase == Phase.Finale && x.Priority == 2)).First();
                         match.BlueTeamId = finishedMatch.WinnerId;
-                        match.PurpleTeamId = matchFinished.First().WinnerId;
+                        match.RedTeamId = matchFinished.First().WinnerId;
                         Mongo.Matches.Save(match);
 
                         // Set team phases
                         var blueTeam = match.BlueTeam;
-                        var purpleTeam = match.PurpleTeam;
+                        var purpleTeam = match.RedTeam;
 
                         blueTeam.Phase = Phase.Finale;
                         blueTeam.OnHold = false;
@@ -432,13 +290,13 @@ namespace LoLTournament.Helpers
 
                         // Also set bronze finale match
                         match = Mongo.Matches.Find(Query<Match>.Where(x => x.Phase == Phase.BronzeFinale)).First();
-                        match.BlueTeamId = finishedMatch.BlueTeamId == finishedMatch.WinnerId ? finishedMatch.PurpleTeamId : finishedMatch.BlueTeamId;
-                        match.PurpleTeamId = matchFinished.First().BlueTeamId == matchFinished.First().WinnerId ? matchFinished.First().PurpleTeamId : matchFinished.First().BlueTeamId;
+                        match.BlueTeamId = finishedMatch.BlueTeamId == finishedMatch.WinnerId ? finishedMatch.RedTeamId : finishedMatch.BlueTeamId;
+                        match.RedTeamId = matchFinished.First().BlueTeamId == matchFinished.First().WinnerId ? matchFinished.First().RedTeamId : matchFinished.First().BlueTeamId;
                         Mongo.Matches.Save(match);
 
                         // And set their teams to the correct phase
                         blueTeam = match.BlueTeam;
-                        purpleTeam = match.PurpleTeam;
+                        purpleTeam = match.RedTeam;
 
                         blueTeam.Phase = Phase.BronzeFinale;
                         blueTeam.OnHold = false;
@@ -454,7 +312,7 @@ namespace LoLTournament.Helpers
                         // Not finished, put team on hold
                         finishedMatchWinner.OnHold = true;
                         var loser = finishedMatchWinner.Id == finishedMatch.BlueTeamId
-                            ? finishedMatch.PurpleTeam
+                            ? finishedMatch.RedTeam
                             : finishedMatch.BlueTeam;
                         loser.OnHold = true;
                         Mongo.Teams.Save(finishedMatchWinner);
@@ -476,12 +334,12 @@ namespace LoLTournament.Helpers
                     {
                         var match = Mongo.Matches.Find(Query<Match>.Where(x => x.Phase == Phase.LoserFinale && x.Priority == 0)).First();
                         match.BlueTeamId = finishedMatch.WinnerId;
-                        match.PurpleTeamId = matchFinished.First().WinnerId;
+                        match.RedTeamId = matchFinished.First().WinnerId;
                         Mongo.Matches.Save(match);
 
                         // Set team phases
                         var blueTeam = match.BlueTeam;
-                        var purpleTeam = match.PurpleTeam;
+                        var purpleTeam = match.RedTeam;
 
                         blueTeam.Phase = Phase.LoserFinale;
                         blueTeam.OnHold = false;
@@ -497,7 +355,7 @@ namespace LoLTournament.Helpers
                         // Not finished, put team on hold
                         finishedMatchWinner.OnHold = true;
                         var loser = finishedMatchWinner.Id == finishedMatch.BlueTeamId
-                            ? finishedMatch.PurpleTeam
+                            ? finishedMatch.RedTeam
                             : finishedMatch.BlueTeam;
                         loser.OnHold = true;
                         Mongo.Teams.Save(finishedMatchWinner);
@@ -509,7 +367,7 @@ namespace LoLTournament.Helpers
             {
                 // Add third and fourth place to database
                 var winner = finishedMatch.Winner;
-                var loser = finishedMatch.BlueTeamId == winner.Id ? finishedMatch.PurpleTeam : finishedMatch.BlueTeam;
+                var loser = finishedMatch.BlueTeamId == winner.Id ? finishedMatch.RedTeam : finishedMatch.BlueTeam;
                 winner.FinalRanking = 3;
                 loser.FinalRanking = 4;
 
@@ -522,8 +380,8 @@ namespace LoLTournament.Helpers
                 {
                     // We have played all three matches, add final rankings to database
                     var winsBlueTeam = Mongo.Matches.Count(Query<Match>.Where(x => x.Phase == Phase.Finale && x.WinnerId == finishedMatch.BlueTeamId));
-                    var winner = winsBlueTeam >= 2 ? finishedMatch.BlueTeam : finishedMatch.PurpleTeam;
-                    var loser = winner.Id == finishedMatch.BlueTeamId ? finishedMatch.PurpleTeam : finishedMatch.BlueTeam;
+                    var winner = winsBlueTeam >= 2 ? finishedMatch.BlueTeam : finishedMatch.RedTeam;
+                    var loser = winner.Id == finishedMatch.BlueTeamId ? finishedMatch.RedTeam : finishedMatch.BlueTeam;
 
                     winner.FinalRanking = 1;
                     loser.FinalRanking = 2;
@@ -541,7 +399,7 @@ namespace LoLTournament.Helpers
                         Mongo.Matches.Remove(Query<Match>.Where(x => x.Phase == Phase.Finale && x.Priority == 2));
 
                         var winner = finishedMatch.Winner; // winner is always also the winner of the previous match
-                        var loser = winner.Id == finishedMatch.BlueTeamId ? finishedMatch.PurpleTeam : finishedMatch.BlueTeam;
+                        var loser = winner.Id == finishedMatch.BlueTeamId ? finishedMatch.RedTeam : finishedMatch.BlueTeam;
 
                         winner.FinalRanking = 1;
                         loser.FinalRanking = 2;
@@ -563,10 +421,10 @@ namespace LoLTournament.Helpers
         /// <param name="pool"></param>
         /// <param name="matchCol"></param>
         /// <returns></returns>
-        private static bool PoolFinished(int pool, MongoCollection<Match> matchCol)
+        private static bool PoolFinished(int pool)
         {
             // It doesn't matter which side we look at since they are both in the same pool
-            var notFinished = matchCol.FindAll().Where(x => x.BlueTeam != null && x.BlueTeam.Pool == pool && x.Phase == Phase.Pool && !x.Finished);
+            var notFinished = Mongo.Matches.FindAll().Where(x => x.BlueTeam != null && x.BlueTeam.Pool == pool && x.Phase == Phase.Pool && !x.Finished);
 
             // Check whether we have no unfinished matches in the pool
             return !notFinished.Any();

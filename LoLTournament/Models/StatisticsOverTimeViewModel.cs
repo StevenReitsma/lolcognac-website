@@ -31,8 +31,8 @@ namespace LoLTournament.Models
             for (DateTime currentTime = tournamentStart; currentTime <= tournamentEnd; currentTime += new TimeSpan(0, 5, 0))
             {
                 var matchesSoFar = matches.Where(match => match.FinishDate < currentTime);
-                long killsSoFar = matchesSoFar.Sum(match => match.KillsBlueTeam + match.KillsPurpleTeam);
-                long assistsSoFar = matchesSoFar.Sum(match => match.AssistsBlueTeam + match.AssistsPurpleTeam);
+                long killsSoFar = matchesSoFar.Sum(match => match.KillsBlueTeam + match.KillsRedTeam);
+                long assistsSoFar = matchesSoFar.Sum(match => match.AssistsBlueTeam + match.AssistsRedTeam);
                 string time = currentTime.ToString("HH:mm");
                 Kills.Add(time, killsSoFar);
                 Assists.Add(time, assistsSoFar);

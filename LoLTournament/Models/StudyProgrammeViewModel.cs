@@ -14,7 +14,7 @@ namespace LoLTournament.Models
 
         public StudyProgrammeViewModel()
         {
-            var participants = Mongo.Participants.Find(Query<Participant>.Where(x => x.StudyProgram != null));
+            var participants = Mongo.Participants.Find(Query<Participant>.Where(x => x.StudyProgram != null)).Where(x => !x.Team.Cancelled);
             Programmes = participants.GroupBy(p => p.StudyProgram)
                 .OrderByDescending(group => group.Count())
                 .ToDictionary(g => g.Key, g => g.Count());

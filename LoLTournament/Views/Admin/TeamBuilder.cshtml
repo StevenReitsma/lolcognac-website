@@ -22,6 +22,7 @@
                 <th>Dorans member</th>
                 <th>Team captain</th>
                 <th>Register date</th>
+                <th>Roles</th>
             </tr>
             @foreach (var p in Model.TeamBuilders)
             {
@@ -73,6 +74,7 @@
                     </td>
 
                     <td><i class="fa fa-clock-o"></i> @TimeZoneInfo.ConvertTimeFromUtc(p.RegisterTime, TimeZoneInfo.Local)</td>
+                    <td>@p.Roles</td>
                 </tr>
                             }
         </table>

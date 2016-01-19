@@ -44,25 +44,25 @@ namespace LoLTournament.Models
 
             // Initialize match history
             MatchHistory =
-                Mongo.Matches.Find(Query<Match>.Where(x => x.Finished && (x.BlueTeamId == Team.Id || x.PurpleTeamId == Team.Id))).OrderByDescending(x => x.CreationTime)
+                Mongo.Matches.Find(Query<Match>.Where(x => x.Finished && (x.BlueTeamId == Team.Id || x.RedTeamId == Team.Id))).OrderByDescending(x => x.CreationTime)
                     .ToList();
 
             // Initialize statistics
-            AvgKills = Mongo.Matches.Find(Query<Match>.Where(x => x.Finished && x.BlueTeamId == Team.Id)).Sum(x => x.KillsBlueTeam) + Mongo.Matches.Find(Query<Match>.Where(x => x.Finished && x.PurpleTeamId == Team.Id)).Sum(x => x.KillsPurpleTeam);
+            AvgKills = Mongo.Matches.Find(Query<Match>.Where(x => x.Finished && x.BlueTeamId == Team.Id)).Sum(x => x.KillsBlueTeam) + Mongo.Matches.Find(Query<Match>.Where(x => x.Finished && x.RedTeamId == Team.Id)).Sum(x => x.KillsRedTeam);
 
             if (MatchHistory.Count > 0)
                 AvgKills /= MatchHistory.Count;
             else
                 AvgKills = 0;
 
-            AvgDeaths = Mongo.Matches.Find(Query<Match>.Where(x => x.Finished && x.BlueTeamId == Team.Id)).Sum(x => x.DeathsBlueTeam) + Mongo.Matches.Find(Query<Match>.Where(x => x.Finished && x.PurpleTeamId == Team.Id)).Sum(x => x.DeathsPurpleTeam);
+            AvgDeaths = Mongo.Matches.Find(Query<Match>.Where(x => x.Finished && x.BlueTeamId == Team.Id)).Sum(x => x.DeathsBlueTeam) + Mongo.Matches.Find(Query<Match>.Where(x => x.Finished && x.RedTeamId == Team.Id)).Sum(x => x.DeathsRedTeam);
 
             if (MatchHistory.Count > 0)
                 AvgDeaths /= MatchHistory.Count;
             else
                 AvgDeaths = 0;
 
-            AvgAssists = Mongo.Matches.Find(Query<Match>.Where(x => x.Finished && x.BlueTeamId == Team.Id)).Sum(x => x.AssistsBlueTeam) + Mongo.Matches.Find(Query<Match>.Where(x => x.Finished && x.PurpleTeamId == Team.Id)).Sum(x => x.AssistsPurpleTeam);
+            AvgAssists = Mongo.Matches.Find(Query<Match>.Where(x => x.Finished && x.BlueTeamId == Team.Id)).Sum(x => x.AssistsBlueTeam) + Mongo.Matches.Find(Query<Match>.Where(x => x.Finished && x.RedTeamId == Team.Id)).Sum(x => x.AssistsRedTeam);
 
             if (MatchHistory.Count > 0)
                 AvgAssists /= MatchHistory.Count;
@@ -85,7 +85,7 @@ namespace LoLTournament.Models
             // Check if other team is ready
             if (NextMatch != null)
             {
-                var otherId = NextMatch.BlueTeamId == Team.Id ? NextMatch.PurpleTeamId : NextMatch.BlueTeamId;
+                var otherId = NextMatch.BlueTeamId == Team.Id ? NextMatch.RedTeamId : NextMatch.BlueTeamId;
                 var otherTeam = Mongo.Teams.Find(Query<Team>.Where(x => x.Id == otherId)).SingleOrDefault();
                 if (otherTeam == null)
                 {
@@ -95,7 +95,7 @@ namespace LoLTournament.Models
 
                 var otherTeamNextMatch = otherTeam.GetNextMatch();
                 OtherTeamReady = otherTeamNextMatch.BlueTeamId == NextMatch.BlueTeamId &&
-                                 otherTeamNextMatch.PurpleTeamId == NextMatch.PurpleTeamId;
+                                 otherTeamNextMatch.RedTeamId == NextMatch.RedTeamId;
             }
         }
     }

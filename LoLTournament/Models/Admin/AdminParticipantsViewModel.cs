@@ -9,7 +9,7 @@ namespace LoLTournament.Models.Admin
         {
             get
             {
-                return Mongo.Participants.FindAll().Where(x => !x.Team.Cancelled).OrderBy(x => x.RegisterTime);
+                return Mongo.Participants.FindAll().Where(x => !x.Team.Cancelled && x.Summoner != null).OrderBy(x => x.RegisterTime);
             }
         }
     }
