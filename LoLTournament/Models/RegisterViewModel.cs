@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Web.Configuration;
 using LoLTournament.Helpers;
 using LoLTournament.Models.Financial;
+using MongoDB.Driver.Builders;
 
 namespace LoLTournament.Models
 {
@@ -158,7 +159,7 @@ namespace LoLTournament.Models
 
         public long TeamCount
         {
-            get { return Mongo.Teams.Count(); }
+            get { return Mongo.Teams.Count(Query<Team>.Where(x => !x.Cancelled)); }
         }
     }
 }

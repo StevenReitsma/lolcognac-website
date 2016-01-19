@@ -13,6 +13,13 @@ namespace System.Web.Mvc
             if (controllerContext == null)
                 throw new ArgumentNullException(nameof(controllerContext));
 
+            if (controllerContext.HttpContext.Request.FilePath != "/Match/Callback")
+            {
+                // Fallback
+                var prov = new JsonValueProviderFactory();
+                return prov.GetValueProvider(controllerContext);
+            }
+
             if (!controllerContext.HttpContext.Request.ContentType.StartsWith("application/json", StringComparison.OrdinalIgnoreCase))
                 return null;
 
@@ -22,14 +29,11 @@ namespace System.Web.Mvc
             if (string.IsNullOrEmpty(bodyText))
                 return null;
 
-            if (controllerContext.HttpContext.Request.FilePath == "/Match/Callback")
-            {
-                var jsonObject = JsonConvert.DeserializeObject<CallbackResult>(bodyText);
+            var jsonObject = JsonConvert.DeserializeObject<CallbackResult>(bodyText);
 
-                return new DictionaryValueProvider<CallbackResult>(new Dictionary<string, CallbackResult> { { "obj", jsonObject } }, CultureInfo.CurrentCulture);
-            }
-
-            return null;
+            return
+                new DictionaryValueProvider<CallbackResult>(
+                    new Dictionary<string, CallbackResult> {{"obj", jsonObject}}, CultureInfo.CurrentCulture);
         }
     }
 }

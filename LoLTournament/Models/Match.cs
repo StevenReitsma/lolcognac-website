@@ -40,6 +40,7 @@ namespace LoLTournament.Models
         public long AssistsRedTeam { get; set; }
 
         public string TournamentCode { get; set; }
+        public string TournamentCodeBlind { get; set; }
         public bool Invalid { get; set; }
         public string InvalidReason { get; set; }
 

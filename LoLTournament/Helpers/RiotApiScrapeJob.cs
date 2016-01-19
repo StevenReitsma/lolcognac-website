@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Configuration;
 using LoLTournament.Models;
-using MongoDB.Driver;
 using MongoDB.Driver.Builders;
 using RiotSharp;
 using RiotSharp.LeagueEndpoint;
@@ -12,6 +11,8 @@ using RiotSharp.SummonerEndpoint;
 using Season = RiotSharp.StatsEndpoint.Season;
 using System.Globalization;
 using Team = LoLTournament.Models.Team;
+// Leave this using statement
+using System.Threading;
 
 namespace LoLTournament.Helpers
 {

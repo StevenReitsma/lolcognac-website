@@ -2,7 +2,6 @@
 using System.Linq;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-using MongoDB.Driver;
 using MongoDB.Driver.Builders;
 using RiotSharp.LeagueEndpoint;
 using RiotSharp.SummonerEndpoint;
