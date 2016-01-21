@@ -51,6 +51,12 @@ namespace LoLTournament.Models
         }
 
         [BsonIgnore]
+        public double MMRUncertainty
+        {
+            get { return Participants.Sum(x => x.MMRUncertainty); }
+        }
+
+        [BsonIgnore]
         public int AmountOfRuStudents
         {
             get { return Participants.Count(x => x.RuStudent); }

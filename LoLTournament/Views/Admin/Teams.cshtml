@@ -20,6 +20,7 @@
                 <th width="5%">Dorans</th>
                 <th>Pool</th>
                 <th>MMR</th>
+                <th>MMR sigma</th>
                 <th>Actions</th>
             </tr>
             @foreach (var t in Model.Teams)
@@ -51,6 +52,7 @@
                     </td>
                     <td>Pool @(t.Pool+1)</td>
                     <td>@t.MMR.ToString("0")</td>
+                    <td>@t.MMRUncertainty.ToString("0.00")</td>
                     <td>
                         @if (!t.Cancelled)
                         {

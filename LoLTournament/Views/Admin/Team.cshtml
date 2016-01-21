@@ -27,8 +27,11 @@ else
                 <tr>
                     <th>Name</th>
                     <th>Summoner name</th>
-                    <th>League</th>
+                    <th>Current league</th>
+                    <th>Previous league</th>
                     <th>MMR</th>
+                    <th>MMR sigma</th>
+                    <th>MMR DR</th>
                     <th>Study programme</th>
                     <th>E-mail</th>
                     <th>Student number</th>
@@ -79,7 +82,44 @@ else
                             }
                             <span class="label" style="background-color: #@color;">@p.CurrentSeasonTier @p.CurrentSeasonDivision</span>
                         </td>
+                        <td>
+                            @{
+                                switch (p.PreviousSeasonTier)
+                                {
+                                    case Tier.Unranked:
+                                        color = "333";
+                                        break;
+                                    case Tier.Bronze:
+                                        color = "6E3A07";
+                                        break;
+                                    case Tier.Silver:
+                                        color = "ADB3C6";
+                                        break;
+                                    case Tier.Gold:
+                                        color = "F0AD4E";
+                                        break;
+                                    case Tier.Platinum:
+                                        color = "5CB85C";
+                                        break;
+                                    case Tier.Diamond:
+                                        color = "5BC0DE";
+                                        break;
+                                    case Tier.Master:
+                                        color = "337AB7";
+                                        break;
+                                    case Tier.Challenger:
+                                        color = "D9534F";
+                                        break;
+                                    default:
+                                        color = "777";
+                                        break;
+                                }
+                            }
+                            <span class="label" style="background-color: #@color;">@p.PreviousSeasonTier</span>
+                        </td>
                         <td>@p.MMR.ToString("0")</td>
+                        <td>@p.MMRUncertainty.ToString("0.00")</td>
+                        <td>@p.DynamicRatio.ToString("0.00")</td>
                         <td>@p.StudyProgram</td>
                         <td>@p.Email</td>
                         <td>@p.StudentNumber</td>

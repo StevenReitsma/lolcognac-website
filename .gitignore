@@ -1,6 +1,7 @@
-## Ignore API key file
+## Ignore API key file and passwords
 LoLTournament/ApiKeys.config
 .vs/
+LoLTournament/Helpers/UserHelper.cs
 
 ## Ignore large content files
 LoLTournament/Content/Images/Photos

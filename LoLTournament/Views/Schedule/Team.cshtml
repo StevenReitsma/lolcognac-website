@@ -36,9 +36,9 @@
                 {
                     <h2>@Model.Team.Name <span class="label label-success" style="font-size: 11px; vertical-align: middle">Pool Unknown</span></h2>
 
-                    foreach (var p in @Model.Team.Participants.OrderBy(x => Math.Max((int) x.PreviousSeasonTier, (int) x.CurrentSeasonTier)))
+                    foreach (var p in @Model.Team.Participants.OrderBy(x => Math.Min((int) x.PreviousSeasonTier, (int) x.CurrentSeasonTier)))
                     {
-                        var maxTier = (Tier) Math.Max((int) p.PreviousSeasonTier, (int) p.CurrentSeasonTier);
+                        var maxTier = (Tier) Math.Min((int) p.PreviousSeasonTier, (int) p.CurrentSeasonTier);
                         string color;
                         switch (maxTier)
                         {

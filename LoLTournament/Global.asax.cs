@@ -16,7 +16,10 @@ namespace LoLTournament
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-            new RiotApiScrapeJob();
+            var scrape = new RiotApiScrapeJob();
+#if !DEBUG
+            scrape.StartTimer();
+#endif
 
             //ExportHelper.ExportBadgeList();
             //ExportHelper.ExportEntryList();

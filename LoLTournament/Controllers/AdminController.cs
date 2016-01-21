@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System.Threading;
+using System.Web.Mvc;
 using System.Web.Security;
 using LoLTournament.Helpers;
 using LoLTournament.Models;
@@ -91,6 +92,18 @@ namespace LoLTournament.Controllers
         public ActionResult TeamBuilder()
         {
             return View(new AdminTeamBuilderViewModel());
+        }
+
+        // GET: Admin/UpdateSummoners
+        public ActionResult UpdateSummoners()
+        {
+            if (!User.IsInRole("Edit"))
+                return View("AuthenticationError");
+
+            // Update summoners on separate thread
+            new Thread(() => new RiotApiScrapeJob().ScrapeSummoners(null)).Start();
+
+            return RedirectToAction("Index", "Admin");
         }
     }
 }

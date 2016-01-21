@@ -21,6 +21,8 @@ namespace LoLTournament.Models
         public int CurrentSeasonDivision { get; set; }
         public int PreviousSeasonWins { get; set; }
         public int PreviousSeasonLosses { get; set; }
+        public int CurrentSeasonWins { get; set; }
+        public int CurrentSeasonLosses { get; set; }
         public string SummonerName { get; set; }
         public string Email { get; set; }
         public string FullName { get; set; }
@@ -55,21 +57,80 @@ namespace LoLTournament.Models
         {
             get
             {
-                double tierRanking = 0;
+                var previousSeason = (7 - (int)PreviousSeasonTier)*5 + 3;
+                var currentSeason = (7 - (int) CurrentSeasonTier)*5 + (5 - CurrentSeasonDivision);
 
-                if (PreviousSeasonTier != Tier.Unranked)
-                    tierRanking += (int)(6-PreviousSeasonTier) * 5 + 3; // the +3 is because this is the average division
+                if (PreviousSeasonTier == Tier.Unranked)
+                    return currentSeason;
+                if (CurrentSeasonTier == Tier.Unranked)
+                    return previousSeason;
 
-                // If also ranked in current season, take weighted average (previous = 0.67, current = 0.33)
-                if (CurrentSeasonTier != Tier.Unranked)
-                {
-                    tierRanking *= PreviousRatio;
-                    tierRanking += (1 - PreviousRatio) * ((int)(6-CurrentSeasonTier) * 5 + 5 - CurrentSeasonDivision);
-                    if (PreviousSeasonTier != Tier.Unranked)
-                        tierRanking /= (1 - PreviousRatio); // undo ratio multiplication
-                }
+                return previousSeason* DynamicRatio + currentSeason*(1 - DynamicRatio);
+            }
+        }
 
-                return tierRanking * 3;
+        [BsonIgnore]
+        public double DynamicRatio
+        {
+            get
+            {
+                if (PreviousSeasonMMRUncertainty == 0)
+                    return 0;
+                if (CurrentSeasonMMRUncertainty == 0)
+                    return 1;
+
+                var sum = (1/PreviousSeasonMMRUncertainty) + (1/CurrentSeasonMMRUncertainty);
+                var expandPrevious = (1/PreviousSeasonMMRUncertainty)/sum;
+
+                return expandPrevious;
+            }
+        }
+
+        [BsonIgnore]
+        public double PreviousSeasonMMRUncertainty
+        {
+            get
+            {
+                if (PreviousSeasonLosses == 0)
+                    return 0;
+                if (PreviousSeasonTier == Tier.Unranked)
+                    return 0;
+
+                var winrate = PreviousSeasonWins / (double)PreviousSeasonLosses;
+
+                var winrateDeviation = Math.Abs(winrate - 1) + 0.08;
+                var matchCountDeviation = 1 / (PreviousSeasonWins + (double) PreviousSeasonLosses);
+
+                return winrateDeviation * matchCountDeviation * 1000;
+            }
+        }
+
+        [BsonIgnore]
+        public double CurrentSeasonMMRUncertainty
+        {
+            get
+            {
+                if (CurrentSeasonLosses == 0)
+                    return 0;
+                if (CurrentSeasonTier == Tier.Unranked)
+                    return 0;
+
+                var winrate = CurrentSeasonWins / (double)CurrentSeasonLosses;
+
+                var winrateDeviation = Math.Abs(winrate - 1) + 0.08;
+                var matchCountDeviation = 1 / (CurrentSeasonWins + (double)CurrentSeasonLosses);
+
+                return winrateDeviation * matchCountDeviation * 1000;
+            }
+        }
+
+        [BsonIgnore]
+        public double MMRUncertainty
+        {
+            get
+            {
+                var uncertainty = DynamicRatio*PreviousSeasonMMRUncertainty + (1 - DynamicRatio)*CurrentSeasonMMRUncertainty;
+                return uncertainty > 5 ? 5 : uncertainty;
             }
         }
     }
