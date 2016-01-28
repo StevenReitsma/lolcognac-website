@@ -30,15 +30,15 @@
                     <td>
                         @if (@t.Payment.Status == PaymentStatus.Cancelled || @t.Payment.Status == PaymentStatus.Expired || @t.Payment.Status == PaymentStatus.Refunded)
                         {
-                            <span class="badge bg-red">@t.Payment.Status</span>
+                            <span class="label bg-red">@t.Payment.Status</span>
                         }
                         else if (@t.Payment.Status == PaymentStatus.Paid || @t.Payment.Status == PaymentStatus.Paidout)
                         {
-                            <span class="badge bg-green">@t.Payment.Status</span>
+                            <span class="label bg-green">@t.Payment.Status</span>
                         }
                         else
                         {
-                            <span class="badge bg-orange">@t.Payment.Status</span>
+                            <span class="label bg-orange">@t.Payment.Status</span>
                         }
                     </td>
                     <td>

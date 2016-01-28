@@ -32,7 +32,7 @@ namespace LoLTournament.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
             // Get the match from the database by looking up the tournament code
-            var match = Mongo.Matches.FindOne(Query<Match>.Where(x => x.TournamentCode == obj.TournamentCode));
+            var match = Mongo.Matches.FindOne(Query<Match>.Where(x => x.TournamentCode == obj.TournamentCode || x.TournamentCodeBlind == obj.TournamentCode));
 
             // Check which side won
             var winningTeam = obj.WinningTeam.Select(y => y.SummonerId);
@@ -100,6 +100,9 @@ namespace LoLTournament.Controllers
                 // Teams did not have correct summoners playing the match. Match invalid.
                 match.Invalid = true;
                 match.InvalidReason = "INCORRECT_SUMMONERS";
+
+                // Save to database
+                Mongo.Matches.Save(match);
             }
 
             return new HttpStatusCodeResult(HttpStatusCode.OK);

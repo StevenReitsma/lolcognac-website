@@ -89,12 +89,14 @@ namespace LoLTournament.Controllers
         }
 
         // GET: Admin/TeamBuilder
+        [Authorize]
         public ActionResult TeamBuilder()
         {
             return View(new AdminTeamBuilderViewModel());
         }
 
         // GET: Admin/UpdateSummoners
+        [Authorize]
         public ActionResult UpdateSummoners()
         {
             if (!User.IsInRole("Edit"))
@@ -104,6 +106,24 @@ namespace LoLTournament.Controllers
             new Thread(() => new RiotApiScrapeJob().ScrapeSummoners(null)).Start();
 
             return RedirectToAction("Index", "Admin");
+        }
+
+        // GET: Admin/Matches
+        [Authorize]
+        public ActionResult Matches()
+        {
+            return View(new AdminMatchesViewModel());
+        }
+
+        // GET: Admin/MatchInfo
+        [Authorize]
+        public ActionResult MatchInfo()
+        {
+            var id = HttpContext.Request.QueryString["matchId"];
+
+            var match = Mongo.Matches.FindOne(Query<Match>.Where(x => x.Id == ObjectId.Parse(id)));
+
+            return View(match);
         }
     }
 }

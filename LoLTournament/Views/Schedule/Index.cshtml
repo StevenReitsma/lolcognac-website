@@ -79,7 +79,7 @@
                 @if (Model.TeambuilderParticipants.Any())
                 {
                     <h3>People still looking for a team</h3>
-                    <p>Do you have room in your team for one of the roles below? Send us an email and we'll get you in touch with each other!</p>
+                    <p>Are you also looking for a team? Register yourself for our <a href="@Url.Action("Teambuilder", "Register")">team builder</a>.</p>
                     <ul>
                         @foreach (var t in Model.TeambuilderParticipants)
                         {

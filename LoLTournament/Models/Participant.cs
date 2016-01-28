@@ -57,15 +57,15 @@ namespace LoLTournament.Models
         {
             get
             {
-                var previousSeason = (7 - (int)PreviousSeasonTier)*5 + 3;
-                var currentSeason = (7 - (int) CurrentSeasonTier)*5 + (5 - CurrentSeasonDivision);
+                var previousSeason = 10 * ((7 - (int)PreviousSeasonTier)*5 + 3);
+                var currentSeason = 10 * ((7 - (int) CurrentSeasonTier)*5 + (5 - CurrentSeasonDivision));
 
                 if (PreviousSeasonTier == Tier.Unranked)
                     return currentSeason;
                 if (CurrentSeasonTier == Tier.Unranked)
                     return previousSeason;
 
-                return previousSeason* DynamicRatio + currentSeason*(1 - DynamicRatio);
+                return previousSeason * DynamicRatio + currentSeason * (1 - DynamicRatio);
             }
         }
 
@@ -101,7 +101,7 @@ namespace LoLTournament.Models
                 var winrateDeviation = Math.Abs(winrate - 1) + 0.08;
                 var matchCountDeviation = 1 / (PreviousSeasonWins + (double) PreviousSeasonLosses);
 
-                return winrateDeviation * matchCountDeviation * 1000;
+                return winrateDeviation * matchCountDeviation * 1000 + 1; // add 1 because we don't have division
             }
         }
 

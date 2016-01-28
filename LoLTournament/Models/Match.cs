@@ -46,6 +46,8 @@ namespace LoLTournament.Models
 
         public bool PlayedWrongSide { get; set; }
 
+        public string SpectateKey { get; set; }
+
         [BsonIgnore]
         public Team BlueTeam {
             get

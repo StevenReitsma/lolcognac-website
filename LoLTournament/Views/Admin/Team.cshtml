@@ -16,6 +16,10 @@ else
         {
             <span class="badge bg-red" style="vertical-align:middle">Cancelled</span>
         }
+        @if (Model.OnHold)
+        {
+            <span class="badge bg-orange" style="vertical-align:middle">On hold</span>
+        }
     </h1>
 
     <div class="box">
