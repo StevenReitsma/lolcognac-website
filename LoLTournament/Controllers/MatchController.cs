@@ -17,7 +17,7 @@ namespace LoLTournament.Controllers
 
         public MatchController()
         {
-            var tournamentKey = WebConfigurationManager.AppSettings["TournamentRiotApiKey"];
+            var tournamentKey = WebConfigurationManager.AppSettings["RiotTournamentApiKey"];
             var rateLimit1 = int.Parse(WebConfigurationManager.AppSettings["RateLimitPer10Seconds"]);
             var rateLimit2 = int.Parse(WebConfigurationManager.AppSettings["RateLimitPer10Minutes"]);
 
@@ -33,6 +33,9 @@ namespace LoLTournament.Controllers
 
             // Get the match from the database by looking up the tournament code
             var match = Mongo.Matches.FindOne(Query<Match>.Where(x => x.TournamentCode == obj.TournamentCode || x.TournamentCodeBlind == obj.TournamentCode));
+
+            if (match == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
             // Check which side won
             var winningTeam = obj.WinningTeam.Select(y => y.SummonerId);
@@ -55,7 +58,7 @@ namespace LoLTournament.Controllers
 
                 // Get the players that were supposed to be on blue side
                 var supposedToBeBluePlayers = matchDetails.Participants.Where(
-                        x => match.BlueTeam.Participants.Select(y => y.Summoner.Id).Contains(x.ParticipantId));
+                        x => match.BlueTeam.Participants.Select(y => y.Summoner.Id).Contains(x.ParticipantId)); // ParticipantIdentities, no summoner id's, only names
                 // Set the team id to the side they actually played
                 var blueTeamId = supposedToBeBluePlayers.First().TeamId;
 
@@ -69,7 +72,7 @@ namespace LoLTournament.Controllers
                 match.Duration = matchDetails.MatchDuration;
                 match.CreationTime = matchDetails.MatchCreation;
                 match.StartTime = obj.StartTime;
-                match.FinishDate = DateTime.Now;
+                match.FinishDate = DateTime.UtcNow;
                 match.RiotMatchId = matchDetails.MatchId;
                 match.Finished = true;
                 

@@ -557,7 +557,7 @@ namespace LoLTournament.Helpers
                 p.CurrentSeasonDivision = divisionInt;
                 p.CurrentSeasonWins = winsCurrent;
                 p.CurrentSeasonLosses = lossesCurrent;
-                p.LastUpdateTime = DateTime.Now;
+                p.LastUpdateTime = DateTime.UtcNow;
 
 
                 Mongo.Participants.Save(p);

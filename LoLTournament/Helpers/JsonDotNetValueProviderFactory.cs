@@ -29,7 +29,16 @@ namespace System.Web.Mvc
             if (string.IsNullOrEmpty(bodyText))
                 return null;
 
-            var jsonObject = JsonConvert.DeserializeObject<CallbackResult>(bodyText);
+            CallbackResult jsonObject = null;
+
+            try
+            {
+                jsonObject = JsonConvert.DeserializeObject<CallbackResult>(bodyText);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
 
             return
                 new DictionaryValueProvider<CallbackResult>(

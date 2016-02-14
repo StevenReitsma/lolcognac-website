@@ -39,6 +39,6 @@ namespace LoLTournament.Models.TournamentApi
         public GameMode GameMode;
 
         [JsonProperty("region")]
-        public Region Region;
+        public Platform Region;
     }
 }

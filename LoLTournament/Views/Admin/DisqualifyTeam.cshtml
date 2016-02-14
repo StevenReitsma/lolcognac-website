@@ -1,0 +1,12 @@
+﻿@{
+    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+}
+@model LoLTournament.Models.Team
+
+<h1>Disqualify team</h1>
+
+<p>
+    Are you absolutely sure you want to disqualify team <b>@Model.Name</b>? This is permanent.
+</p>
+
+<a href="@Url.Action("DisqualifyTeam", "Admin", new RouteValueDictionary {{"teamId", @Model.Id.ToString()}, {"confirmation", true}})"><button class="btn btn-primary btn-lg" type="button">Disqualify team</button></a>

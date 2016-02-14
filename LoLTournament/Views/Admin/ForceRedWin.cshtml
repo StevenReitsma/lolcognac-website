@@ -1,0 +1,14 @@
+﻿@{
+    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+}
+@model LoLTournament.Models.Match
+
+<h1>Force red win</h1>
+
+<p>
+    Are you sure you want to make the red team win the match? This is permanent.
+</p>
+
+<a href="@Url.Action("ForceRedWin", "Admin", new RouteValueDictionary {{"matchId", @Model.Id.ToString()}, {"confirmation", true}})"><button class="btn btn-primary btn-lg" type="button">Force red win</button></a>
+
+

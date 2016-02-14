@@ -30,7 +30,7 @@ namespace LoLTournament.Models
         {
             get
             {
-                return Mongo.Participants.Find(Query<Participant>.Where(x => x.TeamId == Id)).ToList();
+                return Mongo.Participants.Find(Query<Participant>.Where(x => ParticipantsIds.Contains(x.Id))).ToList();
             }
         }
 
@@ -230,6 +230,20 @@ namespace LoLTournament.Models
         public Payment Payment
         {
             get { return Mongo.Payments.FindOne(Query<Payment>.Where(x => x.TeamId == Id)); }
+        }
+
+        public void Disqualify()
+        {
+            var match = GetNextMatch();
+            while (match != null)
+            {
+                if (match.BlueTeamId == Id)
+                    match.ForceRedWin();
+                else
+                    match.ForceBlueWin();
+
+                match = GetNextMatch();
+            }
         }
     }
 }

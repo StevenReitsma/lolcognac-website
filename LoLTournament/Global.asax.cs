@@ -24,6 +24,8 @@ namespace LoLTournament
             scrape.StartTimer();
 #endif
 
+            //TournamentCodeFactory.GetTournamentCode(8551);
+
             //ExportHelper.ExportBadgeList();
             //ExportHelper.ExportEntryList();
             //BracketHelper.CreatePoolStructure();

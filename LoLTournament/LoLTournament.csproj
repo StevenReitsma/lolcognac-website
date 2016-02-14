@@ -143,6 +143,7 @@
     <Compile Include="Helpers\NavigationLink.cs" />
     <Compile Include="Helpers\RiotApiScrapeJob.cs" />
     <Compile Include="Helpers\TimeFixer.cs" />
+    <Compile Include="Helpers\TournamentCodeFactory.cs" />
     <Compile Include="Helpers\Util.cs" />
     <Compile Include="Models\Admin\AdminDashboardViewModel.cs" />
     <Compile Include="Models\Admin\AdminFinanceViewModel.cs" />
@@ -628,6 +629,11 @@
     <Content Include="Views\Admin\TeamBuilder.cshtml" />
     <Content Include="Views\Admin\Matches.cshtml" />
     <Content Include="Views\Admin\MatchInfo.cshtml" />
+    <Content Include="Views\Admin\SwitchWin.cshtml" />
+    <Content Include="Views\Admin\RollbackMatch.cshtml" />
+    <Content Include="Views\Admin\ForceBlueWin.cshtml" />
+    <Content Include="Views\Admin\ForceRedWin.cshtml" />
+    <Content Include="Views\Admin\DisqualifyTeam.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

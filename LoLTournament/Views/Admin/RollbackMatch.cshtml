@@ -1,0 +1,13 @@
+﻿@{
+    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+}
+@model LoLTournament.Models.Match
+
+<h1>Rollback match</h1>
+
+<p>
+    Are you sure you want to rollback the outcome of this match? The match will have to be completely replayed using a new tournament code.
+</p>
+
+<a href="@Url.Action("RollbackMatch", "Admin", new RouteValueDictionary {{"matchId", @Model.Id.ToString()}, {"confirmation", true}})"><button class="btn btn-primary btn-lg" type="button">Rollback match</button></a>
+

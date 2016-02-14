@@ -73,5 +73,57 @@ namespace LoLTournament.Models
                 return Mongo.Teams.Find(Query<Team>.Where(x => x.Id == WinnerId)).FirstOrDefault();
             }
         }
+
+        public void SwitchWin()
+        {
+            WinnerId = WinnerId == BlueTeamId ? RedTeamId : BlueTeamId;
+            Mongo.Matches.Save(this);
+        }
+
+        public void Rollback()
+        {
+            WinnerId = ObjectId.Empty;
+            Finished = false;
+            Invalid = false;
+            InvalidReason = null;
+            SpectateKey = null;
+            PlayedWrongSide = false;
+
+            TournamentCode = TournamentCodeFactory.GetTournamentCode(0); // TODO
+            TournamentCodeBlind = TournamentCodeFactory.GetTournamentCodeBlind();
+            KillsBlueTeam = 0;
+            KillsRedTeam = 0;
+            AssistsBlueTeam = 0;
+            AssistsRedTeam = 0;
+            DeathsBlueTeam = 0;
+            DeathsRedTeam = 0;
+            ChampionIds = null;
+            BanIds = null;
+            RiotMatchId = 0;
+
+            Mongo.Matches.Save(this);
+        }
+
+        public void ForceBlueWin()
+        {
+            WinnerId = BlueTeamId;
+            Finished = true;
+            FinishDate = DateTime.UtcNow;
+
+            Mongo.Matches.Save(this);
+
+            RiotApiScrapeJob.NewMatch(this);
+        }
+
+        public void ForceRedWin()
+        {
+            WinnerId = RedTeamId;
+            Finished = true;
+            FinishDate = DateTime.UtcNow;
+
+            Mongo.Matches.Save(this);
+
+            RiotApiScrapeJob.NewMatch(this);
+        }
     }
 }

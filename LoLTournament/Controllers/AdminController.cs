@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System.Web.Mvc;
+using System.Web.Routing;
 using System.Web.Security;
 using LoLTournament.Helpers;
 using LoLTournament.Models;
@@ -124,6 +125,106 @@ namespace LoLTournament.Controllers
             var match = Mongo.Matches.FindOne(Query<Match>.Where(x => x.Id == ObjectId.Parse(id)));
 
             return View(match);
+        }
+
+        [Authorize]
+        public ActionResult SwitchWin()
+        {
+            if (!User.IsInRole("Edit"))
+                return View("AuthenticationError");
+
+            var id = HttpContext.Request.QueryString["matchId"];
+            var confirmation = HttpContext.Request.QueryString["confirmation"] != null;
+
+            var match = Mongo.Matches.FindOne(Query<Match>.Where(x => x.Id == ObjectId.Parse(id)));
+
+            if (confirmation)
+            {
+                match.SwitchWin();
+                return RedirectToAction("MatchInfo", "Admin", new RouteValueDictionary {{"matchId", id}});
+            }
+
+            return View(match);
+        }
+
+        [Authorize]
+        public ActionResult RollbackMatch()
+        {
+            if (!User.IsInRole("Edit"))
+                return View("AuthenticationError");
+
+            var id = HttpContext.Request.QueryString["matchId"];
+            var confirmation = HttpContext.Request.QueryString["confirmation"] != null;
+
+            var match = Mongo.Matches.FindOne(Query<Match>.Where(x => x.Id == ObjectId.Parse(id)));
+
+            if (confirmation)
+            {
+                match.Rollback();
+                return RedirectToAction("MatchInfo", "Admin", new RouteValueDictionary { { "matchId", id } });
+            }
+
+            return View(match);
+        }
+
+        [Authorize]
+        public ActionResult ForceBlueWin()
+        {
+            if (!User.IsInRole("Edit"))
+                return View("AuthenticationError");
+
+            var id = HttpContext.Request.QueryString["matchId"];
+            var confirmation = HttpContext.Request.QueryString["confirmation"] != null;
+
+            var match = Mongo.Matches.FindOne(Query<Match>.Where(x => x.Id == ObjectId.Parse(id)));
+
+            if (confirmation)
+            {
+                match.ForceBlueWin();
+                return RedirectToAction("MatchInfo", "Admin", new RouteValueDictionary { { "matchId", id } });
+            }
+
+            return View(match);
+        }
+
+        [Authorize]
+        public ActionResult ForceRedWin()
+        {
+            if (!User.IsInRole("Edit"))
+                return View("AuthenticationError");
+
+            var id = HttpContext.Request.QueryString["matchId"];
+            var confirmation = HttpContext.Request.QueryString["confirmation"] != null;
+
+            var match = Mongo.Matches.FindOne(Query<Match>.Where(x => x.Id == ObjectId.Parse(id)));
+
+            if (confirmation)
+            {
+                match.ForceRedWin();
+                return RedirectToAction("MatchInfo", "Admin", new RouteValueDictionary { { "matchId", id } });
+            }
+
+            return View(match);
+        }
+
+        [Authorize]
+        public ActionResult DisqualifyTeam()
+        {
+            if (!User.IsInRole("Edit"))
+                return View("AuthenticationError");
+
+            var id = HttpContext.Request.QueryString["teamId"];
+            var confirmation = HttpContext.Request.QueryString["confirmation"] != null;
+
+            var team = Mongo.Teams.FindOne(Query<Team>.Where(x => x.Id == ObjectId.Parse(id)));
+
+            if (confirmation)
+            {
+                team.Disqualify();
+                return RedirectToAction("Teams", "Admin");
+            }
+
+            return View(team);
         }
     }
 }
