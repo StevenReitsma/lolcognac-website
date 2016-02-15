@@ -136,6 +136,7 @@
     <Compile Include="Helpers\BracketHelper.cs" />
     <Compile Include="Helpers\EmailHelper.cs" />
     <Compile Include="Helpers\JsonDotNetValueProviderFactory.cs" />
+    <Compile Include="Helpers\LeagueMath.cs" />
     <Compile Include="Helpers\Mollie.cs" />
     <Compile Include="Helpers\ExportHelper.cs" />
     <Compile Include="Helpers\IpHelper.cs" />
@@ -165,6 +166,7 @@
     <Compile Include="Models\Financial\PaymentRefundStatus.cs" />
     <Compile Include="Models\Financial\PaymentStatus.cs" />
     <Compile Include="Models\Financial\PaymentTemplate.cs" />
+    <Compile Include="Models\LeagueDataViewModel.cs" />
     <Compile Include="Models\PaymentStatusViewModel.cs" />
     <Compile Include="Models\StatisticsOverTimeViewModel.cs" />
     <Compile Include="Models\Match.cs" />

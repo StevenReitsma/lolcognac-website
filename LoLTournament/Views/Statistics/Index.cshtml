@@ -74,6 +74,23 @@
             <div class="col-lg-6 col-lg-12">
                 <div class="clearfix"></div>
 
+                <h2>Leagues</h2>
+                <h4>Season 5</h4>
+                <div id="league-bar5" style="width: 800px; height: 500px"></div>
+
+                <h4>Season 6</h4>
+                <div id="league-bar6" style="width: 800px; height: 500px"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="content-section-a">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 col-lg-12">
+                <div class="clearfix"></div>
+
                 <h2>Kills and assists over time</h2>
                 <div id="statistics-over-time" style="width: 800px; height: 500px"></div>
             </div>
@@ -81,7 +98,7 @@
     </div>
 </div>
 
-<div class="content-section-a">
+<div class="content-section-b">
     <div class="container">
         <div class="row">
             <div class="col-lg-6 col-lg-12">
@@ -94,7 +111,7 @@
     </div>
 </div>
 
-<div class="content-section-b">
+<div class="content-section-a">
     <div class="container">
         <div class="row">
             <div class="col-lg-6 col-lg-12">
@@ -140,6 +157,56 @@
         });
     }
 
+    function makeLeagueDataChart() {
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            contentType: 'application/json',
+            url: '@Url.Action("LeagueData")',
+            data: '{}',
+            success: function (chartsData) {
+                var leagues = chartsData.LeagueData5;
+                var data = new google.visualization.DataTable();
+
+                data.addColumn('string', 'League');
+                data.addColumn('number', 'Players');
+
+                for (var league in leagues) {
+                    data.addRow([league, leagues[league]]);
+                }
+
+                var chart = new google.visualization.BarChart(document.getElementById('league-bar5'));
+
+                chart.draw(data, {
+                    title: '',
+                    bars: 'horizontal',
+                    backgroundColor: '#F8F8F8'
+                });
+
+                leagues = chartsData.LeagueData6;
+                data = new google.visualization.DataTable();
+
+                data.addColumn('string', 'League');
+                data.addColumn('number', 'Players');
+
+                for (var league in leagues) {
+                    data.addRow([league, leagues[league]]);
+                }
+
+                var chart = new google.visualization.BarChart(document.getElementById('league-bar6'));
+
+                chart.draw(data, {
+                    title: '',
+                    bars: 'horizontal',
+                    backgroundColor: '#F8F8F8'
+                });
+            },
+            error: function () {
+                console.error("Error loading bar data from url " + this.url);
+            }
+        });
+    }
+
     function makeStatisticsOverTimeChart() {
         $.ajax({
             type: 'POST',
@@ -171,7 +238,6 @@
                             min: 0
                         }
                     },
-                    backgroundColor: '#F8F8F8'
 
                 });
             },
@@ -203,7 +269,8 @@
                 var chart = new google.visualization.BarChart(document.getElementById('champions-played-bar'));
 
                 chart.draw(data, {
-                    title: ''
+                    title: '',
+                    backgroundColor: '#F8F8F8'
                 });
             },
             error: function () {
@@ -233,7 +300,6 @@
                 var chart = new google.visualization.BarChart(document.getElementById('bans-bar'));
                 chart.draw(data, {
                     title: '',
-                    backgroundColor: '#F8F8F8'
                 });
             },
             error: function () {
@@ -244,6 +310,7 @@
 
     function makeCharts() {
         makeStudyProgrammePie();
+        makeLeagueDataChart();
         makeStatisticsOverTimeChart();
         makeChampionsPlayedChart();
         makeChampionsBannedChart();

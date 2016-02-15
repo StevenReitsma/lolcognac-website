@@ -57,8 +57,8 @@ namespace LoLTournament.Models
         {
             get
             {
-                var previousSeason = 10 * ((7 - (int)PreviousSeasonTier)*5 + 3);
-                var currentSeason = 10 * ((7 - (int) CurrentSeasonTier)*5 + (5 - CurrentSeasonDivision));
+                var previousSeason = 10 * ((7 - LeagueMath.GetLeagueMultiplier(PreviousSeasonTier))*5 + 3);
+                var currentSeason = 10 * ((7 - LeagueMath.GetLeagueMultiplier(CurrentSeasonTier))*5 + (5 - CurrentSeasonDivision));
 
                 if (PreviousSeasonTier == Tier.Unranked)
                     return currentSeason;
@@ -131,6 +131,15 @@ namespace LoLTournament.Models
             {
                 var uncertainty = DynamicRatio*PreviousSeasonMMRUncertainty + (1 - DynamicRatio)*CurrentSeasonMMRUncertainty;
                 return uncertainty > 5 ? 5 : uncertainty;
+            }
+        }
+
+        [BsonIgnore]
+        public bool Cancelled
+        {
+            get
+            {
+                return Team == null ? true : Team.Cancelled;
             }
         }
     }

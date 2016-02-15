@@ -1,8 +1,4 @@
 ﻿using LoLTournament.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace LoLTournament.Controllers
@@ -32,6 +28,11 @@ namespace LoLTournament.Controllers
         public JsonResult ChampionsBannedData()
         {
             return Json(new ChampionsBannedViewModel());
+        }
+
+        public JsonResult LeagueData()
+        {
+            return Json(new LeagueDataViewModel());
         }
     }
 }
