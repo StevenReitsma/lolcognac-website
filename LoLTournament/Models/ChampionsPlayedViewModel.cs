@@ -18,7 +18,7 @@ namespace LoLTournament.Models
             var matches = Mongo.Matches.FindAll();
 
             // Flatten all champion id's
-            var playedChampions = matches.SelectMany(match => match.ChampionIds);
+            var playedChampions = matches.Where(x => x.ChampionIds != null).SelectMany(match => match.ChampionIds);
 
             // Create groups, count contents, check for 0-count, order by count and put in dictionary
             var counts = from id in playedChampions
@@ -30,8 +30,12 @@ namespace LoLTournament.Models
 
             // Take top 5 and convert id -> name
             ChampionsPlayed = counts
-                .Take(5)
-                .ToDictionary(c => Mongo.Champions.Find(Query<Champion>.Where(champion => champion.ChampionId == c.Key)).First().Name, c => c.Count);   
+                .Take(10)
+                .ToDictionary(
+                    c =>
+                        Mongo.Champions.Find(Query<Champion>.Where(champion => champion.ChampionId == c.Key))
+                            .First()
+                            .Name, c => c.Count);
         }
     }
 }

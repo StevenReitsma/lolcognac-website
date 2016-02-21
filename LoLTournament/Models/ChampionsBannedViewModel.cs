@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using LoLTournament.Helpers;
 using System.Linq;
 using MongoDB.Driver.Builders;
@@ -12,7 +11,6 @@ namespace LoLTournament.Models
 
         public ChampionsBannedViewModel()
         {
-
             var matches = Mongo.Matches.FindAll();
 
             // Flatten all champion IDs
@@ -25,7 +23,13 @@ namespace LoLTournament.Models
                 orderby g.Count() descending
                 select new {g.Key, Count = g.Count()};
 
-            ChampionsBanned = counts.Take(5).ToDictionary(c => Mongo.Champions.Find(Query<Champion>.Where(champion => champion.ChampionId == c.Key)).First().Name, c => c.Count);
+            ChampionsBanned =
+                counts.Take(10)
+                    .ToDictionary(
+                        c =>
+                            Mongo.Champions.Find(Query<Champion>.Where(champion => champion.ChampionId == c.Key))
+                                .First()
+                                .Name, c => c.Count);
         } 
     }
 }
