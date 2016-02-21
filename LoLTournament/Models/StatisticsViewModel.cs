@@ -21,13 +21,13 @@ namespace LoLTournament.Models
             TotalGames = Mongo.Matches.Count(Query<Match>.Where(x => x.Finished));
             var matches = Mongo.Matches.FindAll();
 
-            if(matches.Count() > 0)
+            if(matches.Count(x => x.Finished) > 0)
             {
                 AvgKills = matches.Sum(x => x.KillsBlueTeam + x.KillsRedTeam) / TotalGames;
                 AvgDeaths = matches.Sum(x => x.DeathsBlueTeam + x.DeathsRedTeam) / TotalGames;
                 AvgAssists = matches.Sum(x => x.AssistsBlueTeam + x.AssistsRedTeam) / TotalGames;
                 AvgMatchDuration = TimeSpan.FromSeconds(matches.Average(x => x.Duration.TotalSeconds));
-                BlueSideWinPercentage = matches.Where(match => match.Finished).Where(match => match.BlueTeamId == match.WinnerId).Count() / TotalGames;
+                BlueSideWinPercentage = matches.Where(match => match.Finished).Count(match => match.BlueTeamId == match.WinnerId) / TotalGames;
             }
             else
             {

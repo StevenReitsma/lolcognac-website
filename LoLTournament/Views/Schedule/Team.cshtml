@@ -75,7 +75,11 @@
 
                     <h3>Next match</h3>
 
-                    if (!Model.OtherTeamDefined)
+                    if (DateTime.Now < DateTime.ParseExact(WebConfigurationManager.AppSettings["TournamentStart"], "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture))
+                    {
+                        <p> Tournament hasn't started yet.</p>
+                    }
+                    else if (!Model.OtherTeamDefined)
                     {
                         <p>Your next opponent has not yet been defined because their pool or elimination match has not yet finished. Refresh the page every minute or so or refresh yourself with a drink from the bar.</p>
                     }
