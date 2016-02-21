@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Net;
+using System.Threading;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.Security;
@@ -225,6 +226,71 @@ namespace LoLTournament.Controllers
             }
 
             return View(team);
+        }
+
+        [Authorize]
+        public ActionResult ManualNewMatchHook()
+        {
+            if (!User.IsInRole("Edit"))
+                return View("AuthenticationError");
+
+            var id = HttpContext.Request.QueryString["matchId"];
+            var confirmation = HttpContext.Request.QueryString["confirmation"] != null;
+
+            var match = Mongo.Matches.FindOne(Query<Match>.Where(x => x.Id == ObjectId.Parse(id)));
+
+            if (confirmation)
+            {
+                BracketHelper.NewMatch(match);
+                return RedirectToAction("Matches", "Admin");
+            }
+
+            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        }
+
+        [Authorize]
+        public ActionResult DeleteMatch()
+        {
+            if (!User.IsInRole("Edit"))
+                return View("AuthenticationError");
+
+            var id = HttpContext.Request.QueryString["matchId"];
+            var confirmation = HttpContext.Request.QueryString["confirmation"] != null;
+
+            if (confirmation)
+            {
+                Mongo.Matches.Remove(Query<Match>.Where(x => x.Id == ObjectId.Parse(id)));
+                return RedirectToAction("Matches", "Admin");
+            }
+
+            var match = Mongo.Matches.FindOne(Query<Match>.Where(x => x.Id == ObjectId.Parse(id)));
+
+            return View(match);
+        }
+
+        [Authorize]
+        public ActionResult BuildTournamentStructure()
+        {
+            if (User.Identity.Name != "Steven")
+                return View("AuthenticationError");
+
+            var confirmation = HttpContext.Request.QueryString["confirmation"] != null;
+
+            if (confirmation)
+            {
+                BracketHelper.CreatePoolStructure();
+                BracketHelper.CreateFinaleStructure();
+
+                return RedirectToAction("Index", "Admin");
+            }
+
+            return View();
+        }
+
+        [Authorize]
+        public ActionResult BadgeExport()
+        {
+            return new FileContentResult(ExportHelper.ExportBadgeList(), "text/csv");
         }
     }
 }

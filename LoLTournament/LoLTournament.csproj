@@ -142,6 +142,7 @@
     <Compile Include="Helpers\IpHelper.cs" />
     <Compile Include="Helpers\Mongo.cs" />
     <Compile Include="Helpers\NavigationLink.cs" />
+    <Compile Include="Helpers\RegistrantsCsvParser.cs" />
     <Compile Include="Helpers\RiotApiScrapeJob.cs" />
     <Compile Include="Helpers\TimeFixer.cs" />
     <Compile Include="Helpers\TournamentCodeFactory.cs" />
@@ -231,6 +232,7 @@
     <Content Include="Content\Images\blitz.jpg" />
     <Content Include="Content\Images\bracket.png" />
     <Content Include="Content\Images\CognAC_logo.png" />
+    <Content Include="Content\Images\conjugo.png" />
     <Content Include="Content\Images\GitHub-Mark-32px.png" />
     <Content Include="Content\Images\gm.png" />
     <Content Include="Content\Images\index1.jpg" />
@@ -569,6 +571,7 @@
     <Content Include="fonts\fontawesome-webfont.ttf" />
     <Content Include="fonts\fontawesome-webfont.woff" />
     <Content Include="fonts\FontAwesome.otf" />
+    <Content Include="Content\Admin\registrants.csv" />
     <None Include="Properties\PublishProfiles\Local VM.pubxml" />
     <None Include="Properties\PublishProfiles\VPS CognAC.pubxml" />
     <None Include="Scripts\jquery-2.1.1.intellisense.js" />
@@ -636,6 +639,8 @@
     <Content Include="Views\Admin\ForceBlueWin.cshtml" />
     <Content Include="Views\Admin\ForceRedWin.cshtml" />
     <Content Include="Views\Admin\DisqualifyTeam.cshtml" />
+    <Content Include="Views\Admin\DeleteMatch.cshtml" />
+    <Content Include="Views\Admin\BuildTournamentStructure.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -29,5 +29,29 @@ namespace LoLTournament.Models.Admin
         {
             get { return Mongo.Payments.Count(Query<Payment>.Where(x => x.Status == PaymentStatus.Open || x.Status == PaymentStatus.Pending)); }
         }
+
+        public long DoransNoRUCount
+        {
+            get
+            {
+                return Mongo.Participants.FindAll().Count(x => !x.Cancelled && x.Dorans && !x.RuStudent);
+            }
+        }
+
+        public long NoDoransNoRUCount
+        {
+            get
+            {
+                return Mongo.Participants.FindAll().Count(x => !x.Cancelled && !x.Dorans && !x.RuStudent);
+            }
+        }
+
+        public long CognACCount
+        {
+            get
+            {
+                return Mongo.Participants.FindAll().Count(x => !x.Cancelled && x.CognAC);
+            }
+        }
     }
 }

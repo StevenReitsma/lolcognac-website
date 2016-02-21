@@ -89,8 +89,13 @@ namespace LoLTournament.Models
             SpectateKey = null;
             PlayedWrongSide = false;
 
-            TournamentCode = TournamentCodeFactory.GetTournamentCode(0); // TODO
-            TournamentCodeBlind = TournamentCodeFactory.GetTournamentCodeBlind();
+            var allowedSummoners =
+                Mongo.Teams.Find(Query<Team>.Where(team => team.Id == BlueTeamId || team.Id == RedTeamId))
+                    .SelectMany(team => team.Participants.Select(participant => participant.Summoner.Id))
+                    .ToList();
+
+            TournamentCode = TournamentCodeFactory.GetTournamentCode(allowedSummoners);
+            TournamentCodeBlind = TournamentCodeFactory.GetTournamentCodeBlind(allowedSummoners);
             KillsBlueTeam = 0;
             KillsRedTeam = 0;
             AssistsBlueTeam = 0;
@@ -112,7 +117,7 @@ namespace LoLTournament.Models
 
             Mongo.Matches.Save(this);
 
-            RiotApiScrapeJob.NewMatch(this);
+            BracketHelper.NewMatch(this);
         }
 
         public void ForceRedWin()
@@ -123,7 +128,7 @@ namespace LoLTournament.Models
 
             Mongo.Matches.Save(this);
 
-            RiotApiScrapeJob.NewMatch(this);
+            BracketHelper.NewMatch(this);
         }
     }
 }

@@ -3,6 +3,8 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Web.Configuration;
+using LoLTournament.Helpers;
+using MongoDB.Driver.Builders;
 
 namespace LoLTournament.Models
 {
@@ -54,6 +56,11 @@ namespace LoLTournament.Models
 
                 return registrationStart;
             }
+        }
+
+        public long TeamCount
+        {
+            get { return Mongo.Teams.Count(Query<Team>.Where(x => !x.Cancelled)); }
         }
     }
 }

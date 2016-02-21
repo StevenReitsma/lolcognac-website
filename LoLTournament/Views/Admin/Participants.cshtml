@@ -27,6 +27,7 @@
                 <th>CognAC member</th>
                 <th>Dorans member</th>
                 <th>Team captain</th>
+                <th>Officially registered</th>
                 <th>Register date</th>
             </tr>
             @foreach (var p in Model.Participants)
@@ -152,6 +153,16 @@
                         }
                     </td>
 
+                    <td>
+                        @if (@p.RegisteredOfficially)
+                        {
+                            <span class="label bg-green">Yes</span>
+                        }
+                        else
+                        {
+                            <span class="label bg-red">No</span>
+                        }
+                    </td>
                     <td><i class="fa fa-clock-o"></i> @TimeZoneInfo.ConvertTimeFromUtc(p.RegisterTime, TimeZoneInfo.Local)</td>
                 </tr>
             }

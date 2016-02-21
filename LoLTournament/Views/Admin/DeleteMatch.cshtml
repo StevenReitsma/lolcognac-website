@@ -1,0 +1,12 @@
+﻿@{
+    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+}
+@model LoLTournament.Models.Match
+
+<h1>Delete match</h1>
+
+<p>
+    Are you sure you want to delete this match? This is not recommended if the match is already ongoing.
+</p>
+
+<a href="@Url.Action("DeleteMatch", "Admin", new RouteValueDictionary {{"matchId", @Model.Id.ToString()}, {"confirmation", true}})"><button class="btn btn-danger btn-lg" type="button">Delete match</button></a>

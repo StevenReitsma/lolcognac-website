@@ -1,0 +1,12 @@
+﻿@{
+    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+}
+
+<h1>Build tournament structure</h1>
+
+<p>
+    Are you sure you want to build the entire tournament structure? Only do this once.
+</p>
+
+<a href="@Url.Action("BuildTournamentStructure", "Admin", new RouteValueDictionary {{"confirmation", true}})"><button class="btn btn-danger btn-lg" type="button">Build tournament structure</button></a>
+

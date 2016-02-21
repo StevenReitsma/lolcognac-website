@@ -27,6 +27,7 @@ namespace LoLTournament.Models
         public string Email { get; set; }
         public string FullName { get; set; }
         public ObjectId TeamId { get; set; }
+        public bool RegisteredOfficially { get; set; }
 
         /// <summary>
         /// Returns the Team this participant is competing with. Null if no team.

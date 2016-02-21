@@ -2,36 +2,45 @@
     Layout = "~/Views/Admin/_AdminLayout.cshtml";
 }
 @using LoLTournament.Models
-@model LoLTournament.Models.Match
+@model Match
 
 <h1>Match overview</h1>
 
 <div class="row">
-    <div class="col-lg-6 col-xs-6" onclick="window.document.location = '@Url.Action("Team", "Admin", new RouteValueDictionary {{"teamId", @Model.BlueTeam.Id}})';" style="cursor: pointer;">
+    <div class="col-lg-6 col-xs-6" onclick="window.document.location = '@Url.Action("Team", "Admin", new RouteValueDictionary {{"teamId", @Model.BlueTeamId}})';" style="cursor: pointer;">
         <!-- small box -->
         <div class="small-box bg-aqua">
             <div class="inner text-center">
-                <h4>@Model.BlueTeam.Name</h4>
-                @if (Model.Winner != null)
+                @if (Model.BlueTeam != null)
                 {
-                    if (Model.Winner.Id.Equals(Model.BlueTeam.Id))
-                    {
-                        <h5>Won</h5>
-                    }
-                    else
-                    {
-                        <h5>Lost</h5>
-                    }
+                    <h4>@Model.BlueTeam.Name</h4>
+                    if (Model.Winner != null)
+                     {
+                         if (Model.Winner.Id.Equals(Model.BlueTeam.Id))
+                         {
+                             <h5>Won</h5>
+                         }
+                         else
+                         {
+                             <h5>Lost</h5>
+                         }
+                     }
+                }
+                else
+                {
+                    <h4>Unknown</h4>
                 }
             </div>
         </div>
     </div><!-- ./col -->
-    <div class="col-lg-6 col-xs-6" onclick="window.document.location = '@Url.Action("Team", "Admin", new RouteValueDictionary {{"teamId", @Model.RedTeam.Id}})';" style="cursor: pointer;">
+    <div class="col-lg-6 col-xs-6" onclick="window.document.location = '@Url.Action("Team", "Admin", new RouteValueDictionary {{"teamId", @Model.RedTeamId}})';" style="cursor: pointer;">
         <!-- small box -->
         <div class="small-box bg-red">
             <div class="inner text-center">
+                @if (Model.BlueTeam != null)
+                {
                 <h4>@Model.RedTeam.Name</h4>
-                @if (Model.Winner != null)
+                if (Model.Winner != null)
                 {
                     if (Model.Winner.Id.Equals(Model.RedTeam.Id))
                     {
@@ -40,7 +49,12 @@
                     else
                     {
                         <h5>Lost</h5>
+                        }
                     }
+                }
+                else
+                {
+                    <h4>Unknown</h4>
                 }
             </div>
         </div>
@@ -65,7 +79,7 @@
             <div class="panel-body" style="padding: 0; margin: 0;">
                 <table class="table table-striped table-hover" style="margin:0">
                     <tr>
-                        <td style="width:190px">Phase</td>
+                        <td style="width: 190px">Phase</td>
                         <td>
                             <b>@Model.Phase</b>
 
@@ -75,10 +89,13 @@
                             }
                         </td>
                     </tr>
-                    <tr>
-                        <td>Pool</td>
-                        <td><b>@(Model.BlueTeam.Pool + 1)</b></td>
-                    </tr>
+                    @if (Model.Phase == Phase.Pool)
+                    {
+                        <tr>
+                            <td>Pool</td>
+                            <td><b>@(Model.BlueTeam.Pool + 1)</b></td>
+                        </tr>
+                    }
                     <tr>
                         <td>Creation time</td>
                         <td><b><i class="fa fa-clock-o"></i> @TimeZoneInfo.ConvertTimeFromUtc(Model.CreationTime, TimeZoneInfo.Local)</b></td>
@@ -180,6 +197,7 @@
                     {
                         <a href="@Url.Action("ForceBlueWin", "Admin", new RouteValueDictionary {{"matchId", @Model.Id}})"><button class="btn btn-primary btn-lg" type="button">Force win for Blue</button></a>
                         <a href="@Url.Action("ForceRedWin", "Admin", new RouteValueDictionary {{"matchId", @Model.Id}})"><button class="btn btn-primary btn-lg" type="button">Force win for Red</button></a>
+                        <a href="@Url.Action("DeleteMatch", "Admin", new RouteValueDictionary {{"matchId", @Model.Id}})"><button class="btn btn-danger btn-lg" type="button">Delete match</button></a>
                     }
                 </div>
             </div>

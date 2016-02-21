@@ -39,6 +39,8 @@ namespace LoLTournament.Controllers
             var registrationStart = DateTime.ParseExact(timeSetting, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
             timeSetting = WebConfigurationManager.AppSettings["RegistrationStartEarlyBird"];
             var registrationStartEarlyBird = DateTime.ParseExact(timeSetting, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
+            timeSetting = WebConfigurationManager.AppSettings["RegistrationStartOpenToAll"];
+            var registrationStartOpenToAll = DateTime.ParseExact(timeSetting, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
 
             // Check registration date, throw 403 otherwise.
             if (DateTime.Now >= registrationClose || DateTime.Now < registrationStartEarlyBird)
@@ -60,7 +62,7 @@ namespace LoLTournament.Controllers
                                  Convert.ToInt16(m.Summoner5CognAC || m.Summoner5Dorans);
 
             // Check for at least 4 permitted clients
-            if (permitCount < 4)
+            if (DateTime.Now < registrationStartOpenToAll && permitCount < 4)
                 ModelState.AddModelError("permitCount", "The team does not exist of at least 4 RU students, CognAC members, or Dorans members.");
 
             // Check for early-bird access

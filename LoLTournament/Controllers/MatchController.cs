@@ -35,7 +35,7 @@ namespace LoLTournament.Controllers
             var match = Mongo.Matches.FindOne(Query<Match>.Where(x => x.TournamentCode == obj.TournamentCode || x.TournamentCodeBlind == obj.TournamentCode));
 
             if (match == null)
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Tournament code not found");
 
             // Check which side won
             var winningTeam = obj.WinningTeam.Select(y => y.SummonerId);
@@ -52,29 +52,69 @@ namespace LoLTournament.Controllers
             {
                 // Set winner ID to blue if blue side won.
                 match.WinnerId = blueSideWon ? match.BlueTeamId : match.RedTeamId;
+                match.StartTime = obj.StartTime;
+                match.FinishDate = DateTime.UtcNow;
+                match.RiotMatchId = obj.GameId;
+                match.Finished = true;
+
+                // Save to database
+                Mongo.Matches.Save(match);
 
                 // Get more match details
                 var matchDetails = _tournamentApi.GetTournamentMatch(Region.euw, obj.GameId, match.TournamentCode, false);
 
                 // Get the players that were supposed to be on blue side
                 var supposedToBeBluePlayers = matchDetails.Participants.Where(
-                        x => match.BlueTeam.Participants.Select(y => y.Summoner.Id).Contains(x.ParticipantId)); // ParticipantIdentities, no summoner id's, only names
+                    matchDetailParticipant =>
+                        match.BlueTeam.Participants.Select(
+                            localMatchParticipant => localMatchParticipant.Summoner.Name.ToLower())
+                            .Contains(
+                                matchDetails.ParticipantIdentities.Single(
+                                    identity => identity.ParticipantId == matchDetailParticipant.ParticipantId)
+                                    .Player.SummonerName.ToLower())).ToList();
+
+                if (supposedToBeBluePlayers.Count != 5)
+                {
+                    // Teams did not have correct summoners playing the match. Match invalid.
+                    match.Invalid = true;
+                    match.InvalidReason = "INCORRECT_SUMMONER_COUNT_BLUE_TEAM";
+
+                    // Save to database
+                    Mongo.Matches.Save(match);
+                    return new HttpStatusCodeResult(HttpStatusCode.OK);
+                }
+
                 // Set the team id to the side they actually played
                 var blueTeamId = supposedToBeBluePlayers.First().TeamId;
 
                 // Get the players that were supposed to be on red side
                 var supposedToBeRedPlayers = matchDetails.Participants.Where(
-                        x => match.RedTeam.Participants.Select(y => y.Summoner.Id).Contains(x.ParticipantId));
+                    matchDetailParticipant =>
+                        match.RedTeam.Participants.Select(
+                            localMatchParticipant => localMatchParticipant.Summoner.Name.ToLower())
+                            .Contains(
+                                matchDetails.ParticipantIdentities.Single(
+                                    identity => identity.ParticipantId == matchDetailParticipant.ParticipantId)
+                                    .Player.SummonerName.ToLower())).ToList();
+
+                if (supposedToBeRedPlayers.Count != 5)
+                {
+                    // Teams did not have correct summoners playing the match. Match invalid.
+                    match.Invalid = true;
+                    match.InvalidReason = "INCORRECT_SUMMONER_COUNT_RED_TEAM";
+
+                    // Save to database
+                    Mongo.Matches.Save(match);
+                    return new HttpStatusCodeResult(HttpStatusCode.OK);
+                }
+                
                 // Set the team id to the side they actually played
                 var redTeamId = supposedToBeRedPlayers.First().TeamId;
 
                 // Set statistics
                 match.Duration = matchDetails.MatchDuration;
                 match.CreationTime = matchDetails.MatchCreation;
-                match.StartTime = obj.StartTime;
-                match.FinishDate = DateTime.UtcNow;
                 match.RiotMatchId = matchDetails.MatchId;
-                match.Finished = true;
                 
                 match.ChampionIds = matchDetails.Participants.Select(x => x.ChampionId).ToArray();
 
@@ -96,7 +136,7 @@ namespace LoLTournament.Controllers
                 Mongo.Matches.Save(match);
 
                 // Call the new match hook
-                RiotApiScrapeJob.NewMatch(match);
+                BracketHelper.NewMatch(match);
             }
             else
             {

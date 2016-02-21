@@ -74,11 +74,8 @@
                     }
 
                     <h3>Next match</h3>
-                    if (DateTime.Now < DateTime.ParseExact(WebConfigurationManager.AppSettings["TournamentStart"], "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture))
-                    {
-                        <p>Tournament hasn't started yet.</p>
-                    }
-                    else if (!Model.OtherTeamDefined)
+
+                    if (!Model.OtherTeamDefined)
                     {
                         <p>Your next opponent has not yet been defined because their pool or elimination match has not yet finished. Refresh the page every minute or so or refresh yourself with a drink from the bar.</p>
                     }
@@ -177,11 +174,11 @@
 
                             <div class="panel panel-@color">
                                 <div class="panel-heading">
-                                    <div style="float: right" title="@m.Duration">@(m.CreationTime.AddMinutes(10).ToShortTimeString()) - @((m.CreationTime.AddMinutes(10) + m.Duration).ToShortTimeString())</div>
+                                    <div style="float: right" title="@m.Duration">@(@TimeZoneInfo.ConvertTimeFromUtc(m.StartTime, TimeZoneInfo.Local).ToShortTimeString()) - @(@TimeZoneInfo.ConvertTimeFromUtc(m.StartTime + m.Duration, TimeZoneInfo.Local).ToShortTimeString())</div>
                                     <span class="label label-primary" style="font-size: 11px; vertical-align: middle">@m.Phase.GetDisplayString()</span>
                                     @if (m.Duration == new TimeSpan(0, 0, 0, 0))
                                     {
-                                        <span class="label label-danger" style="font-size: 11px; vertical-align: middle">Losing team left early</span>
+                                        <span class="label label-danger" style="font-size: 11px; vertical-align: middle">Bye</span>
                                     }
                                     <a href="@Url.Action("Team", "Schedule", new RouteValueDictionary {{"teamId", otherTeamId}})">@otherTeamName</a>
                                 </div>

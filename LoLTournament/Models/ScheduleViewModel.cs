@@ -12,8 +12,7 @@ namespace LoLTournament.Models
         public ScheduleViewModel()
         {
             Teams = Mongo.Teams.Find(Query<Team>.Where(x => !x.Cancelled))
-                   .OrderBy(x => x.Participants.Sum(y => y.RegisterTime.Ticks))
-                   .ThenBy(x => x.Pool)
+                   .OrderBy(x => x.Pool)
                    .ThenBy(x => x.Name)
                    .ToList();
 

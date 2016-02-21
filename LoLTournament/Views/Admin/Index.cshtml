@@ -60,12 +60,17 @@
     </div><!-- ./col -->
 </div><!-- /.row -->
 
+<h3>Participant statistics</h3>
+#participants Dorans !RU = @Model.DoransNoRUCount <br/>
+#participants !Dorans !RU = @Model.NoDoransNoRUCount <br/>
+#participants CognAC = @Model.CognACCount
+
 <h3>Actions</h3>
 <p>Do not spam these actions. One click will execute the job in the background.</p>
 <div class="btn-group-vertical">
-    <a href="@Url.Action("UpdateSummoners", "Admin")"><button class="btn btn-primary btn-lg" type="button">Update summoners</button></a>
-    <button class="btn btn-primary btn-lg" type="button" disabled>Update payments</button>
-    <button class="btn btn-primary btn-lg" type="button" disabled>Update matches</button>
+    <a href="@Url.Action("UpdateSummoners", "Admin")" class="btn btn-primary btn-lg" role="button">Update summoners</a>
+    <a href="@Url.Action("BadgeExport", "Admin")" class="btn btn-primary btn-lg" role="button">Export badge CSV</a>
+    <a href="@Url.Action("BuildTournamentStructure", "Admin")" class="btn btn-danger btn-lg" role="button">Build tournament structure</a>
 </div>
 
 <br/><br/><br /><br />

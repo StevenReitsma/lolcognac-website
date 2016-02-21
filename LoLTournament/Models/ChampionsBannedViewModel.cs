@@ -12,10 +12,11 @@ namespace LoLTournament.Models
 
         public ChampionsBannedViewModel()
         {
+
             var matches = Mongo.Matches.FindAll();
 
             // Flatten all champion IDs
-            var bannedChampions = matches.SelectMany(match => match.BanIds);
+            var bannedChampions = matches.Where(match => match.BanIds != null).SelectMany(match => match.BanIds);
 
             var counts = from id in bannedChampions
                 group id by id

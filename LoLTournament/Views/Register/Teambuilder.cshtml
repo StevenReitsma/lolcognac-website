@@ -21,8 +21,7 @@
             <div class="col-lg-12 col-lg-12">
                 <div class="clearfix"></div>
 
-
-                @if (DateTime.Now < Model.RegistrationCloseDate && DateTime.Now >= Model.RegistrationStartEarlyBird)
+                @if (DateTime.Now < Model.RegistrationCloseDate && DateTime.Now >= Model.RegistrationStartEarlyBird && Model.TeamCount < 32)
                 {
                     <p class="lead">
                         Fill in the form below to enqueue yourself in the Team Builder system.
