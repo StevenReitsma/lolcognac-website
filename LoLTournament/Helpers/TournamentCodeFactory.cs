@@ -23,10 +23,6 @@ namespace LoLTournament.Helpers
 
         public static string GetTournamentCode(List<long> allowedSummoners)
         {
-#if DEBUG
-            return string.Empty;
-#endif
-
             var tc = TournamentApi.CreateTournamentCode(TournamentId, 5, allowedSummoners, TournamentSpectatorType.All,
                 TournamentPickType.TournamentDraft, TournamentMapType.SummonersRift, string.Empty);
 
@@ -35,10 +31,6 @@ namespace LoLTournament.Helpers
 
         public static string GetTournamentCodeBlind(List<long> allowedSummoners)
         {
-#if DEBUG
-            return string.Empty;
-#endif
-
             var tc = TournamentApi.CreateTournamentCode(TournamentId, 5, allowedSummoners, TournamentSpectatorType.All,
                 TournamentPickType.BlindPick, TournamentMapType.SummonersRift, string.Empty);
 
@@ -47,7 +39,7 @@ namespace LoLTournament.Helpers
 
         public static Tournament GenerateTournament()
         {
-            var provider = TournamentApi.CreateProvider(Region.euw, "https://lolcognac.nl/Match/Callback");
+            var provider = TournamentApi.CreateProvider(Region.euw, "http://lolcognac.nl/Match/Callback");
             var tournament = TournamentApi.CreateTournament(provider.Id, "CognAC League of Legends Tournament 2016");
 
             return tournament;
