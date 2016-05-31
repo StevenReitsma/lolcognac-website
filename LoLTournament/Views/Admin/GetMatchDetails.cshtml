@@ -1,0 +1,12 @@
+﻿@{
+    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+}
+@model LoLTournament.Models.Match
+
+<h1>Get match details</h1>
+
+<p>
+    Are you sure you want to get info for this match? This will overwrite current data.
+</p>
+
+<a href="@Url.Action("GetMatchDetails", "Admin", new RouteValueDictionary {{"matchId", @Model.Id.ToString()}, {"confirmation", true}})"><button class="btn btn-primary btn-lg" type="button">Get match details</button></a>

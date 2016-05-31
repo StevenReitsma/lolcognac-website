@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Threading;
+using System.Web.Configuration;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.Security;
@@ -8,6 +9,7 @@ using LoLTournament.Models;
 using LoLTournament.Models.Admin;
 using MongoDB.Bson;
 using MongoDB.Driver.Builders;
+using RiotSharp;
 
 namespace LoLTournament.Controllers
 {
@@ -229,9 +231,9 @@ namespace LoLTournament.Controllers
         }
 
         [Authorize]
-        public ActionResult ManualNewMatchHook()
+        public ActionResult GetMatchDetails()
         {
-            if (!User.IsInRole("Edit"))
+            if (User.Identity.Name != "Steven")
                 return View("AuthenticationError");
 
             var id = HttpContext.Request.QueryString["matchId"];
@@ -241,11 +243,17 @@ namespace LoLTournament.Controllers
 
             if (confirmation)
             {
-                BracketHelper.NewMatch(match);
+                var key = WebConfigurationManager.AppSettings["RiotTournamentApiKey"];
+                var rateLimit1 = int.Parse(WebConfigurationManager.AppSettings["RateLimitPer10Seconds"]);
+                var rateLimit2 = int.Parse(WebConfigurationManager.AppSettings["RateLimitPer10Minutes"]);
+
+                var api = TournamentRiotApi.GetInstance(key, rateLimit1, rateLimit2);
+
+                MatchScraper.GetMatchDetails(api, match, false);
                 return RedirectToAction("Matches", "Admin");
             }
 
-            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            return View(match);
         }
 
         [Authorize]

@@ -3,6 +3,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+// Leave this using statement
 using LoLTournament.Helpers;
 
 namespace LoLTournament
@@ -16,9 +17,12 @@ namespace LoLTournament
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-            var scrape = new RiotApiScrapeJob();
 #if !DEBUG
-            scrape.StartTimer();
+            //var scrape = new RiotApiScrapeJob();
+            //scrape.StartTimer();
+
+            //var matchScrape = new MatchScraper();
+            //matchScrape.StartTimer();
 #endif
 
             //Remove and JsonValueProviderFactory and add JsonDotNetValueProviderFactory

@@ -100,6 +100,7 @@ namespace LoLTournament.Controllers
                 match.FinishDate = DateTime.UtcNow;
                 match.RiotMatchId = obj.GameId;
                 match.Finished = true;
+                match.Status = Status.Finished;
 
                 // Save to database
                 Mongo.Matches.Save(match);
@@ -115,7 +116,7 @@ namespace LoLTournament.Controllers
                 }
                 catch (Exception)
                 {
-                    Log("match not found");
+                    Log("match not found, deferring to scraper");
 
                     match.Invalid = true;
                     match.InvalidReason = "MATCH_NOT_FOUND";

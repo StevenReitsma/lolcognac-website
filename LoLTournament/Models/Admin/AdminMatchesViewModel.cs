@@ -12,7 +12,7 @@ namespace LoLTournament.Models.Admin
 
         public IOrderedEnumerable<Match> FinishedMatches
         {
-            get { return Mongo.Matches.FindAll().Where(x => x.Finished).OrderBy(x => x.FinishDate); }
+            get { return Mongo.Matches.FindAll().Where(x => x.Finished).OrderBy(x => x.StartTime + x.Duration); }
         }
     }
 }

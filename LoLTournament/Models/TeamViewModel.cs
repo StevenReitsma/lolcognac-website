@@ -44,7 +44,7 @@ namespace LoLTournament.Models
 
             // Initialize match history
             MatchHistory =
-                Mongo.Matches.Find(Query<Match>.Where(x => x.Finished && (x.BlueTeamId == Team.Id || x.RedTeamId == Team.Id))).OrderByDescending(x => x.CreationTime)
+                Mongo.Matches.Find(Query<Match>.Where(x => x.Finished && (x.BlueTeamId == Team.Id || x.RedTeamId == Team.Id))).OrderByDescending(x => x.StartTime)
                     .ToList();
 
             // Initialize statistics

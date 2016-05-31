@@ -47,6 +47,7 @@ namespace LoLTournament.Models
         public bool PlayedWrongSide { get; set; }
 
         public string SpectateKey { get; set; }
+        public Status Status { get; set; }
 
         [BsonIgnore]
         public Team BlueTeam {
@@ -113,6 +114,7 @@ namespace LoLTournament.Models
         {
             WinnerId = BlueTeamId;
             Finished = true;
+            Status = Status.Finished;
             FinishDate = DateTime.UtcNow;
 
             Mongo.Matches.Save(this);
@@ -124,6 +126,7 @@ namespace LoLTournament.Models
         {
             WinnerId = RedTeamId;
             Finished = true;
+            Status = Status.Finished;
             FinishDate = DateTime.UtcNow;
 
             Mongo.Matches.Save(this);

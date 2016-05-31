@@ -1,6 +1,7 @@
 ﻿@{
     Layout = "~/Views/Admin/_AdminLayout.cshtml";
 }
+@using LoLTournament.Models
 @model LoLTournament.Models.Admin.AdminMatchesViewModel
 
 <h1>Matches</h1>
@@ -16,6 +17,7 @@
                 <th>Red Team</th>
                 <th>Phase</th>
                 <th>Priority</th>
+                <th>Status</th>
             </tr>
             @foreach (var p in Model.UnfinishedMatches)
             {
@@ -42,6 +44,26 @@
                     </td>
                     <td>@p.Phase</td>
                     <td>@p.Priority</td>
+                    <td>
+                        @switch (p.Status)
+                        {
+                            case Status.Lobby:
+                                <span class="label bg-orange">Lobby</span>
+                                break;
+                            case Status.ChampionSelect:
+                                <span class="label bg-blue">Champion select</span>
+                                break;
+                            case Status.Loading:
+                                <span class="label bg-aqua">Game loading</span>
+                                break;
+                            case Status.InGame:
+                                <span class="label bg-green">In game</span>
+                                break;
+                            case Status.Pending:
+                                <span class="label bg-gray">Pending</span>
+                                break;
+                        }
+                    </td>
                 </tr>
             }
         </table>
@@ -65,7 +87,7 @@
                 <th>Invalid</th>
             </tr>
             @foreach (var p in Model.FinishedMatches)
-            {
+                                {
                 <tr onclick="window.document.location='@Url.Action("MatchInfo", "Admin", new RouteValueDictionary {{"matchId", @p.Id}})';" style="cursor: pointer;">
                     <td>@p.RiotMatchId</td>
                     <td>
@@ -91,7 +113,7 @@
                     <td>@p.Phase</td>
                     <td>@p.Priority</td>
                     <td><i class="fa fa-clock-o"></i> @TimeZoneInfo.ConvertTimeFromUtc(p.StartTime, TimeZoneInfo.Local)</td>
-                    <td><i class="fa fa-clock-o"></i> @TimeZoneInfo.ConvertTimeFromUtc(p.FinishDate, TimeZoneInfo.Local)</td>
+                    <td><i class="fa fa-clock-o"></i> @TimeZoneInfo.ConvertTimeFromUtc(p.StartTime + p.Duration, TimeZoneInfo.Local)</td>
                     <td>
                         @if (@p.Invalid)
                         {

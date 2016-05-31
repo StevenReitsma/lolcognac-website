@@ -3,9 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Web;
-using System.Web.UI.WebControls;
 using MongoDB.Driver.Builders;
-using RiotSharp.MatchEndpoint;
 using Participant = LoLTournament.Models.Participant;
 
 namespace LoLTournament.Helpers
@@ -14,6 +12,15 @@ namespace LoLTournament.Helpers
     {
         public static void Check()
         {
+            // Set all to false
+            var allParticipants = Mongo.Participants.FindAll();
+
+            foreach (var p in allParticipants)
+            {
+                p.RegisteredOfficially = false;
+                Mongo.Participants.Save(p);
+            }
+
             try
             {
                 // Read csv
