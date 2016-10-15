@@ -347,10 +347,10 @@
     <Content Include="Content\Images\Photos\Thumb\IMG_4065.jpg" />
     <Content Include="Content\Images\poro.jpg" />
     <Content Include="Content\Images\redbull.png" />
+    <Content Include="Content\Images\sollieboy.jpg" />
     <Content Include="Content\Images\splash.jpg" />
     <Content Include="Content\Images\splash2.jpg" />
     <Content Include="Content\Images\thresh.jpg" />
-    <Content Include="Content\Images\sollieboy.png" />
     <Content Include="Content\landing-page.css" />
     <Content Include="Content\Videos\hype.mp4" />
     <Content Include="favicon.ico" />
