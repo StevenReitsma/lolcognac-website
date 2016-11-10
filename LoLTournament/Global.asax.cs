@@ -18,12 +18,13 @@ namespace LoLTournament
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
 #if !DEBUG
-            //var scrape = new RiotApiScrapeJob();
-            //scrape.StartTimer();
+            var scrape = new RiotApiScrapeJob();
+            scrape.StartTimer();
 
-            //var matchScrape = new MatchScraper();
-            //matchScrape.StartTimer();
+            var matchScrape = new MatchScraper();
+            matchScrape.StartTimer();
 #endif
+
 
             //Remove and JsonValueProviderFactory and add JsonDotNetValueProviderFactory
             ValueProviderFactories.Factories.Remove(ValueProviderFactories.Factories.OfType<JsonValueProviderFactory>().FirstOrDefault());

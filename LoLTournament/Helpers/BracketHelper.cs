@@ -360,8 +360,9 @@ namespace LoLTournament.Helpers
                     // It's finished, set finale match
                     if (matchFinished.Count() == 1)
                     {
+                        var otherId = matchFinished.First().WinnerId;
                         var allowedSummoners =
-                            Mongo.Teams.Find(Query<Team>.Where(team => team.Id == finishedMatch.WinnerId || team.Id == matchFinished.First().WinnerId))
+                            Mongo.Teams.Find(Query<Team>.Where(team => team.Id == finishedMatch.WinnerId || team.Id == otherId))
                                 .SelectMany(team => team.Participants.Select(participant => participant.Summoner.Id))
                                 .ToList();
 

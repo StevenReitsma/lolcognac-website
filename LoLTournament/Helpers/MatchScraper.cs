@@ -123,8 +123,7 @@ namespace LoLTournament.Helpers
                 Mongo.Matches.Find(
                     Query<Match>.Where(
                         x =>
-                            x.Finished && x.Invalid && x.InvalidReason == "MATCH_NOT_FOUND" && x.FinishDate != null &&
-                            DateTime.UtcNow >= x.FinishDate + TimeSpan.FromMinutes(5))); // TODO fix serialization
+                            x.Finished && x.Invalid && x.InvalidReason == "MATCH_NOT_FOUND")).Where(x => DateTime.UtcNow >= x.FinishDate + TimeSpan.FromMinutes(5));
 
             foreach (var match in matches)
                 GetMatchDetails(_api, match, true);
