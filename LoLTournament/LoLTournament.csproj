@@ -239,6 +239,7 @@
     <Content Include="Content\Images\gm.png" />
     <Content Include="Content\Images\index1.jpg" />
     <Content Include="Content\Images\index2.jpg" />
+    <Content Include="Content\Images\index3.jpg" />
     <Content Include="Content\Images\jinx.jpg" />
     <Content Include="Content\Images\kindred.jpg" />
     <Content Include="Content\Images\laserquest.png" />
