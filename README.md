@@ -1,4 +1,4 @@
-# CognAC League of Legends Tournament 2015 website
+# LCN: League of Legends Championship Nijmegen website
 
 [![Build status](https://ci.appveyor.com/api/projects/status/wm953ob1fprdfc9c?svg=true)](https://ci.appveyor.com/project/StevenReitsma/lolcognac-website)
 
