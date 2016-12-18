@@ -440,6 +440,7 @@
     <Content Include="Views\Admin\DeleteMatch.cshtml" />
     <Content Include="Views\Admin\BuildTournamentStructure.cshtml" />
     <Content Include="Views\Admin\GetMatchDetails.cshtml" />
+    <Content Include="Views\Admin\SetMatchDuration.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

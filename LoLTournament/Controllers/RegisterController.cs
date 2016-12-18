@@ -62,7 +62,7 @@ namespace LoLTournament.Controllers
                                  Convert.ToInt16(m.Summoner5CognAC || m.Summoner5Dorans);
 
             // Check for at least 4 permitted clients
-            if (DateTime.Now < registrationStartOpenToAll && permitCount < 4)
+            if (DateTime.Now < registrationStartOpenToAll && permitCount < 3)
                 ModelState.AddModelError("permitCount", "The team does not exist of at least 4 RU students, CognAC members, or Dorans members.");
 
             // Check for early-bird access
@@ -80,7 +80,7 @@ namespace LoLTournament.Controllers
 
             if (ModelState.IsValid)
             {
-                // Note: we don't actually retrieve stuff from the Riot servers here. We do this in a separate cron thread asynchronously every hour (outside event) or every minute (during event).
+                // Note: we don't actually retrieve stuff from the Riot servers here. We do this in a separate cron thread asynchronously
 
                 var teamId = ObjectId.GenerateNewId();
 
@@ -185,10 +185,10 @@ namespace LoLTournament.Controllers
                 Mongo.Teams.Insert(team);
 
                 // Create iDeal payment
-                var key = WebConfigurationManager.AppSettings["MollieLiveKey"];
+                var key = WebConfigurationManager.AppSettings["MollieTestKey"];
                 var client = new MollieClient {ApiKey = key};
 
-                var template = new PaymentTemplate {Amount = team.Price, Description = "CognAC League of Legends Tournament 2016", RedirectUrl = "https://lolcognac.nl/Payment/Status/" + team.Id, Method = m.PaymentMethod };
+                var template = new PaymentTemplate {Amount = team.Price, Description = "LoL Championship Nijmegen 2017", RedirectUrl = "https://lolcognac.nl/Payment/Status/" + team.Id, Method = m.PaymentMethod };
                 var status = client.StartPayment(template);
                 m.PaymentUrl = status.Links.PaymentUrl;
                 m.Price = status.Amount;

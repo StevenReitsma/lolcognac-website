@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Threading;
 using System.Web.Configuration;
 using System.Web.Mvc;
@@ -272,6 +273,27 @@ namespace LoLTournament.Controllers
             }
 
             var match = Mongo.Matches.FindOne(Query<Match>.Where(x => x.Id == ObjectId.Parse(id)));
+
+            return View(match);
+        }
+
+        [Authorize]
+        public ActionResult SetMatchDuration()
+        {
+            if (!User.IsInRole("Edit"))
+                return View("AuthenticationError");
+
+            var id = HttpContext.Request.QueryString["matchId"];
+            var confirmation = HttpContext.Request.QueryString["confirmation"] != null;
+            var match = Mongo.Matches.FindOne(Query<Match>.Where(x => x.Id == ObjectId.Parse(id)));
+
+            if (confirmation)
+            {
+                match.Duration = TimeSpan.Parse(HttpContext.Request.QueryString["confirmation"]);
+
+                Mongo.Matches.Save(match);
+                return RedirectToAction("MatchInfo", "Admin", new RouteValueDictionary { { "matchId", id } });
+            }
 
             return View(match);
         }

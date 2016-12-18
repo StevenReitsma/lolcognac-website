@@ -205,21 +205,18 @@ namespace LoLTournament.Models
 
                 foreach (var p in Participants)
                 {
-                    // RU + CognAC: 3.00 euro
-                    if (p.RuStudent && p.CognAC)
-                        price += 3.0m;
-                    // CognAC: 4.50 euro
-                    else if (!p.RuStudent && p.CognAC)
-                        price += 4.5m;
-                    // RU || Dorans: 5.00 euro
-                    else if (p.RuStudent && !p.CognAC || p.Dorans && !p.CognAC)
-                        price += 5.0m;
-                    // None: 6.50 euro
+                    // CognAC: 1.00 euro
+                    if (p.CognAC)
+                        price += 1.00m;
+                    // Either RU or Dorans: 5.00 euro
+                    else if (p.RuStudent || p.Dorans)
+                        price += 5.00m;
+                    // None: 10.00 euro
                     else if (!p.RuStudent && !p.CognAC && !p.Dorans)
-                        price += 6.5m;
+                        price += 10.00m;
                     // Baseline for oversights
                     else
-                        price += 5.0m;
+                        price += 5.00m;
                 }
 
                 return price;
