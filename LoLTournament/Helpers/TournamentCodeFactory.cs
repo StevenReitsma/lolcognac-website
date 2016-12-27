@@ -40,7 +40,7 @@ namespace LoLTournament.Helpers
         public static Tournament GenerateTournament()
         {
             var provider = TournamentApi.CreateProvider(Region.euw, "http://lolcognac.nl/Match/Callback");
-            var tournament = TournamentApi.CreateTournament(provider.Id, "CognAC League of Legends Tournament 2016");
+            var tournament = TournamentApi.CreateTournament(provider.Id, "LCN 2017");
 
             return tournament;
         }

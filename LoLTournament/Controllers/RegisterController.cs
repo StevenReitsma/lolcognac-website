@@ -185,7 +185,7 @@ namespace LoLTournament.Controllers
                 Mongo.Teams.Insert(team);
 
                 // Create iDeal payment
-                var key = WebConfigurationManager.AppSettings["MollieTestKey"];
+                var key = WebConfigurationManager.AppSettings["MollieLiveKey"];
                 var client = new MollieClient {ApiKey = key};
 
                 var template = new PaymentTemplate {Amount = team.Price, Description = "LoL Championship Nijmegen 2017", RedirectUrl = "https://lolcognac.nl/Payment/Status/" + team.Id, Method = m.PaymentMethod };

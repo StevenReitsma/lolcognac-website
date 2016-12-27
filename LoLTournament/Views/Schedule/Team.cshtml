@@ -3,7 +3,7 @@
 @using LoLTournament.Helpers
 @using LoLTournament.Models
 @using RiotSharp.LeagueEndpoint
-@model LoLTournament.Models.TeamViewModel
+@model TeamViewModel
 
 <div class="schedule-header">
     <div class="container">
@@ -34,7 +34,7 @@
                 }
                 else
                 {
-                    <h2>@Model.Team.Name <span class="label label-success" style="font-size: 11px; vertical-align: middle">Pool Unknown</span></h2>
+                    <h2>@Model.Team.Name <span class="label label-success" style="font-size: 11px; vertical-align: middle">Pool @Model.Team.Pool</span></h2>
 
                     foreach (var p in @Model.Team.Participants.OrderBy(x => Math.Min((int) x.PreviousSeasonTier, (int) x.CurrentSeasonTier)))
                     {
@@ -81,7 +81,7 @@
                     }
                     else if (!Model.OtherTeamDefined)
                     {
-                        <p>Your next opponent has not yet been defined because their pool or elimination match has not yet finished. Refresh the page every minute or so or refresh yourself with a drink from the bar.</p>
+                        <p>Your next opponent has not yet been defined because their pool or elimination match has not yet finished. Refresh the page every minute or refresh yourself with a drink from the bar.</p>
                     }
                     else if (Model.NextMatch == null)
                     {
