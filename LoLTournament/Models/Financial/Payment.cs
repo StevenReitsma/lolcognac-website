@@ -168,6 +168,15 @@ namespace LoLTournament.Models.Financial
                 // Send email
                 var captain = team.Participants.Single(x => x.IsCaptain);
                 EmailHelper.SendPaymentSuccess(captain.Email, captain.FullName);
+
+                // Force summoner scrape
+                try
+                {
+                    new RiotApiScrapeJob().ScrapeSummoners(null);
+                }
+                catch (Exception)
+                {
+                }
             }
         }
 

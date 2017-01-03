@@ -26,11 +26,15 @@
 
                 @if (@Model == null || @Model.Team == null)
                 {
-                    <h2>Team does not exist</h2>
+                    <div class="alert alert-danger" role="alert">
+                        Team does not exist.
+                    </div>
                 }
                 else if (@Model.Team.Participants.Any(x => x.Summoner == null))
                 {
-                    <h2>Team info has not yet been downloaded from Riot API, this is done every hour, so check back later!</h2>
+                    <div class="alert alert-warning" role="alert">
+                        Team info has not yet been downloaded from Riot API, this is done every 15 minutes, so check back later.
+                    </div>
                 }
                 else
                 {

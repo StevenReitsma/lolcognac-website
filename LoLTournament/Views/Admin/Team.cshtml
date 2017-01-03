@@ -6,7 +6,9 @@
 
 @if (@Model.Participants.Any(x => x.Summoner == null))
 {
-    <h2>Team info has not yet been downloaded from Riot API, this is done every hour, so check back later!</h2>
+    <div class="alert alert-warning" role="alert">
+        Team info has not yet been downloaded from Riot API, this is done every 15 minutes, so check back later.
+    </div>
 }
 else
 {
