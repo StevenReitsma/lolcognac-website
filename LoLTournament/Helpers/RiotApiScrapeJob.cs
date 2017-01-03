@@ -79,7 +79,8 @@ namespace LoLTournament.Helpers
                 var previousTier = Tier.Unranked;
                 try
                 {
-                    var rankedGames = _api.GetMatchList(Region.euw, s.Id, null, new List<Queue> {Queue.RankedSolo5x5});
+                    // We get last Ranked match and take the HighestAchievedSeasonTier (previous season tier) by looking at the loading screen border
+                    var rankedGames = _api.GetMatchList(Region.euw, s.Id, null, new List<Queue> {Queue.RankedSolo5x5, Queue.RankedFlexSR, Queue.TeamBuilderRankedSolo});
 
                     if (rankedGames != null && rankedGames.Matches.Count > 0)
                     {
@@ -100,8 +101,10 @@ namespace LoLTournament.Helpers
                 try
                 {
                     var winLoss = _api.GetStatsSummaries(Region.euw, s.Id, Season.Season2016); // change each year to PREVIOUS season
+                    // We prefer Solo5x5, if not available we take FlexSR
                     var winLossSoloQueue =
-                        winLoss.Single(x => x.PlayerStatSummaryType == PlayerStatsSummaryType.RankedSolo5x5);
+                        winLoss.SingleOrDefault(x => x.PlayerStatSummaryType == PlayerStatsSummaryType.RankedSolo5x5) ??
+                        winLoss.SingleOrDefault(x => x.PlayerStatSummaryType == PlayerStatsSummaryType.RankedFlexSR);
                     wins = winLossSoloQueue.Wins;
                     losses = winLossSoloQueue.Losses;
                 }
@@ -118,8 +121,10 @@ namespace LoLTournament.Helpers
                 try
                 {
                     var winLoss = _api.GetStatsSummaries(Region.euw, s.Id, Season.Season2017); // change each year to CURRENT season
+                    // We prefer Solo5x5, if not available we take FlexSR
                     var winLossSoloQueue =
-                        winLoss.Single(x => x.PlayerStatSummaryType == PlayerStatsSummaryType.RankedSolo5x5);
+                        winLoss.SingleOrDefault(x => x.PlayerStatSummaryType == PlayerStatsSummaryType.RankedSolo5x5) ??
+                        winLoss.SingleOrDefault(x => x.PlayerStatSummaryType == PlayerStatsSummaryType.RankedFlexSR);
                     winsCurrent = winLossSoloQueue.Wins;
                     lossesCurrent = winLossSoloQueue.Losses;
                 }

@@ -99,7 +99,7 @@ namespace LoLTournament.Models
 
                 var winrate = PreviousSeasonWins / (double)PreviousSeasonLosses;
 
-                var winrateDeviation = Math.Abs(winrate - 1) + 0.08;
+                var winrateDeviation = Math.Abs(winrate - 1) + 0.1;
                 var matchCountDeviation = 1 / (PreviousSeasonWins + (double) PreviousSeasonLosses);
 
                 return winrateDeviation * matchCountDeviation * 1000 + 2; // add constant because we don't have division
@@ -118,7 +118,7 @@ namespace LoLTournament.Models
 
                 var winrate = CurrentSeasonWins / (double)CurrentSeasonLosses;
 
-                var winrateDeviation = Math.Abs(winrate - 1) + 0.08;
+                var winrateDeviation = Math.Abs(winrate - 1) + 0.1;
                 var matchCountDeviation = 1 / (CurrentSeasonWins + (double)CurrentSeasonLosses);
 
                 return winrateDeviation * matchCountDeviation * 1000;

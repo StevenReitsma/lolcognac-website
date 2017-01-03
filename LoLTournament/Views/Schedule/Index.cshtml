@@ -40,12 +40,6 @@
                     <div class="alert alert-warning" role="alert">There is only <b>@(32 - Model.Teams.Count())</b> more spot available.
                     </div>
                 }
-                else if (Model.Teams.Count() == 11)
-                {
-                    <div class="alert alert-warning" role="alert">
-                        There is only <b>@(12 - Model.Teams.Count())</b> more exclusive spot available for CognAC and Dorans members.
-                    </div>
-                }
                 else if (DateTime.Now >= Model.RegistrationStartEarlyBird && DateTime.Now < Model.RegistrationStartDate)
                 {
                     <div class="alert alert-warning" role="alert">There are <b>@(12 - Model.Teams.Count())</b> more exclusive spots available for CognAC and Dorans members. <a href="@Url.Action("Index", "Register")">Register</a> now to reserve your spot! Registration opens up to all RU students January 25th.
