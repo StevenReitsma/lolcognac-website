@@ -2,7 +2,7 @@
 @using System.Web.Configuration
 @using LoLTournament.Helpers
 @using LoLTournament.Models
-@using RiotSharp.LeagueEndpoint
+@using RiotSharp.LeagueEndpoint.Enums
 @model TeamViewModel
 
 <div class="schedule-header">
@@ -70,7 +70,7 @@
                                 color = "777";
                                 break;
                         }
-                        <a href="http://www.lolking.net/summoner/euw/@p.Summoner.Id" style="text-decoration: none;" title="@maxTier"><span class="label" style="background-color: #@color;">@p.Summoner.Name</span></a>
+                        <a href="http://euw.op.gg/summoner/userName=@p.Summoner.Name" style="text-decoration: none;" title="@maxTier"><span class="label" style="background-color: #@color;">@p.Summoner.Name</span></a>
                     }
 
                     <h3>Next match</h3>

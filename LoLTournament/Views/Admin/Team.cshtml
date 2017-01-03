@@ -1,7 +1,7 @@
 ﻿@{
     Layout = "~/Views/Admin/_AdminLayout.cshtml";
 }
-@using RiotSharp.LeagueEndpoint
+@using RiotSharp.LeagueEndpoint.Enums
 @model LoLTournament.Models.Team
 
 @if (@Model.Participants.Any(x => x.Summoner == null))
@@ -49,7 +49,7 @@ else
                 {
                     <tr>
                         <td>@p.FullName</td>
-                        <td><a href="//lolking.net/summoner/euw/@p.Summoner.Id">@p.Summoner.Name</a></td>
+                        <td><a href="http://euw.op.gg/summoner/userName=@p.Summoner.Name">@p.Summoner.Name</a></td>
                         <td>
                             @{
                                 string color;
@@ -84,7 +84,7 @@ else
                                         break;
                                 }
                             }
-                            <span class="label" style="background-color: #@color;">@p.CurrentSeasonTier @p.CurrentSeasonDivision</span>
+                            <span class="label" style="background-color: #@color;" title="W/L @p.CurrentSeasonWins / @p.CurrentSeasonLosses">@p.CurrentSeasonTier @p.CurrentSeasonDivision</span>
                         </td>
                         <td>
                             @{
@@ -119,7 +119,7 @@ else
                                         break;
                                 }
                             }
-                            <span class="label" style="background-color: #@color;">@p.PreviousSeasonTier</span>
+                            <span class="label" style="background-color: #@color;" title="W/L @p.PreviousSeasonWins / @p.PreviousSeasonLosses">@p.PreviousSeasonTier</span>
                         </td>
                         <td>@p.MMR.ToString("0")</td>
                         <td>@p.MMRUncertainty.ToString("0.00")</td>
