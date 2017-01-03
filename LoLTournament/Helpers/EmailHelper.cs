@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Net.Mail;
 using System.Web.Configuration;
 using LoLTournament.Models.Financial;
@@ -24,26 +25,39 @@ namespace LoLTournament.Helpers
 
         private static void SendMail(string toMail, string toName, string subject, string body)
         {
-            var fromAddress = new MailAddress("lol@svcognac.nl", "League of Legends Championship Nijmegen");
-            var toAddress = new MailAddress(toMail, toName);
-            var password = WebConfigurationManager.AppSettings["EmailPassword"];
+            try
+            {
 
-            var smtp = new SmtpClient
+
+                var fromAddress = new MailAddress("lol@svcognac.nl", "League of Legends Championship Nijmegen");
+                var toAddress = new MailAddress(toMail, toName);
+                var password = WebConfigurationManager.AppSettings["EmailPassword"];
+
+                // Can't get TLS certificate to work so just accept it, w/e
+                ServicePointManager.ServerCertificateValidationCallback =
+                    (s, certificate, chain, sslPolicyErrors) => true;
+
+                var smtp = new SmtpClient
+                {
+                    Host = "smtp.gmail.com",
+                    Port = 587,
+                    EnableSsl = true,
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    UseDefaultCredentials = false,
+                    Credentials = new NetworkCredential(fromAddress.Address, password)
+                };
+                using (var message = new MailMessage(fromAddress, toAddress)
+                {
+                    Subject = subject,
+                    Body = body
+                })
+                {
+                    smtp.Send(message);
+                }
+            }
+            catch (Exception)
             {
-                Host = "smtp.gmail.com",
-                Port = 587,
-                EnableSsl = true,
-                DeliveryMethod = SmtpDeliveryMethod.Network,
-                UseDefaultCredentials = false,
-                Credentials = new NetworkCredential(fromAddress.Address, password)
-            };
-            using (var message = new MailMessage(fromAddress, toAddress)
-            {
-                Subject = subject,
-                Body = body
-            })
-            {
-                smtp.Send(message);
+                // Error sending email. Exception is caught because it crashes the server otherwise if it can't connect to Gmail.
             }
         }
     }
