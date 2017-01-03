@@ -3,9 +3,9 @@ using System.Linq;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver.Builders;
-using RiotSharp.LeagueEndpoint;
 using RiotSharp.SummonerEndpoint;
 using LoLTournament.Helpers;
+using RiotSharp.LeagueEndpoint.Enums;
 
 namespace LoLTournament.Models
 {
@@ -140,7 +140,7 @@ namespace LoLTournament.Models
         {
             get
             {
-                return Team == null ? true : Team.Cancelled;
+                return Team == null || Team.Cancelled;
             }
         }
     }

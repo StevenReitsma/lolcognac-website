@@ -1,4 +1,4 @@
-﻿using RiotSharp.LeagueEndpoint;
+﻿using RiotSharp.LeagueEndpoint.Enums;
 
 namespace LoLTournament.Helpers
 {

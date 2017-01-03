@@ -4,6 +4,7 @@ using LoLTournament.Helpers;
 using System.Web.Configuration;
 using System;
 using System.Globalization;
+using LoLTournament.Models.Financial;
 using MongoDB.Driver.Builders;
 
 namespace LoLTournament.Models
@@ -14,7 +15,7 @@ namespace LoLTournament.Models
         {
             get
             {
-                return Mongo.Teams.Find(Query<Team>.Where(x => !x.Cancelled && !x.Name.Contains("TESTCOGNAC"))).OrderBy(x => x.Participants.Sum(y => y.RegisterTime.Ticks));
+                return Mongo.Teams.Find(Query<Team>.Where(x => !x.Cancelled && !x.Name.Contains("TESTCOGNAC"))).Where(x => x.Payment.Status == PaymentStatus.Paid).OrderBy(x => x.Participants.Sum(y => y.RegisterTime.Ticks));
             }
         }
 

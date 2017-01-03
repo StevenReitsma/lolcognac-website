@@ -2,6 +2,7 @@
 using System.Web.Configuration;
 using RiotSharp;
 using RiotSharp.TournamentEndpoint;
+using RiotSharp.TournamentEndpoint.Enums;
 
 namespace LoLTournament.Helpers
 {

@@ -1,4 +1,6 @@
-﻿<div class="intro-header">
+﻿@using System.Globalization
+@using System.Web.Configuration
+<div class="intro-header">
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
@@ -15,7 +17,20 @@
                     </ul>
 
                     <div style="position: absolute; bottom: 0; width: 100%; margin: 0 auto;">
-                        <h4 style="text-transform: uppercase">Registration opening soon</h4>
+                        <h4 style="text-transform: uppercase">
+                            @{
+                                var timeSetting = WebConfigurationManager.AppSettings["RegistrationStart"];
+                                var registrationStart = DateTime.ParseExact(timeSetting, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
+                            }
+                            @if (DateTime.Now < registrationStart)
+                            {
+                                <span>Registration opening tonight at 20:00!</span>
+                            }
+                            else
+                            {
+                                <a href="@Url.Action("Index", "Register")" class="btn btn-default btn-lg"><i class="fa fa-pencil fa-fw"></i> <span class="network-name">Register now</span></a>
+                            }
+                        </h4>
                     </div>
                 </div>
 

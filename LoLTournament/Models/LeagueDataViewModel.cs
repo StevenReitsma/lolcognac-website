@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using LoLTournament.Helpers;
-using RiotSharp.LeagueEndpoint;
+using RiotSharp.LeagueEndpoint.Enums;
 
 namespace LoLTournament.Models
 {

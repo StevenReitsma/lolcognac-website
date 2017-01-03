@@ -18,8 +18,8 @@ namespace LoLTournament
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
 #if !DEBUG
-            //var scrape = new RiotApiScrapeJob();
-            //scrape.StartTimer();
+            var scrape = new RiotApiScrapeJob();
+            scrape.StartTimer();
 
             //var matchScrape = new MatchScraper();
             //matchScrape.StartTimer();

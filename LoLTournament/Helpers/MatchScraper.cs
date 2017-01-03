@@ -10,6 +10,7 @@ using MongoDB.Driver.Builders;
 using RiotSharp;
 using RiotSharp.MatchEndpoint;
 using RiotSharp.TournamentEndpoint;
+using RiotSharp.TournamentEndpoint.Enums;
 
 namespace LoLTournament.Helpers
 {
@@ -92,16 +93,16 @@ namespace LoLTournament.Helpers
 
                 switch (latest.EventType)
                 {
-                    case "PracticeGameCreatedEvent":
+                    case TournamentEventType.PracticeGameCreatedEvent:
                         m.Status = Status.Lobby;
                         break;
-                    case "ChampSelectStartedEvent":
+                    case TournamentEventType.ChampSelectStartedEvent:
                         m.Status = Status.ChampionSelect;
                         break;
-                    case "GameAllocationStartedEvent":
+                    case TournamentEventType.GameAllocationStartedEvent:
                         m.Status = Status.Loading;
                         break;
-                    case "GameAllocatedToLsmEvent":
+                    case TournamentEventType.GameAllocatedToLsmEvent:
                         m.Status = Status.InGame;
                         break;
                 }

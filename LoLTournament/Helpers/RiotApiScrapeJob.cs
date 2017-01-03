@@ -4,12 +4,12 @@ using System.Linq;
 using System.Web.Configuration;
 using LoLTournament.Models;
 using RiotSharp;
-using RiotSharp.LeagueEndpoint;
-using RiotSharp.StatsEndpoint;
 using RiotSharp.SummonerEndpoint;
-using Season = RiotSharp.StatsEndpoint.Season;
 using System.Globalization;
 using System.Threading;
+using RiotSharp.LeagueEndpoint.Enums;
+using RiotSharp.StatsEndpoint;
+using RiotSharp.StatsEndpoint.Enums;
 
 namespace LoLTournament.Helpers
 {
@@ -36,7 +36,7 @@ namespace LoLTournament.Helpers
 
         public void ScrapeStatic(object arg)
         {
-            Mongo.Champions.DropAllIndexes();
+            Mongo.Champions.Drop();
             var champions = _staticApi.GetChampions(Region.euw).Champions;
             foreach(var champion in champions.Keys)
             {
@@ -89,7 +89,7 @@ namespace LoLTournament.Helpers
                             previousTier = match.Participants.Single(x => x.ParticipantId == match.ParticipantIdentities.Single(y => y.Player.SummonerId == s.Id).ParticipantId).HighestAchievedSeasonTier;
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     // Unranked in previous season
                 }
@@ -99,13 +99,13 @@ namespace LoLTournament.Helpers
                 int losses;
                 try
                 {
-                    var winLoss = _api.GetStatsSummaries(Region.euw, s.Id, Season.Season2015); // change each year to PREVIOUS season
+                    var winLoss = _api.GetStatsSummaries(Region.euw, s.Id, Season.Season2016); // change each year to PREVIOUS season
                     var winLossSoloQueue =
                         winLoss.Single(x => x.PlayerStatSummaryType == PlayerStatsSummaryType.RankedSolo5x5);
                     wins = winLossSoloQueue.Wins;
                     losses = winLossSoloQueue.Losses;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     // No matches played in previous season
                     wins = 0;
@@ -117,13 +117,13 @@ namespace LoLTournament.Helpers
                 int lossesCurrent;
                 try
                 {
-                    var winLoss = _api.GetStatsSummaries(Region.euw, s.Id, Season.Season2016); // change each year to CURRENT season
+                    var winLoss = _api.GetStatsSummaries(Region.euw, s.Id, Season.Season2017); // change each year to CURRENT season
                     var winLossSoloQueue =
                         winLoss.Single(x => x.PlayerStatSummaryType == PlayerStatsSummaryType.RankedSolo5x5);
                     winsCurrent = winLossSoloQueue.Wins;
                     lossesCurrent = winLossSoloQueue.Losses;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     // No matches played in previous season
                     winsCurrent = 0;
@@ -135,7 +135,7 @@ namespace LoLTournament.Helpers
                 int divisionInt;
                 try
                 {
-                    var currentLeague = _api.GetLeagues(Region.euw, new List<int> {(int) s.Id});
+                    var currentLeague = _api.GetLeagues(Region.euw, new List<long> {s.Id});
                     var currentLeagueSoloQueue = currentLeague.First().Value.Single(x => x.Queue == Queue.RankedSolo5x5);
                     tier = currentLeagueSoloQueue.Tier;
                     var division =

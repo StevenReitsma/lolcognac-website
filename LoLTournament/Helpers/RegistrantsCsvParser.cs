@@ -42,7 +42,7 @@ namespace LoLTournament.Helpers
                         summonerId = long.Parse(split[3]);
                         registerStatus = split[0];
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         continue;
                     }
@@ -88,7 +88,7 @@ namespace LoLTournament.Helpers
                 }
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // Error
             }

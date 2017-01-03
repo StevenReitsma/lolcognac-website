@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using LoLTournament.Helpers;
+using LoLTournament.Models.Financial;
 using MongoDB.Driver.Builders;
 
 namespace LoLTournament.Models
