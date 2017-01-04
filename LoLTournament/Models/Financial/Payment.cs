@@ -152,8 +152,7 @@ namespace LoLTournament.Models.Financial
             if (oldStatus == Status) return;
 
             // Cancel team in database
-            if (Status == PaymentStatus.Cancelled || Status == PaymentStatus.Refunded ||
-                Status == PaymentStatus.Expired)
+            if (Status == PaymentStatus.Cancelled || Status == PaymentStatus.Expired)
             {
                 team.Cancelled = true;
 
@@ -162,6 +161,26 @@ namespace LoLTournament.Models.Financial
                 // Send email
                 var captain = team.Participants.Single(x => x.IsCaptain);
                 EmailHelper.SendPaymentFailure(captain.Email, captain.FullName, Status);
+            }
+            else if (Status == PaymentStatus.Refunded)
+            {
+                // Only cancel team registration if transaction was refunded completely
+                if (AmountRemaining == 0)
+                {
+                    team.Cancelled = true;
+
+                    // Send email
+                    var captain = team.Participants.Single(x => x.IsCaptain);
+                    EmailHelper.SendPaymentFailure(captain.Email, captain.FullName, Status);
+                }
+                else
+                {
+                    // Send email
+                    var captain = team.Participants.Single(x => x.IsCaptain);
+                    EmailHelper.SendPaymentPartialRefund(captain.Email, captain.FullName);
+                }
+
+                Mongo.Teams.Save(team);
             }
             else if (Status == PaymentStatus.Paid)
             {

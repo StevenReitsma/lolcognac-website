@@ -15,7 +15,7 @@ namespace LoLTournament.Models
         {
             get
             {
-                return Mongo.Teams.Find(Query<Team>.Where(x => !x.Cancelled && !x.Name.Contains("TESTCOGNAC"))).Where(x => x.Payment.Status == PaymentStatus.Paid).OrderBy(x => x.Participants.Sum(y => y.RegisterTime.Ticks));
+                return Mongo.Teams.Find(Query<Team>.Where(x => !x.Cancelled && !x.Name.Contains("TESTCOGNAC"))).Where(x => x.Payment.Status == PaymentStatus.Paid || x.Payment.Status == PaymentStatus.Refunded).OrderBy(x => x.Participants.Sum(y => y.RegisterTime.Ticks));
             }
         }
 

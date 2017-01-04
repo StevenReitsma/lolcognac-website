@@ -23,6 +23,12 @@ namespace LoLTournament.Helpers
             SendMail(toMail, toName, "Payment failed or refunded", "Hi team captain!\n\nYour payment for the LCN 2017 failed (status: " + status + "). Your team registration has been cancelled. You are welcome to try registering again.\n\nBest,\nLCN Committee");
         }
 
+
+        public static void SendPaymentPartialRefund(string toMail, string toName)
+        {
+            SendMail(toMail, toName, "Payment partially refunded", "Hi team captain!\n\nYour payment for the LCN 2017 has been partially refunded. You will receive the funds within 7 days on the bank account or Bitcoin wallet you paid with.\n\nBest,\nLCN Committee");
+        }
+
         private static void SendMail(string toMail, string toName, string subject, string body)
         {
             try

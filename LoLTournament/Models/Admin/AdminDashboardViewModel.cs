@@ -22,7 +22,7 @@ namespace LoLTournament.Models.Admin
 
         public decimal PaymentsReceived
         {
-            get { return Mongo.Payments.Find(Query<Payment>.Where(x => x.Status == PaymentStatus.Paid || x.Status == PaymentStatus.Paidout)).Sum(x => x.Amount); }
+            get { return Mongo.Payments.Find(Query<Payment>.Where(x => x.Status == PaymentStatus.Paid || x.Status == PaymentStatus.Paidout || x.Status == PaymentStatus.Refunded)).Sum(x => x.AmountRemaining - 25m); }
         }
 
         public long PendingPayments
