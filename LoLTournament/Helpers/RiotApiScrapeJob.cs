@@ -80,20 +80,30 @@ namespace LoLTournament.Helpers
                 try
                 {
                     // We get last Ranked match and take the HighestAchievedSeasonTier (previous season tier) by looking at the loading screen border
-                    var rankedGames = _api.GetMatchList(Region.euw, s.Id, null, new List<Queue> {Queue.RankedSolo5x5, Queue.RankedFlexSR, Queue.TeamBuilderRankedSolo});
+                    var rankedGames = _api.GetMatchList(Region.euw, s.Id, null,
+                        new List<Queue> {Queue.RankedSolo5x5, Queue.RankedFlexSR, Queue.TeamBuilderRankedSolo});
 
                     if (rankedGames != null && rankedGames.Matches.Count > 0)
                     {
                         var id = rankedGames.Matches.First().MatchID;
                         var match = _api.GetMatch(Region.euw, id);
                         if (match != null)
-                            previousTier = match.Participants.Single(x => x.ParticipantId == match.ParticipantIdentities.Single(y => y.Player.SummonerId == s.Id).ParticipantId).HighestAchievedSeasonTier;
+                            previousTier =
+                                match.Participants.Single(
+                                    x =>
+                                        x.ParticipantId ==
+                                        match.ParticipantIdentities.Single(y => y.Player.SummonerId == s.Id)
+                                            .ParticipantId).HighestAchievedSeasonTier;
                     }
                 }
                 catch (Exception)
                 {
                     // Unranked in previous season
                 }
+
+                // Update only if this is the first time or if we have a not-Unranked update
+                if (p.Summoner == null || previousTier != Tier.Unranked)
+                    p.PreviousSeasonTier = previousTier;
 
                 // Get wins and losses in previous season
                 int wins;
@@ -113,6 +123,13 @@ namespace LoLTournament.Helpers
                     // No matches played in previous season
                     wins = 0;
                     losses = 0;
+                }
+
+                // Update only if this is the first time or if we have a non-zero update
+                if (p.Summoner == null || (wins > 0 && losses > 0))
+                {
+                    p.PreviousSeasonWins = wins;
+                    p.PreviousSeasonLosses = losses;
                 }
 
                 // Get wins and losses in current season
@@ -135,6 +152,13 @@ namespace LoLTournament.Helpers
                     lossesCurrent = 0;
                 }
 
+                // Update only if this is the first time or if we have a non-zero update
+                if (p.Summoner == null || (winsCurrent > 0 && lossesCurrent > 0))
+                {
+                    p.CurrentSeasonWins = winsCurrent;
+                    p.CurrentSeasonLosses = lossesCurrent;
+                }
+
                 // Get current league
                 Tier tier;
                 int divisionInt;
@@ -155,17 +179,16 @@ namespace LoLTournament.Helpers
                     divisionInt = 0;
                 }
 
+                // Update only if this is the first time or if we have a not-Unranked update
+                if (p.Summoner == null || tier != Tier.Unranked)
+                {
+                    p.CurrentSeasonTier = tier;
+                    p.CurrentSeasonDivision = divisionInt;
+                }
+
                 // Set values and update DB
                 p.Summoner = s;
-                p.PreviousSeasonWins = wins;
-                p.PreviousSeasonLosses = losses;
-                p.PreviousSeasonTier = previousTier;
-                p.CurrentSeasonTier = tier;
-                p.CurrentSeasonDivision = divisionInt;
-                p.CurrentSeasonWins = winsCurrent;
-                p.CurrentSeasonLosses = lossesCurrent;
                 p.LastUpdateTime = DateTime.UtcNow;
-
 
                 Mongo.Participants.Save(p);
             }
