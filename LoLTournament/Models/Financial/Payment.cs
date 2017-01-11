@@ -164,21 +164,9 @@ namespace LoLTournament.Models.Financial
             }
             else if (Status == PaymentStatus.Refunded)
             {
-                // Only cancel team registration if transaction was refunded completely
-                if (AmountRemaining == 0)
-                {
-                    team.Cancelled = true;
-
-                    // Send email
-                    var captain = team.Participants.Single(x => x.IsCaptain);
-                    EmailHelper.SendPaymentFailure(captain.Email, captain.FullName, Status);
-                }
-                else
-                {
-                    // Send email
-                    var captain = team.Participants.Single(x => x.IsCaptain);
-                    EmailHelper.SendPaymentPartialRefund(captain.Email, captain.FullName);
-                }
+                // Send email
+                var captain = team.Participants.Single(x => x.IsCaptain);
+                EmailHelper.SendPaymentPartialRefund(captain.Email, captain.FullName);
 
                 Mongo.Teams.Save(team);
             }

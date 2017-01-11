@@ -26,7 +26,7 @@ namespace LoLTournament.Helpers
 
         public static void SendPaymentPartialRefund(string toMail, string toName)
         {
-            SendMail(toMail, toName, "Payment partially refunded", "Hi team captain!\n\nYour payment for the LCN 2017 has been partially refunded. You will receive the funds within 7 days on the bank account or Bitcoin wallet you paid with.\n\nBest,\nLCN Committee");
+            SendMail(toMail, toName, "Payment refunded", "Hi team captain!\n\nYour payment for the LCN 2017 has been (fully or partially) refunded. You will receive the funds within 5 days on the bank account or Bitcoin wallet you paid with.\n\nBest,\nLCN Committee");
         }
 
         private static void SendMail(string toMail, string toName, string subject, string body)
