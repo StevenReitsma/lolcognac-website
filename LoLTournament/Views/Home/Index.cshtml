@@ -28,7 +28,8 @@
                             }
                             else
                             {
-                                <a href="@Url.Action("Index", "Register")" class="btn btn-default btn-lg"><i class="fa fa-pencil fa-fw"></i> <span class="network-name">Register now</span></a>
+                                <!--<a href="@Url.Action("Index", "Register")" class="btn btn-default btn-lg"><i class="fa fa-pencil fa-fw"></i> <span class="network-name">Register now</span></a>-->
+                                <span>The tournament is full, but supporters (RU and non-RU) are welcome free of charge!</span>
                             }
                         </h4>
                     </div>
@@ -54,8 +55,10 @@
                 </ul>
             </div>
             <div class="col-lg-5 col-lg-offset-1 col-sm-6">
-                <!--<img class="img-responsive" src="~/Content/Images/index3.jpg" alt="">-->
-                <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/xaxU0VY6CmY?rel=0&amp;showinfo=0&rel=0&modestbranding=1&loop=1&controls=1&cc_load_policy=0" frameborder="0" allowfullscreen></iframe>
+                <div style="position: relative; padding-bottom: 56.25%; height: 0;">
+                    <!--<img class="img-responsive" src="~/Content/Images/index3.jpg" alt="">-->
+                    <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; "width="560" height="315" src="https://www.youtube-nocookie.com/embed/xaxU0VY6CmY?rel=0&amp;showinfo=0&rel=0&modestbranding=1&loop=1&controls=1&cc_load_policy=0" frameborder="0" allowfullscreen></iframe>
+                </div>
             </div>
         </div>
 
