@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Web.Configuration;
 using RiotSharp;
 using RiotSharp.TournamentEndpoint;
@@ -38,12 +39,12 @@ namespace LoLTournament.Helpers
             return tc;
         }
 
-        public static Tournament GenerateTournament()
+        public static Tuple<TournamentProvider, Tournament> GenerateTournament()
         {
             var provider = TournamentApi.CreateProvider(Region.euw, "http://lolcognac.nl/Match/Callback");
             var tournament = TournamentApi.CreateTournament(provider.Id, "LCN 2017");
 
-            return tournament;
+            return new Tuple<TournamentProvider, Tournament>(provider, tournament);
         }
 
         public static bool UpdateTournamentCodePlayers(string code, List<long> allowedsummoners)

@@ -49,6 +49,13 @@ namespace LoLTournament.Controllers
             }
         }
 
+        // GET: Match/Callback
+        [HttpGet]
+        public ActionResult Callback()
+        {
+            return Content("POST only.");
+        }
+
         // POST: Match/Callback
         [HttpPost]
         public ActionResult Callback(CallbackResult obj)
