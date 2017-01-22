@@ -45,5 +45,17 @@ namespace LoLTournament.Helpers
 
             return tournament;
         }
+
+        public static bool UpdateTournamentCodePlayers(string code, List<long> allowedsummoners)
+        {
+            return TournamentApi.UpdateTournamentCode(code, allowedsummoners, TournamentSpectatorType.All,
+                TournamentPickType.TournamentDraft, TournamentMapType.SummonersRift);
+        }
+
+        public static bool UpdateTournamentCodePlayersBlind(string code, List<long> allowedsummoners)
+        {
+            return TournamentApi.UpdateTournamentCode(code, allowedsummoners, TournamentSpectatorType.All,
+                TournamentPickType.BlindPick, TournamentMapType.SummonersRift);
+        }
     }
 }

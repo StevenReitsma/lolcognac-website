@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Web.Configuration;
@@ -292,6 +293,32 @@ namespace LoLTournament.Controllers
                 match.Duration = TimeSpan.Parse(HttpContext.Request.QueryString["confirmation"]);
 
                 Mongo.Matches.Save(match);
+                return RedirectToAction("MatchInfo", "Admin", new RouteValueDictionary { { "matchId", id } });
+            }
+
+            return View(match);
+        }
+
+        [Authorize]
+        public ActionResult NewCode()
+        {
+            if (!User.IsInRole("Edit"))
+                return View("AuthenticationError");
+
+            var id = HttpContext.Request.QueryString["matchId"];
+            var confirmation = HttpContext.Request.QueryString["confirmation"] != null;
+            var match = Mongo.Matches.FindOne(Query<Match>.Where(x => x.Id == ObjectId.Parse(id)));
+
+            if (confirmation)
+            {
+                var allowedSummoners = Mongo.Teams.Find(Query<Team>.Where(team => team.Id == match.BlueTeamId || team.Id == match.RedTeamId))
+                    .SelectMany(team => team.Participants.Select(participant => participant.Summoner.Id))
+                    .ToList();
+                TournamentCodeFactory.UpdateTournamentCodePlayers(match.TournamentCode,
+                    allowedSummoners);
+                TournamentCodeFactory.UpdateTournamentCodePlayersBlind(match.TournamentCodeBlind,
+                    allowedSummoners);
+
                 return RedirectToAction("MatchInfo", "Admin", new RouteValueDictionary { { "matchId", id } });
             }
 
