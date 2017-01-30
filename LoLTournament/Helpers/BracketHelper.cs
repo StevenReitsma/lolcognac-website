@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using LoLTournament.Models;
+using MongoDB.Bson;
 using MongoDB.Driver.Builders;
 
 namespace LoLTournament.Helpers
@@ -57,9 +58,10 @@ namespace LoLTournament.Helpers
                         availabilityLists[j].Remove(p);
                         availabilityLists[k].Remove(p);
 
-                        // Determine sides (lowest MMR = blue)
-                        var blue = teams[j].MMR < teams[k].MMR ? teams[j].Id : teams[k].Id;
-                        var red = teams[j].MMR >= teams[k].MMR ? teams[j].Id : teams[k].Id;
+                        // Determine sides at random
+                        var sides = ShuffleTeamIds(teams[j].Id, teams[k].Id);
+                        var blue = sides.Item1;
+                        var red = sides.Item2;
 
                         // Create match and add to database
                         var allowedSummoners =
@@ -146,10 +148,12 @@ namespace LoLTournament.Helpers
                             Mongo.Teams.Find(Query<Team>.Where(team => team.Id == poolARanking[0].Id || team.Id == poolBRanking[1].Id))
                                 .SelectMany(team => team.Participants.Select(participant => participant.Summoner.Id))
                                 .ToList();
+
+                        var sides = ShuffleTeamIds(poolARanking[0].Id, poolBRanking[1].Id);
                         var match = new Match
                         {
-                            BlueTeamId = poolARanking[0].Id,
-                            RedTeamId = poolBRanking[1].Id,
+                            BlueTeamId = sides.Item1,
+                            RedTeamId = sides.Item2,
                             Phase = Phase.WinnerBracket,
                             Priority = Math.Min(pool, otherPool),
                             TournamentCode = TournamentCodeFactory.GetTournamentCode(allowedSummoners),
@@ -160,10 +164,12 @@ namespace LoLTournament.Helpers
                             Mongo.Teams.Find(Query<Team>.Where(team => team.Id == poolBRanking[0].Id || team.Id == poolARanking[1].Id))
                                 .SelectMany(team => team.Participants.Select(participant => participant.Summoner.Id))
                                 .ToList();
+
+                        var sides2 = ShuffleTeamIds(poolBRanking[0].Id, poolARanking[1].Id);
                         var match2 = new Match
                         {
-                            BlueTeamId = poolBRanking[0].Id,
-                            RedTeamId = poolARanking[1].Id,
+                            BlueTeamId = sides2.Item1,
+                            RedTeamId = sides2.Item2,
                             Phase = Phase.WinnerBracket,
                             Priority = Math.Max(pool, otherPool),
                             TournamentCode = TournamentCodeFactory.GetTournamentCode(allowedSummoners),
@@ -175,8 +181,10 @@ namespace LoLTournament.Helpers
 
                         // Loser bracket
                         // DISABLED FOR 2016 TOURNAMENT
-                        // var match3 = new Match { BlueTeamId = poolARanking[2].Id, RedTeamId = poolBRanking[3].Id, Phase = Phase.LoserBracket, Priority = Math.Min(pool, otherPool) };
-                        // var match4 = new Match { BlueTeamId = poolBRanking[2].Id, RedTeamId = poolARanking[3].Id, Phase = Phase.LoserBracket, Priority = Math.Max(pool, otherPool) };
+                        // var sides3 = ShuffleTeamIds(poolARanking[2].Id, poolBRanking[3].Id);
+                        // var sides4 = ShuffleTeamIds(poolBRanking[2].Id, poolARanking[3].Id);
+                        // var match3 = new Match { BlueTeamId = sides3.Item1, RedTeamId = sides3.Item2, Phase = Phase.LoserBracket, Priority = Math.Min(pool, otherPool) };
+                        // var match4 = new Match { BlueTeamId = sides4.Item1, RedTeamId = sides4.Item2, Phase = Phase.LoserBracket, Priority = Math.Max(pool, otherPool) };
                         // Mongo.Matches.Save(match3);
                         // Mongo.Matches.Save(match4);
 
@@ -267,10 +275,11 @@ namespace LoLTournament.Helpers
                                 .SelectMany(team => team.Participants.Select(participant => participant.Summoner.Id))
                                 .ToList();
 
+                        var sides = ShuffleTeamIds(finishedMatch.WinnerId, otherTeam.Id);
                         var match = new Match
                         {
-                            BlueTeamId = finishedMatch.WinnerId,
-                            RedTeamId = otherTeam.Id,
+                            BlueTeamId = sides.Item1,
+                            RedTeamId = sides.Item2,
                             Phase = finishedMatch.Phase,
                             Priority = Math.Min(finishedMatch.Priority, otherPrio) + 8,
                             TournamentCode = TournamentCodeFactory.GetTournamentCode(allowedSummoners),
@@ -321,10 +330,11 @@ namespace LoLTournament.Helpers
                                 .SelectMany(team => team.Participants.Select(participant => participant.Summoner.Id))
                                 .ToList();
 
+                        var sides = ShuffleTeamIds(finishedMatch.WinnerId, otherTeam.Id);
                         var match = new Match
                         {
-                            BlueTeamId = finishedMatch.WinnerId,
-                            RedTeamId = otherTeam.Id,
+                            BlueTeamId = sides.Item1,
+                            RedTeamId = sides.Item2,
                             Phase = finishedMatch.Phase,
                             Priority = Math.Min(finishedMatch.Priority, otherPrio) + 4,
                             TournamentCode = TournamentCodeFactory.GetTournamentCode(allowedSummoners),
@@ -366,25 +376,26 @@ namespace LoLTournament.Helpers
                                 .SelectMany(team => team.Participants.Select(participant => participant.Summoner.Id))
                                 .ToList();
 
+                        var sides = ShuffleTeamIds(finishedMatch.WinnerId, matchFinished.First().WinnerId);
                         var match = Mongo.Matches.Find(Query<Match>.Where(x => x.Phase == Phase.Finale && x.Priority == 0)).First();
-                        match.BlueTeamId = finishedMatch.WinnerId;
-                        match.RedTeamId = matchFinished.First().WinnerId;
+                        match.BlueTeamId = sides.Item1;
+                        match.RedTeamId = sides.Item2;
                         match.TournamentCode = TournamentCodeFactory.GetTournamentCode(allowedSummoners);
                         match.TournamentCodeBlind = TournamentCodeFactory.GetTournamentCodeBlind(allowedSummoners);
                         Mongo.Matches.Save(match);
 
                         // Switch sides
                         match = Mongo.Matches.Find(Query<Match>.Where(x => x.Phase == Phase.Finale && x.Priority == 1)).First();
-                        match.BlueTeamId = matchFinished.First().WinnerId;
-                        match.RedTeamId = finishedMatch.WinnerId;
+                        match.BlueTeamId = sides.Item2;
+                        match.RedTeamId = sides.Item1;
                         match.TournamentCode = TournamentCodeFactory.GetTournamentCode(allowedSummoners);
                         match.TournamentCodeBlind = TournamentCodeFactory.GetTournamentCodeBlind(allowedSummoners);
                         Mongo.Matches.Save(match);
 
                         // Switch sides again
                         match = Mongo.Matches.Find(Query<Match>.Where(x => x.Phase == Phase.Finale && x.Priority == 2)).First();
-                        match.BlueTeamId = finishedMatch.WinnerId;
-                        match.RedTeamId = matchFinished.First().WinnerId;
+                        match.BlueTeamId = sides.Item1;
+                        match.RedTeamId = sides.Item2;
                         match.TournamentCode = TournamentCodeFactory.GetTournamentCode(allowedSummoners);
                         match.TournamentCodeBlind = TournamentCodeFactory.GetTournamentCodeBlind(allowedSummoners);
                         Mongo.Matches.Save(match);
@@ -404,8 +415,11 @@ namespace LoLTournament.Helpers
 
                         // Also set bronze finale match
                         match = Mongo.Matches.Find(Query<Match>.Where(x => x.Phase == Phase.BronzeFinale)).First();
-                        match.BlueTeamId = finishedMatch.BlueTeamId == finishedMatch.WinnerId ? finishedMatch.RedTeamId : finishedMatch.BlueTeamId;
-                        match.RedTeamId = matchFinished.First().BlueTeamId == matchFinished.First().WinnerId ? matchFinished.First().RedTeamId : matchFinished.First().BlueTeamId;
+                        var team1 = finishedMatch.BlueTeamId == finishedMatch.WinnerId ? finishedMatch.RedTeamId : finishedMatch.BlueTeamId;
+                        var team2 = matchFinished.First().BlueTeamId == matchFinished.First().WinnerId ? matchFinished.First().RedTeamId : matchFinished.First().BlueTeamId;
+                        var sidesBronze = ShuffleTeamIds(team1, team2);
+                        match.BlueTeamId = sidesBronze.Item1;
+                        match.RedTeamId = sidesBronze.Item2;
 
                         allowedSummoners =
                             Mongo.Teams.Find(Query<Team>.Where(team => team.Id == match.BlueTeamId || team.Id == match.RedTeamId))
@@ -455,9 +469,10 @@ namespace LoLTournament.Helpers
                     // It's finished, set loser finale match
                     if (matchFinished.Count() == 1)
                     {
+                        var sides = ShuffleTeamIds(finishedMatch.WinnerId, matchFinished.First().WinnerId);
                         var match = Mongo.Matches.Find(Query<Match>.Where(x => x.Phase == Phase.LoserFinale && x.Priority == 0)).First();
-                        match.BlueTeamId = finishedMatch.WinnerId;
-                        match.RedTeamId = matchFinished.First().WinnerId;
+                        match.BlueTeamId = sides.Item1;
+                        match.RedTeamId = sides.Item2;
                         Mongo.Matches.Save(match);
 
                         // Set team phases
@@ -560,6 +575,18 @@ namespace LoLTournament.Helpers
         private static List<Team> GetPoolRanking(int pool)
         {
             return Mongo.Teams.Find(Query<Team>.Where(x => x.Pool == pool && !x.Cancelled)).OrderBy(x => x.PoolRank).ToList();
+        }
+
+        /// <summary>
+        /// Returns a tuple of the two team ids in a random order, so both teams have an equal change of playing either side
+        /// </summary>
+        /// <param name="team1">Team id 1</param>
+        /// <param name="team2">Team id 2</param>
+        /// <returns></returns>
+        private static Tuple<ObjectId, ObjectId> ShuffleTeamIds(ObjectId team1, ObjectId team2)
+        {
+            var rng = new Random().Next(2) == 1;
+            return rng ? new Tuple<ObjectId, ObjectId>(team1, team2) : new Tuple<ObjectId, ObjectId>(team2, team1);
         }
     }
 }
