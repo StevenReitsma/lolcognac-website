@@ -17,6 +17,9 @@ namespace LoLTournament.Helpers
     public class MatchScraper
     {
         private readonly TournamentRiotApi _api;
+        // Keep references to avoid GC
+        private Timer _currentMatchTimer;
+        private Timer _finishedMatchTimer;
 
         public MatchScraper()
         {
@@ -29,8 +32,8 @@ namespace LoLTournament.Helpers
 
         public void StartTimer()
         {
-            new Timer(ScrapeCurrentMatches, null, TimeSpan.Zero, TimeSpan.FromSeconds(30));
-            new Timer(ScrapeFinishedMatches, null, TimeSpan.Zero, TimeSpan.FromSeconds(30));
+            _currentMatchTimer = new Timer(ScrapeCurrentMatches, null, TimeSpan.Zero, TimeSpan.FromSeconds(30));
+            _finishedMatchTimer = new Timer(ScrapeFinishedMatches, null, TimeSpan.Zero, TimeSpan.FromSeconds(30));
         }
 
         /// <summary>
@@ -43,9 +46,8 @@ namespace LoLTournament.Helpers
             var timeSetting = WebConfigurationManager.AppSettings["TournamentStart"];
             var tournamentStart = DateTime.ParseExact(timeSetting, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
 
-            if (DateTime.Now < tournamentStart || DateTime.Now > tournamentStart + TimeSpan.FromHours(12))
-                // assuming tournament lasts for a maximum of 12 hours
-                return;
+            if (DateTime.Now < tournamentStart || DateTime.Now > tournamentStart + TimeSpan.FromHours(12)) // assuming tournament lasts for a maximum of 12 hours
+               return;
 
             // For each match that is next up to be played (except ingame matches)
             var matches =
@@ -94,6 +96,11 @@ namespace LoLTournament.Helpers
                 switch (latest.EventType)
                 {
                     case TournamentEventType.PracticeGameCreatedEvent:
+                    case TournamentEventType.PlayerJoinedGameEvent:
+                    case TournamentEventType.PlayerQuitGameEvent:
+                    case TournamentEventType.PlayerSwitchedTeamEvent:
+                    case TournamentEventType.PlayerBannedFromGameEvent:
+                    case TournamentEventType.OwnerChangedEvent:
                         m.Status = Status.Lobby;
                         break;
                     case TournamentEventType.ChampSelectStartedEvent:
@@ -105,7 +112,15 @@ namespace LoLTournament.Helpers
                     case TournamentEventType.GameAllocatedToLsmEvent:
                         m.Status = Status.InGame;
                         break;
+                    case TournamentEventType.GameDissolvedEvent:
+                        m.Status = Status.Pending;
+                        break;
+                    default:
+                        m.Status = Status.Pending;
+                        break;
                 }
+
+                Mongo.Matches.Save(m);
             }
         }
 
@@ -115,16 +130,11 @@ namespace LoLTournament.Helpers
             var timeSetting = WebConfigurationManager.AppSettings["TournamentStart"];
             var tournamentStart = DateTime.ParseExact(timeSetting, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
 
-            if (DateTime.Now < tournamentStart || DateTime.Now > tournamentStart + TimeSpan.FromHours(12))
-                // assuming tournament lasts for a maximum of 12 hours
+            if (DateTime.Now < tournamentStart || DateTime.Now > tournamentStart + TimeSpan.FromHours(12)) // assuming tournament lasts for a maximum of 12 hours
                 return;
 
             // Find matches that still have no valid matchDetails associated after callback date + 5 minutes
-            var matches =
-                Mongo.Matches.Find(
-                    Query<Match>.Where(
-                        x =>
-                            x.Finished && x.Invalid && x.InvalidReason == "MATCH_NOT_FOUND")).Where(x => DateTime.UtcNow >= x.FinishDate + TimeSpan.FromMinutes(5));
+            var matches = Mongo.Matches.Find(Query<Match>.Where(x => x.Finished && x.Invalid && x.InvalidReason == "MATCH_NOT_FOUND"));
 
             foreach (var match in matches)
                 GetMatchDetails(_api, match, true);
@@ -151,8 +161,7 @@ namespace LoLTournament.Helpers
                 try
                 {
                     if (match.RiotMatchId != 0)
-                        matchDetails = api.GetTournamentMatch(Region.euw, match.RiotMatchId, match.TournamentCodeBlind,
-                            false);
+                        matchDetails = api.GetTournamentMatch(Region.euw, match.RiotMatchId, match.TournamentCodeBlind, false);
                     else
                     {
                         var matchId = api.GetTournamentMatchId(Region.euw, match.TournamentCodeBlind);
@@ -167,14 +176,7 @@ namespace LoLTournament.Helpers
             }
 
             // Get the players that were supposed to be on blue side
-            var supposedToBeBluePlayers = matchDetails.Participants.Where(
-                matchDetailParticipant =>
-                    match.BlueTeam.Participants.Select(
-                        localMatchParticipant => localMatchParticipant.Summoner.Name.ToLower())
-                        .Contains(
-                            matchDetails.ParticipantIdentities.Single(
-                                identity => identity.ParticipantId == matchDetailParticipant.ParticipantId)
-                                .Player.SummonerName.ToLower())).ToList();
+            var supposedToBeBluePlayers = matchDetails.Participants.Where(matchDetailParticipant => match.BlueTeam.Participants.Select(localMatchParticipant => localMatchParticipant.Summoner.Name.ToLower()).Contains(matchDetails.ParticipantIdentities.Single(identity => identity.ParticipantId == matchDetailParticipant.ParticipantId).Player.SummonerName.ToLower())).ToList();
 
             if (supposedToBeBluePlayers.Count == 0)
             {
@@ -190,14 +192,7 @@ namespace LoLTournament.Helpers
             var blueTeamId = supposedToBeBluePlayers.First().TeamId;
 
             // Get the players that were supposed to be on red side
-            var supposedToBeRedPlayers = matchDetails.Participants.Where(
-                matchDetailParticipant =>
-                    match.RedTeam.Participants.Select(
-                        localMatchParticipant => localMatchParticipant.Summoner.Name.ToLower())
-                        .Contains(
-                            matchDetails.ParticipantIdentities.Single(
-                                identity => identity.ParticipantId == matchDetailParticipant.ParticipantId)
-                                .Player.SummonerName.ToLower())).ToList();
+            var supposedToBeRedPlayers = matchDetails.Participants.Where(matchDetailParticipant => match.RedTeam.Participants.Select(localMatchParticipant => localMatchParticipant.Summoner.Name.ToLower()).Contains(matchDetails.ParticipantIdentities.Single(identity => identity.ParticipantId == matchDetailParticipant.ParticipantId).Player.SummonerName.ToLower())).ToList();
 
             if (supposedToBeRedPlayers.Count == 0)
             {
@@ -220,24 +215,15 @@ namespace LoLTournament.Helpers
             match.ChampionIds = matchDetails.Participants.Select(x => x.ChampionId).ToArray();
 
             // Exclude null bans for blind pick and for teams that forgot all their bans
-            match.BanIds =
-                matchDetails.Teams.Where(x => x.Bans != null)
-                    .SelectMany(x => x.Bans)
-                    .Select(x => x.ChampionId)
-                    .ToArray();
+            match.BanIds = matchDetails.Teams.Where(x => x.Bans != null).SelectMany(x => x.Bans).Select(x => x.ChampionId).ToArray();
 
-            match.AssistsBlueTeam =
-                matchDetails.Participants.Where(x => x.TeamId == blueTeamId).Sum(x => x.Stats.Assists);
-            match.KillsBlueTeam =
-                matchDetails.Participants.Where(x => x.TeamId == blueTeamId).Sum(x => x.Stats.Kills);
-            match.DeathsBlueTeam =
-                matchDetails.Participants.Where(x => x.TeamId == blueTeamId).Sum(x => x.Stats.Deaths);
+            match.AssistsBlueTeam = matchDetails.Participants.Where(x => x.TeamId == blueTeamId).Sum(x => x.Stats.Assists);
+            match.KillsBlueTeam = matchDetails.Participants.Where(x => x.TeamId == blueTeamId).Sum(x => x.Stats.Kills);
+            match.DeathsBlueTeam = matchDetails.Participants.Where(x => x.TeamId == blueTeamId).Sum(x => x.Stats.Deaths);
 
-            match.AssistsRedTeam =
-                matchDetails.Participants.Where(x => x.TeamId == redTeamId).Sum(x => x.Stats.Assists);
+            match.AssistsRedTeam = matchDetails.Participants.Where(x => x.TeamId == redTeamId).Sum(x => x.Stats.Assists);
             match.KillsRedTeam = matchDetails.Participants.Where(x => x.TeamId == redTeamId).Sum(x => x.Stats.Kills);
-            match.DeathsRedTeam =
-                matchDetails.Participants.Where(x => x.TeamId == redTeamId).Sum(x => x.Stats.Deaths);
+            match.DeathsRedTeam = matchDetails.Participants.Where(x => x.TeamId == redTeamId).Sum(x => x.Stats.Deaths);
 
             match.Invalid = false;
 
