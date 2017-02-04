@@ -364,6 +364,7 @@
     <Content Include="Content\Images\splash.jpg" />
     <Content Include="Content\Images\splash2.jpg" />
     <Content Include="Content\Images\thresh.jpg" />
+    <Content Include="Content\jquery.bracket.min.css" />
     <Content Include="Content\landing-page.css" />
     <Content Include="Content\Videos\hype.mp4" />
     <Content Include="favicon.ico" />
@@ -396,6 +397,7 @@
     <Content Include="Scripts\jquery-2.1.1.min.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.blueimp-gallery.min.js" />
+    <Content Include="Scripts\jquery.bracket.min.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
