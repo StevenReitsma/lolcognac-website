@@ -58,7 +58,7 @@ namespace LoLTournament.Models
                 else
                 {
                     KnockOutTeams[matchIndex][0] = "#1 pool " + (pool+1);
-                    KnockOutTeams[otherBracket][1] = "#2 pool " + (otherPool+1);
+                    KnockOutTeams[otherBracket][1] = "#2 pool " + (pool+1);
                 }
 
                 if (BracketHelper.PoolFinished(otherPool))
@@ -70,7 +70,7 @@ namespace LoLTournament.Models
                 else
                 {
                     KnockOutTeams[matchIndex][1] = "#2 pool " + (otherPool+1);
-                    KnockOutTeams[otherBracket][0] = "#1 pool " + (pool+1);
+                    KnockOutTeams[otherBracket][0] = "#1 pool " + (otherPool+1);
                 }
             }
 
