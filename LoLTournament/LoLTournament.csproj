@@ -240,6 +240,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\font-awesome.min.css" />
     <Content Include="Content\Images\annie.jpg" />
+    <Content Include="Content\Images\audius.png" />
     <Content Include="Content\Images\azerty.png" />
     <Content Include="Content\Images\blitz.jpg" />
     <Content Include="Content\Images\bracket.png" />
@@ -255,6 +256,7 @@
     <Content Include="Content\Images\laserquest.png" />
     <Content Include="Content\Images\loading.gif" />
     <Content Include="Content\Images\logo.png" />
+    <Content Include="Content\Images\masc_logo.png" />
     <Content Include="Content\Images\nix.png" />
     <Content Include="Content\Images\Photos\IMG_3938.jpg" />
     <Content Include="Content\Images\Photos\IMG_3939.jpg" />

@@ -17,7 +17,7 @@ namespace LoLTournament.Models
                    .ThenBy(x => x.Name)
                    .ToList();
 
-            if (Teams.Count != 32 || Teams.Any(t => t.Pool == 0))
+            if (Teams.Count != 32 || Mongo.Matches.Count() == 0)
                 Teams = new List<Team>();
         }
     }

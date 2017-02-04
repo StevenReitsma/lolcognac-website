@@ -47,6 +47,14 @@ namespace LoLTournament.Helpers
             return new Tuple<TournamentProvider, Tournament>(provider, tournament);
         }
 
+        public static Tuple<TournamentProvider, Tournament> GenerateTestTournament()
+        {
+            var provider = TournamentApi.CreateProvider(Region.euw, "http://home.properchaos.nl/Match/Callback");
+            var tournament = TournamentApi.CreateTournament(provider.Id, "LCN 2017 Development Testing Tournament");
+
+            return new Tuple<TournamentProvider, Tournament>(provider, tournament);
+        }
+
         public static bool UpdateTournamentCodePlayers(string code, List<long> allowedsummoners)
         {
             return TournamentApi.UpdateTournamentCode(code, allowedsummoners, TournamentSpectatorType.All,

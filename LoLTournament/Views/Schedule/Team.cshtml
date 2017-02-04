@@ -38,7 +38,7 @@
                 }
                 else
                 {
-                    <h2>@Model.Team.Name <span class="label label-success" style="font-size: 11px; vertical-align: middle">Pool @Model.Team.Pool</span></h2>
+                    <h2>@Model.Team.Name <span class="label label-success" style="font-size: 11px; vertical-align: middle">Pool @(Model.Team.Pool + 1)</span></h2>
 
                     foreach (var p in @Model.Team.Participants.OrderBy(x => Math.Min((int) x.PreviousSeasonTier, (int) x.CurrentSeasonTier)))
                     {

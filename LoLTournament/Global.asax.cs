@@ -1,15 +1,19 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
-// Leave this using statement
 using LoLTournament.Helpers;
 
 namespace LoLTournament
 {
     public class MvcApplication : HttpApplication
     {
+        // Keep reference to avoid GC
+        private MatchScraper _matchScraper;
+        private RiotApiScrapeJob _riotApiScrapeJob;
+
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
@@ -17,12 +21,15 @@ namespace LoLTournament
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-#if !DEBUG
-            var scrape = new RiotApiScrapeJob();
-            scrape.StartTimer();
+            // Test code for debugging (Joris + Steven summoner ID's)
+            // var code = TournamentCodeFactory.GetTournamentCode(new List<long> {24689119, 26230426, 20893030, 20122308, 19308883, 39609774, 40776930, 21148960, 19977657, 20013452});
 
-            //var matchScrape = new MatchScraper();
-            //matchScrape.StartTimer();
+#if !DEBUG
+            _riotApiScrapeJob = new RiotApiScrapeJob();
+            _riotApiScrapeJob.StartTimer();
+
+            _matchScraper = new MatchScraper();
+            _matchScraper.StartTimer();
 #endif
 
 
