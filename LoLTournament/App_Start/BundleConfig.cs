@@ -13,6 +13,9 @@ namespace LoLTournament
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*").Include("~/Scripts/jquery.unobtrusive*"));
 
+            bundles.Add(new ScriptBundle("~/bundles/brackets").Include(
+                        "~/Scripts/jquery.bracket.min.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                       "~/Scripts/bootstrap.js"));
 
@@ -22,7 +25,8 @@ namespace LoLTournament
                       "~/Content/blueimp-gallery.min.css",
                       "~/Content/bootstrap-image-gallery.css",
                       "~/Content/landing-page.css",
-                      "~/Content/font-awesome.min.css"));
+                      "~/Content/font-awesome.min.css",
+                      "~/Content/jquery.bracket.min.css"));
 
             // Set EnableOptimizations to false for debugging. For more information,
             // visit http://go.microsoft.com/fwlink/?LinkId=301862
