@@ -32,6 +32,7 @@ namespace LoLTournament.Models
                    .ToList();
 
             if (Teams.Count != 32 || Mongo.Matches.Count() == 0)
+            {
                 Teams = new List<Team>();
                 return;
             }
