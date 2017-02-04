@@ -558,7 +558,7 @@ namespace LoLTournament.Helpers
         /// </summary>
         /// <param name="pool"></param>
         /// <returns></returns>
-        private static bool PoolFinished(int pool)
+        public static bool PoolFinished(int pool)
         {
             // It doesn't matter which side we look at since they are both in the same pool
             var notFinished = Mongo.Matches.FindAll().Where(x => x.BlueTeam != null && x.BlueTeam.Pool == pool && x.Phase == Phase.Pool && !x.Finished);
@@ -572,7 +572,7 @@ namespace LoLTournament.Helpers
         /// </summary>
         /// <param name="pool"></param>
         /// <returns></returns>
-        private static List<Team> GetPoolRanking(int pool)
+        public static List<Team> GetPoolRanking(int pool)
         {
             return Mongo.Teams.Find(Query<Team>.Where(x => x.Pool == pool && !x.Cancelled)).OrderBy(x => x.PoolRank).ToList();
         }

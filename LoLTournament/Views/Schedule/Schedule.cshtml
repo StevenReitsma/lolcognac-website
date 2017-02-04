@@ -1,4 +1,5 @@
-﻿@model LoLTournament.Models.ScheduleViewModel
+﻿@using LoLTournament.Models
+@model LoLTournament.Models.ScheduleViewModel
 
 <div class="schedule-header">
     <div class="container">
@@ -30,7 +31,7 @@
                                 {
                                     if (i*16 + 4*j < Model.Teams.Count)
                                     {
-                                        <td style="padding-left: 10px; width: 25%; font-size:75%">
+                                        <td style="padding-left: 10px; width: 25%; font-size: 75%">
                                             <ul class="list-group">
                                                 <li class="list-group-item list-group-item-info">
                                                     <b>Pool @(Model.Teams[i*16 + 4*j].Pool + 1)</b>
@@ -50,6 +51,12 @@
                     }
                     </tbody>
                 </table>
+
+                @if (Model.Teams.Count == 32)
+                {
+                    <h2>Knock-out phase</h2>
+                    <div id="bracket"></div>
+                }
 
                 <h2>Schedule</h2>
 
@@ -71,3 +78,23 @@
         </div>
     </div>
 </div>
+
+@Scripts.Render("~/bundles/brackets")
+
+<script>
+    var bracketData = {
+        "teams": @Html.Raw(Json.Encode(Model.KnockOutTeams)),
+        "results": @Html.Raw(Json.Encode(Model.KnockOutResults)),
+    };
+
+
+    $("#bracket").bracket({
+        init: bracketData,
+        teamWidth: 150
+    });
+</script>
+<style>
+    .label {
+        color: #000;
+    }
+</style>
