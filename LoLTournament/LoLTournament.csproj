@@ -255,6 +255,7 @@
     <Content Include="Content\Images\kindred.jpg" />
     <Content Include="Content\Images\laserquest.png" />
     <Content Include="Content\Images\loading.gif" />
+    <Content Include="Content\Images\logo-dcl.png" />
     <Content Include="Content\Images\logo.png" />
     <Content Include="Content\Images\masc_logo.png" />
     <Content Include="Content\Images\nix.png" />
@@ -456,6 +457,7 @@
     <Content Include="Views\Admin\GetMatchDetails.cshtml" />
     <Content Include="Views\Admin\SetMatchDuration.cshtml" />
     <Content Include="Views\Admin\NewCode.cshtml" />
+    <Content Include="Views\Admin\NewCodeAll.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
