@@ -339,15 +339,22 @@ namespace LoLTournament.Controllers
                 // Update all tournament codes that are currently defined
                 foreach (var match in Mongo.Matches.Find(Query<Match>.Where(m => m.TournamentCode != null && m.TournamentCode != "")))
                 {
-                    var allowedSummoners = Mongo.Teams.Find(Query<Team>.Where(team => team.Id == match.BlueTeamId || team.Id == match.RedTeamId))
-                        .SelectMany(team => team.Participants.Select(participant => participant.Summoner.Id))
-                        .ToList();
-                    TournamentCodeFactory.UpdateTournamentCodePlayers(match.TournamentCode,
-                        allowedSummoners);
-                    TournamentCodeFactory.UpdateTournamentCodePlayersBlind(match.TournamentCodeBlind,
-                        allowedSummoners);
-                }
+                    try
+                    {
+                        var allowedSummoners = Mongo.Teams.Find(Query<Team>.Where(team => team.Id == match.BlueTeamId || team.Id == match.RedTeamId))
+                            .SelectMany(team => team.Participants.Select(participant => participant.Summoner.Id))
+                            .ToList();
+                        TournamentCodeFactory.UpdateTournamentCodePlayers(match.TournamentCode,
+                            allowedSummoners);
+                        TournamentCodeFactory.UpdateTournamentCodePlayersBlind(match.TournamentCodeBlind,
+                            allowedSummoners);
+                    }
+                    catch (Exception)
+                    {
+                        
+                    }
 
+                }
                 return RedirectToAction("Index", "Admin");
             }
 
