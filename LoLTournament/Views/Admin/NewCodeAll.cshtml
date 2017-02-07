@@ -1,0 +1,12 @@
+﻿@{
+    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+}
+
+<h1>Update match all participants</h1>
+
+<p>
+    Are you sure you want to update all tournament codes to the current summoners?
+</p>
+
+<a href="@Url.Action("NewCodeAll", "Admin", new RouteValueDictionary {{"confirmation", true}})"><button class="btn btn-danger btn-lg" type="button">Update tournament codes</button></a>
+

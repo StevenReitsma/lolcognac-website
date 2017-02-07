@@ -196,8 +196,8 @@
                     else
                     {
                         <a href="@Url.Action("GetMatchDetails", "Admin", new RouteValueDictionary {{"matchId", @Model.Id}})"><button class="btn btn-primary btn-lg" type="button">Get match data (do this before forcing win)</button></a>
-                        <a href="@Url.Action("SetMatchDuration", "Admin", new RouteValueDictionary {{"matchId", @Model.Id}})"><button class="btn btn-primary btn-lg" type="button">Set match duration (do this before forcing win)</button></a><br/><br/>
-                        <a href="@Url.Action("NewCode", "Admin", new RouteValueDictionary {{"matchId", @Model.Id}}))"><button class="btn btn-primary btn-lg" type="button">Update tournament code summoners</button></a>
+                        <a href="@Url.Action("SetMatchDuration", "Admin", new RouteValueDictionary {{"matchId", @Model.Id}})"><button class="btn btn-primary btn-lg" type="button">Set match duration (do this before forcing win)</button></a>
+                        <a href="@Url.Action("NewCode", "Admin", new RouteValueDictionary {{"matchId", @Model.Id}})"><button class="btn btn-primary btn-lg" type="button">Update tournament code summoners</button></a>
                         <a href="@Url.Action("ForceBlueWin", "Admin", new RouteValueDictionary {{"matchId", @Model.Id}})"><button class="btn btn-primary btn-lg" type="button">Force win for Blue</button></a>
                         <a href="@Url.Action("ForceRedWin", "Admin", new RouteValueDictionary {{"matchId", @Model.Id}})"><button class="btn btn-primary btn-lg" type="button">Force win for Red</button></a>
                         <a href="@Url.Action("DeleteMatch", "Admin", new RouteValueDictionary {{"matchId", @Model.Id}})"><button class="btn btn-danger btn-lg" type="button">Delete match</button></a>

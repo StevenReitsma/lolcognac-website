@@ -109,6 +109,9 @@ namespace LoLTournament.Controllers
                 match.Finished = true;
                 match.Status = Status.Finished;
 
+                // Preliminary duration, includes champ select
+                match.Duration = match.FinishDate - match.StartTime;
+
                 // Save to database
                 Mongo.Matches.Save(match);
 

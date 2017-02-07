@@ -32,6 +32,7 @@ namespace LoLTournament.Helpers
                 {
                     var line = reader.ReadLine();
                     if (line == null) continue;
+                    if (!line.StartsWith("registered,")) continue;
 
                     var split = line.Split(',');
                     long summonerId;
@@ -39,7 +40,7 @@ namespace LoLTournament.Helpers
 
                     try
                     {
-                        summonerId = long.Parse(split[3]);
+                        summonerId = long.Parse(split[4]);
                         registerStatus = split[0];
                     }
                     catch (Exception)
