@@ -244,6 +244,7 @@
     <Content Include="Content\Images\azerty.png" />
     <Content Include="Content\Images\blitz.jpg" />
     <Content Include="Content\Images\bracket.png" />
+    <Content Include="Content\Images\campzone.jpg" />
     <Content Include="Content\Images\CognAC_logo.png" />
     <Content Include="Content\Images\conjugo.png" />
     <Content Include="Content\Images\GitHub-Mark-32px.png" />
@@ -254,6 +255,7 @@
     <Content Include="Content\Images\jinx.jpg" />
     <Content Include="Content\Images\kindred.jpg" />
     <Content Include="Content\Images\laserquest.png" />
+    <Content Include="Content\Images\lcn.png" />
     <Content Include="Content\Images\loading.gif" />
     <Content Include="Content\Images\logo-dcl.png" />
     <Content Include="Content\Images\logo.png" />

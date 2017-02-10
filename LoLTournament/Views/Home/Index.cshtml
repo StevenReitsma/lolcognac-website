@@ -17,7 +17,7 @@
                     </ul>
 
                     <div style="position: absolute; bottom: 0; width: 100%; margin: 0 auto;">
-                        <h4 style="text-transform: uppercase">
+                        <h3 style="text-transform: uppercase">
                             @{
                                 var timeSetting = WebConfigurationManager.AppSettings["RegistrationStart"];
                                 var registrationStart = DateTime.ParseExact(timeSetting, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
@@ -29,14 +29,44 @@
                             else
                             {
                                 <!--<a href="@Url.Action("Index", "Register")" class="btn btn-default btn-lg"><i class="fa fa-pencil fa-fw"></i> <span class="network-name">Register now</span></a>-->
-                                <span>The tournament is full, but supporters (RU and non-RU) are welcome free of charge!</span>
+                                <!--<span>The tournament is full, but supporters (RU and non-RU) are welcome free of charge!</span>-->
                             }
-                        </h4>
+                            Thanks for joining us, see you next year!
+                        </h3>
+
                     </div>
                 </div>
 
             </div>
         </div>
+    </div>
+</div>
+
+<div class="content-section-a">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-5 col-lg-offset-1 col-sm-push-5  col-sm-6">
+                <div class="clearfix"></div>
+                <h2 class="section-heading">Winners 2017</h2>
+                <h4>
+                    <ol>
+                        <li>Definitely Not Alpha</li>
+                        <li>Nice Champs ft. De Polio Botlane</li>
+                        <li>Turn Down For Bard</li>
+                        <li>Droge Crackers</li>
+                    </ol>
+                </h4>
+                <h5>
+                    #5-8: Duurt Lan, Kappachinos, The Big Dick Bronzies & Longschlong Gold, We got 420 problems but a victory aint one<br />
+                    ARAM: Godfried IV von Virginville<br />
+                    Honorable mention: TeeMostWanted
+                </h5>
+            </div>
+            <div class="col-lg-5 col-sm-pull-4 col-sm-7">
+                <img class="img-responsive" src="~/Content/Images/lcn.png" alt="" style="height: 275px;">
+            </div>
+        </div>
+
     </div>
 </div>
 
@@ -94,11 +124,12 @@
         <div class="row">
             <div class="col-lg-12 col-lg-12">
                 <div class="clearfix"></div>
-                <h2 class="section-heading">Sponsored by</h2>
+                <h2 class="section-heading">Partners</h2>
                 <div>
                     <a href="http://www.masc.nl" target="_blank"><img src="~/Content/Images/masc_logo.png" /></a><br/>
                     <a href="http://www.audius.nl" target="_blank"><img src="~/Content/Images/audius.png" width="100"/></a><br/>
-                    <a href="http://www.dutchcollegeleague.nl" target="_blank"><img src="~/Content/Images/logo-dcl.png" width="100" /></a>
+                    <a href="http://www.dutchcollegeleague.nl" target="_blank"><img src="~/Content/Images/logo-dcl.png" width="100"/></a><br/>
+                    <a href="http://www.campzone.nl" target="_blank"><img src="~/Content/Images/campzone.jpg" width="100" /></a>
                     <br/><br/>
                     Interested in a sponsor agreement? <a href="@Url.Action("Contact", "Home")">Contact us!</a>
                 </div>

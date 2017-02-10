@@ -54,9 +54,7 @@ namespace LoLTournament.Helpers
             var timeSetting = WebConfigurationManager.AppSettings["TournamentStart"];
             var tournamentStart = DateTime.ParseExact(timeSetting, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
 
-            if (DateTime.Now >= tournamentStart && DateTime.Now <= tournamentStart + TimeSpan.FromHours(12))
-                // assuming tournament lasts for a maximum of 12 hours
-                return;
+
 
             var participants = Mongo.Participants.FindAll();
 

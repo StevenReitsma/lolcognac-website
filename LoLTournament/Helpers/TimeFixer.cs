@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Web;
 using System.Web.Configuration;
-using LoLTournament.Models;
-using MongoDB.Driver;
 using RiotSharp;
-using RiotSharp.GameEndpoint;
 using RiotSharp.MatchEndpoint;
 
 namespace LoLTournament.Helpers
@@ -43,7 +38,11 @@ namespace LoLTournament.Helpers
                 m.DeathsRedTeam = game.Participants.Where(x => x.TeamId == 200).Sum(x => x.Stats.Deaths);
                 m.KillsRedTeam = game.Participants.Where(x => x.TeamId == 200).Sum(x => x.Stats.Kills);
 
-                m.CreationTime = game.MatchCreation + new TimeSpan(0, 2, 10, 0) + game.MatchDuration;
+                m.ChampionIds = game.Participants.Select(x => x.ChampionId).ToArray();
+                m.BanIds = game.Teams.Where(x => x.Bans != null).SelectMany(x => x.Bans).Select(x => x.ChampionId).ToArray();
+
+                m.Duration = game.MatchDuration;
+
                 Mongo.Matches.Save(m);
             }
         }
